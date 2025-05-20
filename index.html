@@ -1,50 +1,10 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script>```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfolio of Ezhilarasan Kandiah, Technical Cleanliness Inspection Expert.">
-    <title>Ezhilarasan Kandiah | Technical Cleanliness Inspection Expert</title>
+    <meta name="description" content="Portfolio of Ezhilarasan Kandiah, Technical Cleanliness Specialist.">
+    <title>Ezhilarasan Kandiah | Technical Cleanliness Specialist</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         * {
@@ -120,20 +80,33 @@
         }
 
         #home {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), ('img_profile.jpg');
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('img_background.jpg');
             background-size: cover;
             background-position: center;
             text-align: center;
         }
 
-        #home h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        #home .intro-text {
+            margin-bottom: 2rem;
         }
 
-        #home p {
+        #home .intro-text .greeting {
+            font-size: 1.5rem;
+            font-weight: 300;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        #home .intro-text .name {
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        #home .subtitle {
             font-size: 1.2rem;
-            margin-bottom: 2rem;
+            font-weight: 300;
+            margin-top: 0.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
         }
 
         .btn {
@@ -277,6 +250,18 @@
                 grid-template-columns: 1fr;
                 text-align: center;
             }
+
+            #home .intro-text .greeting {
+                font-size: 1.2rem;
+            }
+
+            #home .intro-text .name {
+                font-size: 2.5rem;
+            }
+
+            #home .subtitle {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -298,14 +283,17 @@
 
     <section id="home">
         <div class="container">
-            <h1>Ezhilarasan Kandiah</h1>
-            <p>Technical Cleanliness Inspection Expert</p>
+            <div class="intro-text">
+                <span class="greeting">Hi,</span>
+                <span class="name">I am Ezhilarasan.</span>
+            </div>
+            <p class="subtitle">Technical Cleanliness Inspection Expert</p>
         </div>
     </section>
 
     <section id="about">
         <div class="container">
-            <img src="img_profile.jpg" alt="Ezhilarasan Kandiah" width="200">
+            <img src="../images/profile.jpg" alt="Ezhilarasan Kandiah" width="200">
             <div>
                 <h2>About Me</h2>
                 <p>As a dedicated Technical Specialist with 13 years of industrial expertise, I redefine quality through my mastery of technical cleanliness in the automotive sector. Over the past 7 years, I have led cleanliness laboratories, conducted rigorous cleanroom audits, and developed innovative contamination control strategies, ensuring compliance with ISO 14644 and ISO 16232/VDA 19.1 standards.</p>
@@ -356,7 +344,7 @@
                 </div>
                 <div class="project-card">
                     <img src="../images/failure-dashboard.jpg" alt="Failure Analysis Dashboard">
-                    <h3>Failure Analysis Dashboard</h3>
+                    <h3>Cleanroom Audit System</h3>
                     <p>Built a dashboard for metallurgical failure analysis, enhancing data visualization for engineers.</p>
                     <a href="#" class="btn">View Details</a>
                 </div>
@@ -408,7 +396,7 @@
     </section>
 
     <footer>
-        <p>&copy; 2025 Ezhilarasan Kandiah. All rights reserved.</p>
+        <p>© 2025 Ezhilarasan Kandiah. All rights reserved.</p>
     </footer>
 
     <script>
@@ -442,4 +430,3 @@
     </script>
 </body>
 </html>
-```
