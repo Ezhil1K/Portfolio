@@ -116,13 +116,15 @@
             text-decoration: underline;
         }
 
-        .article-image {
+.article-image {
             max-width: 100%;
             height: auto;
-            margin: 1rem 0;
+            margin: 1rem auto; /* This line is already good for horizontal centering if display is block */
             cursor: pointer;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            /* Add this line to make the image a block-level element */
+            display: block;
         }
 
         .image-caption {
