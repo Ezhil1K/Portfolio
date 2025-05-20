@@ -190,6 +190,12 @@
             color: #ffd700;
         }
 
+        .composition-display {
+            font-family: monospace;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+
         .no-results {
             text-align: center;
             padding: 2rem;
@@ -204,6 +210,12 @@
 
         .loading i {
             color: #ffd700;
+        }
+
+        footer {
+            background: #111;
+            text-align: center;
+            padding: 1rem;
         }
 
         @media (max-width: 768px) {
@@ -238,6 +250,10 @@
                 display: block;
                 overflow-x: auto;
             }
+
+            .composition-display {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -261,7 +277,7 @@
         <div class="container">
             <div class="tool-header">
                 <h2>Material Grade Matcher</h2>
-                <p>Input the chemical composition of your material to find matching material grades from our comprehensive database of steel and alloy specifications.</p>
+                <p>Input the chemical composition of your material to find matching material grades from our comprehensive database.</p>
             </div>
 
             <div class="matcher-container">
@@ -334,7 +350,7 @@
                             <th>Grade</th>
                             <th>Standard</th>
                             <th>Match %</th>
-                            <th>Key Elements</th>
+                            <th>Composition</th>
                         </tr>
                     </thead>
                     <tbody id="resultsBody">
@@ -370,7 +386,7 @@
             const clearBtn = document.getElementById('clearBtn');
             const loadingIndicator = document.getElementById('loadingIndicator');
 
-            // Material database (expanded with more examples)
+            // Material database (sample entries)
             const materialGrades = [
                 {
                     grade: 'AISI 1018',
@@ -396,43 +412,30 @@
                     grade: 'AISI 304',
                     standard: 'Stainless Steel',
                     composition: { C: 0.08, S: 0.03, P: 0.045, Si: 1.0, Mn: 2.0, Cr: 18.0, Mo: 0, Ni: 8.0, Cu: 0, V: 0, W: 0 }
-                },
-                {
-                    grade: 'AISI 8620',
-                    standard: 'Nickel-Chromium-Mo',
-                    composition: { C: 0.20, S: 0.04, P: 0.035, Si: 0.25, Mn: 0.80, Cr: 0.5, Mo: 0.2, Ni: 0.55, Cu: 0, V: 0, W: 0 }
-                },
-                {
-                    grade: 'AISI 1095',
-                    standard: 'High Carbon Steel',
-                    composition: { C: 0.95, S: 0.05, P: 0.04, Si: 0.25, Mn: 0.40, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-                },
-                {
-                    grade: 'AISI 4340',
-                    standard: 'Nickel-Chromium-Molybdenum',
-                    composition: { C: 0.40, S: 0.04, P: 0.035, Si: 0.25, Mn: 0.70, Cr: 0.80, Mo: 0.25, Ni: 1.825, Cu: 0, V: 0, W: 0 }
                 }
             ];
 
-            // Format key elements string
-            function getKeyElements(composition) {
+            // Format complete composition string
+            function getFullComposition(composition) {
                 const elements = [];
-                for (const [element, value] of Object.entries(composition)) {
-                    if (value > 0) {
-                        elements.push(`${element}:${value.toFixed(2)}%`);
-                    }
-                }
-                return elements.slice(0, 4).join(' ');
+                const elementOrder = ['C', 'S', 'P', 'Si', 'Mn', 'Cr', 'Mo', 'Ni', 'Cu', 'V', 'W'];
+                
+                elementOrder.forEach(element => {
+                    const value = composition[element] || 0;
+                    elements.push(`${element}:${value.toFixed(2)}%`);
+                });
+                
+                return elements.join(' ');
             }
 
-            // Calculate match percentage with weighted elements
+            // Calculate match percentage
             function calculateMatch(input, material) {
                 let totalDiff = 0;
                 let elementsCounted = 0;
                 const weights = { C: 2, Mn: 1.5, Cr: 2, Mo: 2, Ni: 1, S: 0.5, P: 0.5, Si: 0.8, Cu: 0.5, V: 1, W: 1 };
 
                 for (const [element, value] of Object.entries(input)) {
-                    const inputVal = parseFloat(value) || 0; // Default to 0 if empty
+                    const inputVal = parseFloat(value) || 0;
                     const materialVal = material.composition[element] || 0;
                     const weight = weights[element] || 1;
                     totalDiff += Math.abs(inputVal - materialVal) * weight;
@@ -448,7 +451,6 @@
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // Show loading state
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
                 loadingIndicator.style.display = 'block';
@@ -468,33 +470,24 @@
                     W: document.getElementById('tungsten').value
                 };
 
-                // Small delay to show loading (for UX)
                 setTimeout(() => {
                     try {
-                        // Calculate matches
                         const matches = materialGrades.map(material => {
                             const matchPercent = calculateMatch(input, material);
-                            return {
-                                ...material,
-                                matchPercent: matchPercent
-                            };
+                            return { ...material, matchPercent };
                         }).filter(match => match.matchPercent > 0)
                           .sort((a, b) => b.matchPercent - a.matchPercent);
 
-                        // Display results
                         displayResults(matches);
                     } catch (error) {
-                        console.error("Error calculating matches:", error);
+                        console.error("Error:", error);
                         resultsBody.innerHTML = `
                             <tr>
-                                <td colspan="4" class="no-results">
-                                    Error calculating matches. Please try again.
-                                </td>
+                                <td colspan="4" class="no-results">Error processing request</td>
                             </tr>
                         `;
                     }
 
-                    // Reset button
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fas fa-search"></i> Find Matches';
                     loadingIndicator.style.display = 'none';
@@ -511,7 +504,7 @@
                 `;
             });
 
-            // Display results in table
+            // Display results
             function displayResults(matches) {
                 if (!matches || matches.length === 0) {
                     resultsBody.innerHTML = `
@@ -531,11 +524,10 @@
                             <td>${match.grade}</td>
                             <td>${match.standard}</td>
                             <td class="match-percent">${match.matchPercent.toFixed(1)}%</td>
-                            <td>${getKeyElements(match.composition)}</td>
+                            <td class="composition-display">${getFullComposition(match.composition)}</td>
                         </tr>
                     `;
                 });
-
                 resultsBody.innerHTML = html;
             }
         });
