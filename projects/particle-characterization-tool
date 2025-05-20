@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Material Grade Matcher tool for particle characterization, part of Ezhilarasan Kandiah's portfolio.">
+    <title>Material Grade Matcher - Ezhilarasan Kandiah</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <link rel="stylesheet" href="./style.css"> 
+
+    <style>
+        /* Article-specific styles to match main site */
+        body {
+            background-color: #1a1a1a !important; /* Ensure black background */
+        }
+        .article-content {
+            max-width: 800px;
+            margin: 6rem auto 2rem;
+            padding: 0 2rem;
+            color: #f8f8f2;
+        }
+
+        .article-content h1, .article-content h2, .article-content h3 {
+            color: #ffd700;  /* Yellow headings */
+        }
+
+        .article-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-content h2 {
+            font-size: 1.8rem;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .article-content h3 {
+            font-size: 1.4rem;
+            margin: 1rem 0 0.5rem;
+        }
+
+        .article-content p {
+            margin-bottom: 1rem;
+            color: #e8e8e0;
+        }
+
+        .article-content a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        .article-content a:hover {
+            text-decoration: underline;
+        }
+
+        /* Form and Table Styles */
+        .material-matcher-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .material-matcher-form input {
+            padding: 0.5rem;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background-color: #2a2a2a;
+            color: #f8f8f2;
+            font-size: 0.9rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .material-matcher-form button {
+            padding: 0.75rem;
+            background-color: #ffd700;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            grid-column: span 2;
+        }
+
+        .material-matcher-form button:hover {
+            background-color: #e6c200;
+        }
+
+        .elements-table, .material-matcher-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.5rem 0 2rem 0;
+        }
+
+        .elements-table th, .material-matcher-table th, .material-matcher-table td {
+            border: 1px solid #333;
+            padding: 0.75rem;
+            text-align: center;
+            color: #e8e8e0;
+            font-size: 0.9rem;
+        }
+
+        .elements-table th {
+            background-color: #2a2a2a;
+            color: #ffd700;
+            width: calc(100% / 11); /* Equal width for 11 elements */
+        }
+
+        .material-matcher-table th {
+            background-color: #2a2a2a;
+            color: #ffd700;
+        }
+
+        .material-matcher-table tr:nth-child(even) {
+            background-color: #222222;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: #1a1a1a;
+            color: #fff;
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: #fff;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar ul li {
+            margin-left: 1.5rem;
+        }
+
+        .navbar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .navbar ul li a:hover {
+            color: #ffd700;
+        }
+
+        .nav-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .article-content {
+                margin-top: 5rem;
+                padding: 0 1rem;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            .navbar ul {
+                display: none;
+                flex-direction: column;
+                background-color: #1a1a1a;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                text-align: center;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            }
+
+            .navbar ul.active {
+                display: flex;
+            }
+
+            .navbar ul li {
+                margin: 0;
+                padding: 1rem 0;
+                border-bottom: 1px solid #333;
+            }
+
+            .navbar ul li:last-child {
+                border-bottom: none;
+            }
+
+            .navbar ul li a {
+                display: block;
+            }
+
+            .material-matcher-form {
+                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            }
+
+            .elements-table th, .material-matcher-table th, .material-matcher-table td {
+                font-size: 0.8rem;
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1>Ezhilarasan Kandiah</h1>
+            <span class="nav-toggle"><i class="fas fa-bars"></i></span>
+            <ul>
+                <li><a href="./index.html#home">Home</a></li>
+                <li><a href="./index.html#about">About</a></li>
+                <li><a href="./index.html#skills">Skills</a></li>
+                <li><a href="./index.html#projects">Projects</a></li>
+                <li><a href="./index.html#articles">Articles</a></li>
+                <li><a href="./index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="article-content">
+        <h1>Material Grade Matcher - Particle Characterization Tool</h1>
+        <p class="published-info">Developed by Ezhilarasan Kandiah</p>
+        <p>This tool allows you to input the chemical composition of a material and find matching material grades based on their elemental percentages. Enter the percentages for each element below and click "Find Matches" to see the results.</p>
+
+        <h2>Input Material Composition</h2>
+        <table class="elements-table">
+            <thead>
+                <tr>
+                    <th>C %</th>
+                    <th>S %</th>
+                    <th>P %</th>
+                    <th>Si %</th>
+                    <th>Mn %</th>
+                    <th>Cr %</th>
+                    <th>Mo %</th>
+                    <th>Ni %</th>
+                    <th>Cu %</th>
+                    <th>V %</th>
+                    <th>W %</th>
+                </tr>
+            </thead>
+        </table>
+        <form id="material-matcher-form" class="material-matcher-form">
+            <input type="number" step="0.01" id="carbon" placeholder="%">
+            <input type="number" step="0.01" id="sulfur" placeholder="%">
+            <input type="number" step="0.01" id="phosphorus" placeholder="%">
+            <input type="number" step="0.01" id="silicon" placeholder="%">
+            <input type="number" step="0.01" id="manganese" placeholder="%">
+            <input type="number" step="0.01" id="chromium" placeholder="%">
+            <input type="number" step="0.01" id="molybdenum" placeholder="%">
+            <input type="number" step="0.01" id="nickel" placeholder="%">
+            <input type="number" step="0.01" id="copper" placeholder="%">
+            <input type="number" step="0.01" id="vanadium" placeholder="%">
+            <input type="number" step="0.01" id="tungsten" placeholder="%">
+            <button type="submit">Find Matches</button>
+        </form>
+
+        <h2>Matching Material Grades</h2>
+        <table id="material-matcher-table" class="material-matcher-table">
+            <thead>
+                <tr>
+                    <th>Grade</th>
+                    <th>Standard Grade</th>
+                    <th>Match %</th>
+                    <th>Composition</th>
+                </tr>
+            </thead>
+            <tbody id="material-matcher-results"></tbody>
+        </table>
+
+        <p><a href="./index.html#projects">Back to Projects</a> | <a href="./index.html#contact">Contact Me</a></p>
+    </div>
+
+    <footer>
+        <p>© 2025 Ezhilarasan Kandiah. All rights reserved.</p>
+    </footer>
+
+    <script src="./script.js"></script>
+
+    <script>
+        // Mobile menu toggle functionality
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.navbar ul');
+
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Material Grade Matcher logic
+        const form = document.getElementById('material-matcher-form');
+        const resultsTable = document.getElementById('material-matcher-results');
+
+        // Sample material grade database
+        const materialGrades = [
+            {
+                grade: 'AISI 1018',
+                standard: 'Low Carbon Steel',
+                composition: { C: 0.18, S: 0.05, P: 0.04, Si: 0.4, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+            },
+            {
+                grade: 'AISI 4140',
+                standard: 'Chromium-Molybdenum Steel',
+                composition: { C: 0.40, S: 0.04, P: 0.035, Si: 0.25, Mn: 0.85, Cr: 1.0, Mo: 0.2, Ni: 0, Cu: 0, V: 0, W: 0 }
+            },
+            {
+                grade: 'AISI 316',
+                standard: 'Stainless Steel',
+                composition: { C: 0.08, S: 0.03, P: 0.045, Si: 1.0, Mn: 2.0, Cr: 17.0, Mo: 2.5, Ni: 11.0, Cu: 0, V: 0, W: 0 }
+            }
+        ];
+
+        // Calculate match percentage
+        function calculateMatchPercentage(input, reference) {
+            const elements = ['C', 'S', 'P', 'Si', 'Mn', 'Cr', 'Mo', 'Ni', 'Cu', 'V', 'W'];
+            let totalDiff = 0;
+            let validElements = 0;
+
+            elements.forEach(element => {
+                if (input[element] !== '' && input[element] !== null) {
+                    const diff = Math.abs((input[element] || 0) - (reference[element] || 0));
+                    totalDiff += diff;
+                    validElements++;
+                }
+            });
+
+            if (validElements === 0) return 0;
+            const avgDiff = totalDiff / validElements;
+            return Math.max(0, 100 - (avgDiff * 100)).toFixed(2);
+        }
+
+        // Handle form submission
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            resultsTable.innerHTML = '';
+
+            const inputComposition = {
+                C: parseFloat(document.getElementById('carbon').value) || 0,
+                S: parseFloat(document.getElementById('sulfur').value) || 0,
+                P: parseFloat(document.getElementById('phosphorus').value) || 0,
+                Si: parseFloat(document.getElementById('silicon').value) || 0,
+                Mn: parseFloat(document.getElementById('manganese').value) || 0,
+                Cr: parseFloat(document.getElementById('chromium').value) || 0,
+                Mo: parseFloat(document.getElementById('molybdenum').value) || 0,
+                Ni: parseFloat(document.getElementById('nickel').value) || 0,
+                Cu: parseFloat(document.getElementById('copper').value) || 0,
+                V: parseFloat(document.getElementById('vanadium').value) || 0,
+                W: parseFloat(document.getElementById('tungsten').value) || 0
+            };
+
+            // Calculate matches
+            const matches = materialGrades.map(grade => ({
+                ...grade,
+                matchPercentage: calculateMatchPercentage(inputComposition, grade.composition)
+            }));
+
+            // Sort by match percentage (descending)
+            matches.sort((a, b) => b.matchPercentage - a.matchPercentage);
+
+            // Populate table
+            matches.forEach(match => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${match.grade}</td>
+                    <td>${match.standard}</td>
+                    <td>${match.matchPercentage}%</td>
+                    <td>${Object.entries(match.composition)
+                        .filter(([_, value]) => value > 0)
+                        .map(([key, value]) => `${key}: ${value}%`)
+                        .join(', ')}</td>
+                `;
+                resultsTable.appendChild(row);
+            });
+        });
+    </script>
+</body>
+</html>
