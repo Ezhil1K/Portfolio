@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfolio of Ezhilarasan Kandiah, Technical Cleanliness Specialist.">
-    <title>Ezhilarasan Kandiah | Technical Cleanliness Specialist</title>
+    <meta name="description" content="Portfolio of Ezhilarasan Kandiah, Technical Cleanliness Inspection Expert">
+    <title>Ezhilarasan Kandiah | Technical Cleanliness Inspection Expert</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         * {
@@ -80,11 +80,11 @@
         }
 
         #home {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('img_background, img_background1, img_background2.jpg');
-    background-size: cover;
-    background-position: center;
-    text-align: center;
-    transition: background-image 1s ease-in-out;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('cleanroom-inspection1.jpg');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            transition: background-image 1s ease-in-out;
         }
 
         #home .intro-text {
@@ -282,19 +282,19 @@
         </div>
     </nav>
 
-   <section id="home">
-    <div class="container">
-        <div class="intro-text">
-            <span class="greeting">Hi,</span>
-            <span class="name">I am Ezhilarasan.</span>
-        </div>
+    <section id="home">
+        <div class="container">
+            <div class="intro-text">
+                <span class="greeting">Hi,</span>
+                <span class="name">I am Ezhilarasan.</span>
+            </div>
             <p class="subtitle">Technical Cleanliness Inspection Expert</p>
         </div>
     </section>
 
     <section id="about">
         <div class="container">
-            <img src="img_profile.jpg" alt="Ezhilarasan Kandiah" width="200">
+            <img src="profile.jpg" alt="Ezhilarasan Kandiah" width="200">
             <div>
                 <h2>About Me</h2>
                 <p>As a dedicated Technical Specialist with 13 years of industrial expertise, I redefine quality through my mastery of technical cleanliness in the automotive sector. Over the past 7 years, I have led cleanliness laboratories, conducted rigorous cleanroom audits, and developed innovative contamination control strategies, ensuring compliance with ISO 14644 and ISO 16232/VDA 19.1 standards.</p>
@@ -332,20 +332,20 @@
             <h2>Projects</h2>
             <div class="projects-grid">
                 <div class="project-card">
-                    <img src="../images/cleanroom-audit.jpg" alt="Cleanroom Audit System">
+                    <img src="cleanroom-audit.jpg" alt="Cleanroom Audit System">
                     <h3>Cleanroom Audit System</h3>
                     <p>Developed a system to automate cleanroom audits per ISO 14644 standards, improving efficiency.</p>
                     <a href="#" class="btn">View Details</a>
                 </div>
                 <div class="project-card">
-                    <img src="../images/contamination-tool.jpg" alt="Contamination Control Tool">
+                    <img src="contamination-tool.jpg" alt="Contamination Control Tool">
                     <h3>Contamination Control Tool</h3>
                     <p>Designed a tool for particle characterization in automotive parts, reducing defects.</p>
                     <a href="#" class="btn">View Details</a>
                 </div>
                 <div class="project-card">
-                    <img src="../images/failure-dashboard.jpg" alt="Failure Analysis Dashboard">
-                    <h3>Cleanroom Audit System</h3>
+                    <img src="failure-dashboard.jpg" alt="Failure Analysis Dashboard">
+                    <h3>Failure Analysis Dashboard</h3>
                     <p>Built a dashboard for metallurgical failure analysis, enhancing data visualization for engineers.</p>
                     <a href="#" class="btn">View Details</a>
                 </div>
@@ -358,19 +358,19 @@
             <h2>Articles</h2>
             <div class="articles-grid">
                 <div class="article-card">
-                    <img src="../images/particle-counter.jpg" alt="Particle Counter Validation">
+                    <img src="particle-counter.jpg" alt="Particle Counter Validation">
                     <h3>Can Your Particle Counter Be Trusted?</h3>
                     <p>A guide to validating particle counters for reliable technical cleanliness in automotive manufacturing.</p>
                     <a href="articles/particle-counter-validation.html" class="btn">Read More</a>
                 </div>
                 <div class="article-card">
-                    <img src="../images/particle-contamination.jpg" alt="Particle Contamination">
+                    <img src="particle-contamination.jpg" alt="Particle Contamination">
                     <h3>Particle Contamination in Automotive Manufacturing</h3>
                     <p>A deep dive into effective strategies for reducing particle contamination in automotive components.</p>
                     <a href="articles/particle-contamination.html" class="btn">Read More</a>
                 </div>
                 <div class="article-card">
-                    <img src="../images/failure-analysis.jpg" alt="Failure Analysis Techniques">
+                    <img src="failure-analysis.jpg" alt="Failure Analysis Techniques">
                     <h3>Metallurgical Failure Analysis Techniques</h3>
                     <p>Insights into advanced methods for identifying and resolving material failures in automotive parts.</p>
                     <a href="articles/failure-analysis.html" class="btn">Read More</a>
@@ -402,51 +402,49 @@
 
     <script>
         // Smooth scrolling
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
-    });
-});
-
-// Mobile menu toggle
-const navToggle = document.querySelector('.nav-toggle');
-const navMenu = document.querySelector('.navbar ul');
-
-navToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-});
-
-// Hover effect for cards
-document.querySelectorAll('.skill-card, .project-card, .article-card').forEach(card => {
-    card.addEventListener('mouseenter', () => {
-        card.style.background = '#333';
-    });
-    card.addEventListener('mouseleave', () => {
-        card.style.background = '#222';
-    });
-});
-
-// Carousel effect for Home section background
-const homeSection = document.getElementById('home');
-const images = [
-    'img_background.jpg',
-    'img_background1.jpg',
-    'img_background2.jpg'
-];
-let currentImageIndex = 0;
-
-function changeBackgroundImage() {
-    currentImageIndex = (currentImageIndex + 1) % images.length;
-    const imageUrl = images[currentImageIndex];
-    homeSection.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('${imageUrl}')`;
-}
-
-setInterval(changeBackgroundImage, 15000); // Change image every 3 seconds
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
             });
         });
+
+        // Mobile menu toggle
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.navbar ul');
+
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Hover effect for cards
+        document.querySelectorAll('.skill-card, .project-card, .article-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.background = '#333';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.background = '#222';
+            });
+        });
+
+        // Carousel effect for Home section background
+        const homeSection = document.getElementById('home');
+        const images = [
+            'cleanroom-inspection1.jpg',
+            'cleanroom-inspection2.jpg',
+            'cleanroom-inspection3.jpg'
+        ];
+        let currentImageIndex = 0;
+
+        function changeBackgroundImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            const imageUrl = images[currentImageIndex];
+            homeSection.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('${imageUrl}')`;
+        }
+
+        setInterval(changeBackgroundImage, 15000); // Change image every 15 seconds
     </script>
 </body>
 </html>
