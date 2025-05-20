@@ -14,7 +14,9 @@
         /* Article-specific styles to match main site */
         body {
             background-color: #1a1a1a !important; /* Ensure black background */
+            font-family: 'Arial', sans-serif;
         }
+
         .article-content {
             max-width: 800px;
             margin: 6rem auto 2rem;
@@ -44,6 +46,7 @@
         .article-content p {
             margin-bottom: 1rem;
             color: #e8e8e0;
+            font-size: 1rem;
         }
 
         .article-content a {
@@ -90,8 +93,15 @@
             background-color: #e6c200;
         }
 
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
         .elements-table, .material-matcher-table {
             width: 100%;
+            min-width: 700px; /* Ensures table is wide enough for content */
             border-collapse: collapse;
             margin: 0.5rem 0 2rem 0;
         }
@@ -176,11 +186,35 @@
             cursor: pointer;
         }
 
+        footer {
+            background: #111;
+            text-align: center;
+            padding: 1rem;
+            color: #fff;
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             .article-content {
-                margin-top: 5rem;
-                padding: 0 1rem;
+                margin-top: 6rem; /* Adjusted for navbar height */
+                padding: 1rem; /* More padding for breathing room */
+            }
+
+            .article-content h1 {
+                font-size: 2rem;
+            }
+
+            .article-content h2 {
+                font-size: 1.5rem;
+                margin: 1rem 0 0.75rem;
+            }
+
+            .article-content h3 {
+                font-size: 1.2rem;
+            }
+
+            .article-content p {
+                font-size: 1rem;
             }
 
             .nav-toggle {
@@ -215,15 +249,54 @@
 
             .navbar ul li a {
                 display: block;
+                font-size: 1rem;
+            }
+
+            .navbar h1 {
+                font-size: 1.5rem;
             }
 
             .material-matcher-form {
-                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Wider inputs for better tap targets */
+                gap: 0.75rem; /* More spacing between inputs */
+            }
+
+            .material-matcher-form input {
+                padding: 0.75rem; /* Larger tap area */
+                font-size: 1rem;
+            }
+
+            .material-matcher-form button {
+                grid-column: 1 / -1; /* Full width on mobile */
+                padding: 1rem;
+                font-size: 1.1rem;
             }
 
             .elements-table th, .material-matcher-table th, .material-matcher-table td {
-                font-size: 0.8rem;
+                font-size: 0.9rem; /* Slightly larger for readability */
                 padding: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .article-content h1 {
+                font-size: 1.8rem;
+            }
+
+            .article-content h2 {
+                font-size: 1.3rem;
+            }
+
+            .article-content p {
+                font-size: 0.95rem;
+            }
+
+            .material-matcher-form {
+                grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Slightly smaller for very small screens */
+            }
+
+            .material-matcher-form input {
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -231,7 +304,7 @@
 <body>
     <nav class="navbar">
         <div class="container">
-                    <h1>Ezhilarasan Kandiah</h1>
+            <h1>Ezhilarasan Kandiah</h1>
             <span class="nav-toggle"><i class="fas fa-bars"></i></span>
             <ul>
                 <li><a href="../index.html#home">Home</a></li>
@@ -250,23 +323,25 @@
         <p>This tool allows you to input the chemical composition of a material and find matching material grades based on their elemental percentages. Enter the percentages for each element below and click "Find Matches" to see the results.</p>
 
         <h2>Input Material Composition</h2>
-        <table class="elements-table">
-            <thead>
-                <tr>
-                    <th>C %</th>
-                    <th>S %</th>
-                    <th>P %</th>
-                    <th>Si %</th>
-                    <th>Mn %</th>
-                    <th>Cr %</th>
-                    <th>Mo %</th>
-                    <th>Ni %</th>
-                    <th>Cu %</th>
-                    <th>V %</th>
-                    <th>W %</th>
-                </tr>
-            </thead>
-        </table>
+        <div class="table-wrapper">
+            <table class="elements-table">
+                <thead>
+                    <tr>
+                        <th>C %</th>
+                        <th>S %</th>
+                        <th>P %</th>
+                        <th>Si %</th>
+                        <th>Mn %</th>
+                        <th>Cr %</th>
+                        <th>Mo %</th>
+                        <th>Ni %</th>
+                        <th>Cu %</th>
+                        <th>V %</th>
+                        <th>W %</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
         <form id="material-matcher-form" class="material-matcher-form">
             <input type="number" step="0.01" id="carbon" placeholder="%">
             <input type="number" step="0.01" id="sulfur" placeholder="%">
@@ -283,17 +358,19 @@
         </form>
 
         <h2>Matching Material Grades</h2>
-        <table id="material-matcher-table" class="material-matcher-table">
-            <thead>
-                <tr>
-                    <th>Grade</th>
-                    <th>Standard Grade</th>
-                    <th>Match %</th>
-                    <th>Composition</th>
-                </tr>
-            </thead>
-            <tbody id="material-matcher-results"></tbody>
-        </table>
+        <div class="table-wrapper">
+            <table id="material-matcher-table" class="material-matcher-table">
+                <thead>
+                    <tr>
+                        <th>Grade</th>
+                        <th>Standard Grade</th>
+                        <th>Match %</th>
+                        <th>Composition</th>
+                    </tr>
+                </thead>
+                <tbody id="material-matcher-results"></tbody>
+            </table>
+        </div>
 
         <p><a href="./index.html#projects">Back to Projects</a> | <a href="./index.html#contact">Contact Me</a></p>
     </div>
