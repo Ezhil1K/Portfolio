@@ -61,22 +61,23 @@
             color: #f8f8f2;
         }
 
+        .article-content h1, .article-content h2, .article-content h3 {
+            color: #ffd700;  /* Make all headings yellow */
+        }
+
         .article-content h1 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
-            color: #ffd700;
         }
 
         .article-content h2 {
             font-size: 1.8rem;
             margin: 1.5rem 0 1rem;
-            color: #ffd700;
         }
 
         .article-content h3 {
             font-size: 1.4rem;
             margin: 1rem 0 0.5rem;
-            color: #e8e8e0;
         }
 
         .article-content p {
@@ -144,6 +145,100 @@
             .article-content {
                 margin-top: 5rem;
                 padding: 0 1rem;
+            }
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: #1a1a1a;  /* Dark background */
+            color: #fff;
+            padding: 1rem 0;
+            position: fixed; /* Fix the navbar to the top */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Add a shadow for better visibility */
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between; /* Space out the logo and nav items */
+            align-items: center;             /* Vertically center items */
+            max-width: 1200px;              /* Maximum width for the container */
+            margin: 0 auto;                  /* Center the container */
+            padding: 0 1rem;                /* Add some padding */
+        }
+
+        .navbar h1 {
+            margin: 0;                      /* Remove default heading margin */
+            font-size: 1.8rem;                /* Adjust font size as needed */
+            color: #fff;
+        }
+
+        .navbar ul {
+            list-style: none;               /* Remove bullet points */
+            display: flex;                  /* Use flexbox for horizontal layout */
+            margin: 0;                      /* Remove default ul margin */
+            padding: 0;                      /* Remove default ul padding */
+        }
+
+        .navbar ul li {
+            margin-left: 1.5rem;            /* Add spacing between nav items */
+        }
+
+        .navbar ul li a {
+            color: #fff;                    /* White text color */
+            text-decoration: none;          /* Remove underlines */
+            font-size: 1.1rem;                /* Adjust font size */
+            transition: color 0.3s ease;    /* Smooth color transition on hover */
+        }
+
+        .navbar ul li a:hover {
+            color: #ffd700;                  /* Change color on hover (e.g., to yellow) */
+        }
+
+        .nav-toggle {
+            display: none;                  /* Hide the menu toggle on larger screens */
+            font-size: 1.5rem;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;              /* Show the menu toggle on small screens */
+            }
+
+            .navbar ul {
+                display: none;              /* Hide the nav list by default on small screens */
+                flex-direction: column;    /* Stack the nav items vertically */
+                background-color: #1a1a1a;  /* Dark background for the dropdown menu */
+                position: absolute;          /* Position the menu absolutely */
+                top: 100%;                  /* Position it below the navbar */
+                left: 0;
+                width: 100%;
+                text-align: center;         /* Center the menu items */
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Add a shadow */
+            }
+
+            .navbar ul.active {
+                display: flex;              /* Show the menu when the toggle is clicked */
+            }
+
+            .navbar ul li {
+                margin: 0;                  /* Remove horizontal margin */
+                padding: 1rem 0;            /* Add vertical padding */
+                border-bottom: 1px solid #333; /* Add a border between items */
+            }
+
+            .navbar ul li:last-child {
+                border-bottom: none;       /* Remove the border from the last item */
+            }
+
+            .navbar ul li a {
+                display: block;            /* Make the links take up the full width */
             }
         }
     </style>
@@ -254,6 +349,14 @@
 
         lightbox.addEventListener('click', () => {
             lightbox.classList.remove('active');
+        });
+
+        // Mobile menu toggle functionality
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.navbar ul');
+
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
         });
     </script>
 </body>
