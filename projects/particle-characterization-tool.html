@@ -58,22 +58,39 @@
             text-decoration: underline;
         }
 
-        /* Form and Table Styles */
+        /* Form Styles */
         .material-matcher-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 0.5rem;
             margin: 1rem 0;
         }
 
-        .material-matcher-form input {
+        .form-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .form-row label {
+            width: 80px;
+            padding: 0.75rem;
+            text-align: center;
+            color: #ffd700;
+            font-size: 0.9rem;
+            background-color: #2a2a2a;
+            border: 1px solid #333;
+            border-radius: 4px;
+        }
+
+        .form-row input {
+            flex: 1;
             padding: 0.5rem;
             border: 1px solid #333;
             border-radius: 4px;
             background-color: #2a2a2a;
             color: #f8f8f2;
             font-size: 0.9rem;
-            width: 100%;
             text-align: center;
         }
 
@@ -86,7 +103,7 @@
             cursor: pointer;
             font-size: 1rem;
             transition: background-color 0.3s ease;
-            grid-column: span 2;
+            margin-top: 0.5rem;
         }
 
         .material-matcher-form button:hover {
@@ -99,25 +116,18 @@
             -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
         }
 
-        .elements-table, .material-matcher-table {
+        .material-matcher-table {
             width: 100%;
-            min-width: 700px; /* Ensures table is wide enough for content */
             border-collapse: collapse;
             margin: 0.5rem 0 2rem 0;
         }
 
-        .elements-table th, .material-matcher-table th, .material-matcher-table td {
+        .material-matcher-table th, .material-matcher-table td {
             border: 1px solid #333;
             padding: 0.75rem;
             text-align: center;
             color: #e8e8e0;
             font-size: 0.9rem;
-        }
-
-        .elements-table th {
-            background-color: #2a2a2a;
-            color: #ffd700;
-            width: calc(100% / 11); /* Equal width for 11 elements */
         }
 
         .material-matcher-table th {
@@ -256,24 +266,29 @@
                 font-size: 1.5rem;
             }
 
-            .material-matcher-form {
-                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Wider inputs for better tap targets */
-                gap: 0.75rem; /* More spacing between inputs */
+            .form-row {
+                flex-direction: column;
+                align-items: stretch;
             }
 
-            .material-matcher-form input {
-                padding: 0.75rem; /* Larger tap area */
+            .form-row label {
+                width: 100%;
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .form-row input {
+                padding: 0.75rem;
                 font-size: 1rem;
             }
 
             .material-matcher-form button {
-                grid-column: 1 / -1; /* Full width on mobile */
                 padding: 1rem;
                 font-size: 1.1rem;
             }
 
-            .elements-table th, .material-matcher-table th, .material-matcher-table td {
-                font-size: 0.9rem; /* Slightly larger for readability */
+            .material-matcher-table th, .material-matcher-table td {
+                font-size: 0.9rem;
                 padding: 0.5rem;
             }
         }
@@ -291,12 +306,12 @@
                 font-size: 0.95rem;
             }
 
-            .material-matcher-form {
-                grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Slightly smaller for very small screens */
+            .form-row label, .form-row input {
+                font-size: 0.9rem;
             }
 
-            .material-matcher-form input {
-                font-size: 0.9rem;
+            .material-matcher-table th, .material-matcher-table td {
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -323,52 +338,71 @@
         <p>This tool allows you to input the chemical composition of a material and find matching material grades based on their elemental percentages. Enter the percentages for each element below and click "Find Matches" to see the results.</p>
 
         <h2>Input Material Composition</h2>
-        <div class="table-wrapper">
-            <table class="elements-table">
-                <thead>
-                    <tr>
-                        <th>C %</th>
-                        <th>S %</th>
-                        <th>P %</th>
-                        <th>Si %</th>
-                        <th>Mn %</th>
-                        <th>Cr %</th>
-                        <th>Mo %</th>
-                        <th>Ni %</th>
-                        <th>Cu %</th>
-                        <th>V %</th>
-                        <th>W %</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
         <form id="material-matcher-form" class="material-matcher-form">
-            <input type="number" step="0.01" id="carbon" placeholder="%">
-            <input type="number" step="0.01" id="sulfur" placeholder="%">
-            <input type="number" step="0.01" id="phosphorus" placeholder="%">
-            <input type="number" step="0.01" id="silicon" placeholder="%">
-            <input type="number" step="0.01" id="manganese" placeholder="%">
-            <input type="number" step="0.01" id="chromium" placeholder="%">
-            <input type="number" step="0.01" id="molybdenum" placeholder="%">
-            <input type="number" step="0.01" id="nickel" placeholder="%">
-            <input type="number" step="0.01" id="copper" placeholder="%">
-            <input type="number" step="0.01" id="vanadium" placeholder="%">
-            <input type="number" step="0.01" id="tungsten" placeholder="%">
+            <div class="form-row">
+                <label for="carbon">C %</label>
+                <input type="number" step="0.01" id="carbon" placeholder="%">
+            </div>
+            <div class="form-row">
+                <label for="sulfur">S %</label>
+                <input type="number" step="0.01" id="sulfur" placeholder="%">
+            </div>
+            <div class="form-row">
+                <label for="phosphorus">P %</label>
+                <input type="number" step="0.01" id="phosphorus" placeholder="%">
+            </div>
+            <div class="form-row">
+                <label for="silicon">Si %</label>
+                <input type="number" step="0.01" id="silicon" placeholder="%">
+            </div>
+            <div class="form-row">
+                <label for="manganese">Mn %</label>
+                <input type="number" step="0.01" id="manganese" placeholder="%">
+            </div>
+            <div class="form-row">
+                <label for="chromium">Cr %</label>
+                <input type="number" step="0.01" id="chromium" placeholder="%">
+            </div>
+            <div class="form-row">
+                <label for="molybdenum">Mo %</label>
+                <input type="number" step="0.01" id="molybdenum" placeholder="%">
+            </div>
+            <div class="form-row">
+                <label for="nickel">Ni %</label>
+                <input type="number" step="0.01" id="nickel" placeholder="%">
+            </div>
+            <div class="form-row">
+                <label for="copper">Cu %</label>
+                <input type="number" step="0.01" id="copper" placeholder="%">
+            </div>
+            <div class="form-row">
+                <label for="vanadium">V %</label>
+                <input type="number" step="0.01" id="vanadium" placeholder="%">
+            </div>
+            <div class="form-row">
+                <label for="tungsten">W %</label>
+                <input type="number" step="0.01" id="tungsten" placeholder="%">
+            </div>
             <button type="submit">Find Matches</button>
         </form>
 
         <h2>Matching Material Grades</h2>
         <div class="table-wrapper">
             <table id="material-matcher-table" class="material-matcher-table">
-                <thead>
+                <tbody id="material-matcher-results">
                     <tr>
                         <th>Grade</th>
+                    </tr>
+                    <tr>
                         <th>Standard Grade</th>
+                    </tr>
+                    <tr>
                         <th>Match %</th>
+                    </tr>
+                    <tr>
                         <th>Composition</th>
                     </tr>
-                </thead>
-                <tbody id="material-matcher-results"></tbody>
+                </tbody>
             </table>
         </div>
 
@@ -460,19 +494,27 @@
             // Sort by match percentage (descending)
             matches.sort((a, b) => b.matchPercentage - a.matchPercentage);
 
-            // Populate table
-            matches.forEach(match => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${match.grade}</td>
-                    <td>${match.standard}</td>
-                    <td>${match.matchPercentage}%</td>
-                    <td>${Object.entries(match.composition)
+            // Populate table with columns for each match
+            const rows = [
+                { label: 'Grade', values: matches.map(match => match.grade) },
+                { label: 'Standard Grade', values: matches.map(match => match.standard) },
+                { label: 'Match %', values: matches.map(match => `${match.matchPercentage}%`) },
+                { label: 'Composition', values: matches.map(match => 
+                    Object.entries(match.composition)
                         .filter(([_, value]) => value > 0)
                         .map(([key, value]) => `${key}: ${value}%`)
-                        .join(', ')}</td>
-                `;
-                resultsTable.appendChild(row);
+                        .join(', ')
+                ) }
+            ];
+
+            rows.forEach((row, rowIndex) => {
+                const tr = document.createElement('tr');
+                if (rowIndex === 0) {
+                    tr.innerHTML = `<th>${row.label}</th>` + row.values.map(value => `<th>${value}</th>`).join('');
+                } else {
+                    tr.innerHTML = `<th>${row.label}</th>` + row.values.map(value => `<td>${value}</td>`).join('');
+                }
+                resultsTable.appendChild(tr);
             });
         });
     </script>
