@@ -84,6 +84,7 @@
             background-size: cover;
             background-position: center;
             text-align: center;
+            transition: background-image 1s ease-in-out
         }
 
         #home .intro-text {
@@ -401,30 +402,49 @@
 
     <script>
         // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
         });
+    });
+});
 
-        // Mobile menu toggle
-        const navToggle = document.querySelector('.nav-toggle');
-        const navMenu = document.querySelector('.navbar ul');
+// Mobile menu toggle
+const navToggle = document.querySelector('.nav-toggle');
+const navMenu = document.querySelector('.navbar ul');
 
-        navToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
+navToggle.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+});
 
-        // Hover effect for cards
-        document.querySelectorAll('.skill-card, .project-card, .article-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.background = '#333';
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.background = '#222';
+// Hover effect for cards
+document.querySelectorAll('.skill-card, .project-card, .article-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+        card.style.background = '#333';
+    });
+    card.addEventListener('mouseleave', () => {
+        card.style.background = '#222';
+    });
+});
+
+// Carousel effect for Home section background
+const homeSection = document.getElementById('home');
+const images = [
+    'img_background.jpg',
+    'img_background1.jpg',
+    'img_background2.jpg'
+];
+let currentImageIndex = 0;
+
+function changeBackgroundImage() {
+    currentImageIndex = (currentImageIndex + 1) % images.length;
+    const imageUrl = images[currentImageIndex];
+    homeSection.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('${imageUrl}')`;
+}
+
+setInterval(changeBackgroundImage, 15000); // Change image every 3 seconds
             });
         });
     </script>
