@@ -765,20 +765,20 @@
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
                 loadingIndicator.style.display = 'block';
 
-                // Get input values
-                const input = {
-                    C: document.getElementById('carbon').value,
-                    S: document.getElementById('sulfur').value,
-                    P: document.getElementById('phosphorus').value,
-                    Si: document.getElementById('silicon').value,
-                    Mn: document.getElementById('manganese').value,
-                    Cr: document.getElementById('chromium').value,
-                    Mo: document.getElementById('molybdenum').value,
-                    Ni: document.getElementById('nickel').value,
-                    Cu: document.getElementById('copper').value,
-                    V: document.getElementById('vanadium').value,
-                    W: document.getElementById('tungsten').value
-                };
+               // Get input values
+const input = {
+    C: document.getElementById('carbon').value || '0',
+    S: document.getElementById('sulfur').value || '0',
+    P: document.getElementById('phosphorus').value || '0',
+    Si: document.getElementById('silicon').value || '0',
+    Mn: document.getElementById('manganese').value || '0',
+    Cr: document.getElementById('chromium').value || '0',
+    Mo: document.getElementById('molybdenum').value || '0',
+    Ni: document.getElementById('nickel').value || '0',
+    Cu: document.getElementById('copper').value || '0',
+    V: document.getElementById('vanadium').value || '0',
+    W: document.getElementById('tungsten').value || '0'
+};
 
                 setTimeout(() => {
                     try {
