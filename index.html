@@ -210,7 +210,9 @@
         }
 
         .project-card img, .article-card img {
-            max-width: 100%;
+            width: 100%;
+            height: 200px; /*Fixed height for consistency */
+            object-fit: cover; /*Ensures image fills space without distortion*/
             border-radius: 8px;
             margin-bottom: 1rem;
         }
