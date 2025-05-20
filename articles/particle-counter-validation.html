@@ -7,44 +7,60 @@
     <title>Can Your Particle Counter Be Trusted? - Ezhilarasan Kandiah</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <link rel="stylesheet" href="../style.css"> 
 
     <script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
+        // Initialize global variables safely
+        var gk_isXlsx = typeof gk_isXlsx !== 'undefined' ? gk_isXlsx : false;
+        var gk_xlsxFileLookup = typeof gk_xlsxFileLookup !== 'undefined' ? gk_xlsxFileLookup : {};
+        var gk_fileData = typeof gk_fileData !== 'undefined' ? gk_fileData : {};
 
         function filledCell(cell) {
             return cell !== '' && cell != null;
         }
 
         function loadFileData(filename) {
-            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            if (gk_isXlsx && gk_xlsxFileLookup[filename] && gk_fileData[filename]) {
                 try {
-                    // Assuming XLSX library is loaded.  If not, add: <script src="https://sheetjs.com/js/xlsx.full.min.js"></script>
+                    // Ensure XLSX is defined
+                    if (typeof XLSX === 'undefined') {
+                        console.error('SheetJS (XLSX) library is not loaded.');
+                        return "";
+                    }
+
+                    // Read the workbook from base64-encoded data
                     var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
                     var firstSheetName = workbook.SheetNames[0];
                     var worksheet = workbook.Sheets[firstSheetName];
 
+                    // Convert sheet to JSON array
                     var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
                     var filteredData = jsonData.filter(row => row.some(filledCell));
 
-                    var headerRowIndex = filteredData.findIndex((row, index) =>
-                        row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                    );
-                    if (headerRowIndex === -1 || headerRowIndex > 25) {
+                    // Find header row index safely
+                    var headerRowIndex = 0;
+                    for (let i = 0; i < filteredData.length - 1; i++) {
+                        if (filteredData[i].filter(filledCell).length >= filteredData[i + 1].filter(filledCell).length) {
+                            headerRowIndex = i;
+                            break;
+                        }
+                    }
+                    if (headerRowIndex > 25) {
                         headerRowIndex = 0;
                     }
 
-                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
-                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                    // Convert filtered data to CSV
+                    var csvSheet = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                    var csv = XLSX.utils.sheet_to_csv(csvSheet, { header: 1 });
                     return csv;
                 } catch (e) {
-                    console.error(e);
+                    console.error('Error processing XLSX file:', e);
                     return "";
                 }
             }
+            // Return raw data or empty string if not XLSX or file not found
             return gk_fileData[filename] || "";
         }
     </script>
@@ -172,7 +188,7 @@
 
         .navbar h1 {
             margin: 0;                      /* Remove default heading margin */
-            font-size: 1.8rem;                /* Adjust font size as needed */
+            font-size: 1.8rem;              /* Adjust font size as needed */
             color: #fff;
         }
 
@@ -180,7 +196,7 @@
             list-style: none;               /* Remove bullet points */
             display: flex;                  /* Use flexbox for horizontal layout */
             margin: 0;                      /* Remove default ul margin */
-            padding: 0;                      /* Remove default ul padding */
+            padding: 0;                     /* Remove default ul padding */
         }
 
         .navbar ul li {
@@ -190,12 +206,12 @@
         .navbar ul li a {
             color: #fff;                    /* White text color */
             text-decoration: none;          /* Remove underlines */
-            font-size: 1.1rem;                /* Adjust font size */
+            font-size: 1.1rem;              /* Adjust font size */
             transition: color 0.3s ease;    /* Smooth color transition on hover */
         }
 
         .navbar ul li a:hover {
-            color: #ffd700;                  /* Change color on hover (e.g., to yellow) */
+            color: #ffd700;                 /* Change color on hover (e.g., to yellow) */
         }
 
         .nav-toggle {
@@ -215,7 +231,7 @@
                 display: none;              /* Hide the nav list by default on small screens */
                 flex-direction: column;    /* Stack the nav items vertically */
                 background-color: #1a1a1a;  /* Dark background for the dropdown menu */
-                position: absolute;          /* Position the menu absolutely */
+                position: absolute;         /* Position the menu absolutely */
                 top: 100%;                  /* Position it below the navbar */
                 left: 0;
                 width: 100%;
@@ -315,7 +331,7 @@
         <p>Minitab or similar statistical software makes MSA analysis straightforward. Focus your analysis on overall measurement system variation (% Gage R&R), repeatability (equipment variation), reproducibility (operator variation), and part-to-part variation (actual differences between filter membranes).</p>
 
         <h3>Interpreting Your Results</h3>
-        <p>According to AIAG guidelines, if your Gage R&R is less than 10%, your particle counting system is reliable and decisions based on its data can be trusted. If your Gage R&R is between 10-30%, your system may be acceptable for some applications, but consider improvements, especially for critical cleanliness requirements. diffuser If your Gage R&R exceeds 30%, your measurement system requires significant intervention before results can be trusted for decision-making.</p>
+        <p>According to AIAG guidelines, if your Gage R&R is less than 10%, your particle counting system is reliable and decisions based on its data can be trusted. If your Gage R&R is between 10-30%, your system may be acceptable for some applications, but consider improvements, especially for critical cleanliness requirements. If your Gage R&R exceeds 30%, your measurement system requires significant intervention before results can be trusted for decision-making.</p>
         <p>If your Gage R&R exceeds 30%, you need comprehensive process examination—from sample preparation through analysis parameters. This typically indicates fundamental issues in your particle counting methodology that must be addressed before cleanliness reports can be considered reliable.</p>
         
         <h2>Need Additional Support?</h2>
