@@ -725,7 +725,6 @@
             const weight = weights[element] || 1;
             totalDiff += Math.abs(inputVal - materialVal) * weight;
             elementsCounted += weight;
-        }
     }
 
     if (elementsCounted === 0) return 0;
