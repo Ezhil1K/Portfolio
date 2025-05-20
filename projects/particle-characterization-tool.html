@@ -1225,19 +1225,26 @@
             }
 
             // Calculate match percentage with weighted elements
-            function calculateMatch(input, material) {
-                let totalDiff = 0;
-                let elementsCounted = 0;
-                const weights = { C: 2, Mn: 1.5, Cr: 2, Mo: 2, Ni: 1, S: 0.5, P: 0.5, Si: 0.8, Cu: 0.5, V: 1, W: 1 };
+function calculateMatch(input, material) {
+    let totalDiff = 0;
+    let elementsCounted = 0;
+    const weights = { C: 2, Mn: 1.5, Cr: 2, Mo: 2, Ni: 1, S: 0.5, P: 0.5, Si: 0.8, Cu: 0.5, V: 1, W: 1 };
 
-                for (const [element, value] of Object.entries(input)) {
-                    if (value !== '' && !isNaN(value)) {
-                        const inputVal = parseFloat(value);
-                        const materialVal = material.composition[element] || 0;
-                        const weight = weights[element] || 1;
-                        totalDiff += Math.abs(inputVal - materialVal) * weight;
-                        elementsCounted += weight;
-                    }
+    for (const [element, value] of Object.entries(input)) {
+        // Check if the value is not empty and is a valid number
+        if (value !== '' && !isNaN(value) && value !== null) {
+            const inputVal = parseFloat(value);
+            const materialVal = material.composition[element] || 0;
+            const weight = weights[element] || 1;
+            totalDiff += Math.abs(inputVal - materialVal) * weight;
+            elementsCounted += weight;
+        }
+    }
+
+    if (elementsCounted === 0) return 0;
+    const avgDiff = totalDiff / elementsCounted;
+    return Math.max(0, 100 - (avgDiff * 100));
+}
                 }
 
                 if (elementsCounted === 0) return 0;
@@ -1254,20 +1261,20 @@
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
                 submitBtn.disabled = true;
 
-                // Get input values
-                const input = {
-                    C: document.getElementById('carbon').value,
-                    S: document.getElementById('sulfur').value,
-                    P: document.getElementById('phosphorus').value,
-                    Si: document.getElementById('silicon').value,
-                    Mn: document.getElementById('manganese').value,
-                    Cr: document.getElementById('chromium').value,
-                    Mo: document.getElementById('molybdenum').value,
-                    Ni: document.getElementById('nickel').value,
-                    Cu: document.getElementById('copper').value,
-                    V: document.getElementById('vanadium').value,
-                    W: document.getElementById('tungsten').value
-                };
+// Get input values
+const input = {
+    C: document.getElementById('carbon').value || '0',
+    S: document.getElementById('sulfur').value || '0',
+    P: document.getElementById('phosphorus').value || '0',
+    Si: document.getElementById('silicon').value || '0',
+    Mn: document.getElementById('manganese').value || '0',
+    Cr: document.getElementById('chromium').value || '0',
+    Mo: document.getElementById('molybdenum').value || '0',
+    Ni: document.getElementById('nickel').value || '0',
+    Cu: document.getElementById('copper').value || '0',
+    V: document.getElementById('vanadium').value || '0',
+    W: document.getElementById('tungsten').value || '0'
+};
 
                 // Calculate matches
                 const matches = materialGrades.map(material => {
