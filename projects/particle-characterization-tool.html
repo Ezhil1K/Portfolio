@@ -738,24 +738,26 @@
                 return elements.join(' ');
             }
 
-            // Calculate match percentage
-            function calculateMatch(input, material) {
-                let totalDiff = 0;
-                let elementsCounted = 0;
-                const weights = { C: 2, Mn: 1.5, Cr: 2, Mo: 2, Ni: 1, S: 0.5, P: 0.5, Si: 0.8, Cu: 0.5, V: 1, W: 1 };
+           function calculateMatch(input, material) {
+    let totalDiff = 0;
+    let elementsCounted = 0;
+    const weights = { C: 2, Mn: 1.5, Cr: 2, Mo: 2, Ni: 1, S: 0.5, P: 0.5, Si: 0.8, Cu: 0.5, V: 1, W: 1 };
 
-                for (const [element, value] of Object.entries(input)) {
-                    const inputVal = parseFloat(value) || 0;
-                    const materialVal = material.composition[element] || 0;
-                    const weight = weights[element] || 1;
-                    totalDiff += Math.abs(inputVal - materialVal) * weight;
-                    elementsCounted += weight;
-                }
+    for (const [element, value] of Object.entries(input)) {
+        // Check if the value is not empty and is a valid number
+        if (value !== '' && !isNaN(value) && value !== null) {
+            const inputVal = parseFloat(value);
+            const materialVal = material.composition[element] || 0;
+            const weight = weights[element] || 1;
+            totalDiff += Math.abs(inputVal - materialVal) * weight;
+            elementsCounted += weight;
+        }
+    }
 
-                if (elementsCounted === 0) return 0;
-                const avgDiff = totalDiff / elementsCounted;
-                return Math.max(0, 100 - (avgDiff * 100));
-            }
+    if (elementsCounted === 0) return 0;
+    const avgDiff = totalDiff / elementsCounted;
+    return Math.max(0, 100 - (avgDiff * 100));
+}
 
             // Handle form submission
             form.addEventListener('submit', function(e) {
