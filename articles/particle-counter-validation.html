@@ -22,7 +22,7 @@
         function loadFileData(filename) {
             if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
                 try {
-                    // Assuming XLSX library is loaded somewhere else (e.g., in your common script.js or another specific script)
+                    // Assuming XLSX library is loaded.  If not, add: <script src="https://sheetjs.com/js/xlsx.full.min.js"></script>
                     var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
                     var firstSheetName = workbook.SheetNames[0];
                     var worksheet = workbook.Sheets[firstSheetName];
@@ -50,36 +50,38 @@
     </script>
 
     <style>
-        /* Article-specific styles that are NOT in your main style.css */
-        /* If these styles are generic for all articles, move them to style.css */
+        /* Article-specific styles */
+        body {
+            background-color: #1a1a1a !important; /* Ensure black background */
+        }
         .article-content {
             max-width: 800px;
-            margin: 6rem auto 2rem; /* Adjusted top margin to account for fixed navbar */
+            margin: 6rem auto 2rem;
             padding: 0 2rem;
-            color: #f8f8f2; /* Use a color from your main site's theme if possible */
+            color: #f8f8f2;
         }
 
         .article-content h1 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
-            color: #ffd700; /* Use your main site's accent color */
+            color: #ffd700;
         }
 
         .article-content h2 {
             font-size: 1.8rem;
             margin: 1.5rem 0 1rem;
-            color: #ffd700; /* Use your main site's accent color */
+            color: #ffd700;
         }
 
         .article-content h3 {
             font-size: 1.4rem;
             margin: 1rem 0 0.5rem;
-            color: #e8e8e0; /* Use a slightly muted color from your main site's theme */
+            color: #e8e8e0;
         }
 
         .article-content p {
             margin-bottom: 1rem;
-            color: #e8e8e0; /* Use a slightly muted color from your main site's theme */
+            color: #e8e8e0;
         }
 
         .article-content ul {
@@ -89,7 +91,7 @@
         }
 
         .article-content a {
-            color: #ffd700; /* Use your main site's accent color */
+            color: #ffd700;
             text-decoration: none;
         }
 
@@ -103,17 +105,17 @@
             margin: 1rem 0;
             cursor: pointer;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Match shadow from main site */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
         .image-caption {
             font-style: italic;
-            color: #aaa; /* Slightly lighter gray for captions */
+            color: #aaa;
             text-align: center;
             margin-bottom: 1rem;
         }
 
-        /* Lightbox styles (these are specific to articles, so keep them here or in a dedicated article-js/css) */
+        /* Lightbox styles */
         .lightbox {
             display: none;
             position: fixed;
@@ -137,10 +139,10 @@
             display: flex;
         }
 
-        /* Responsive adjustments for article content if needed */
+        /* Responsive adjustments for article content */
         @media (max-width: 768px) {
             .article-content {
-                margin-top: 5rem; /* Adjust for smaller screens if navbar collapses */
+                margin-top: 5rem;
                 padding: 0 1rem;
             }
         }
@@ -158,7 +160,7 @@
                 <li><a href="../index.html#projects">Projects</a></li>
                 <li><a href="../index.html#articles">Articles</a></li>
                 <li><a href="../index.html#contact">Contact</a></li>
-                </ul>
+            </ul>
         </div>
     </nav>
 
@@ -237,23 +239,7 @@
     <script src="../script.js"></script>
 
     <script>
-        // Smooth scrolling for navigation links (if not already handled by common script.js)
-        // Note: Your main script.js already has smooth scrolling for anchors. 
-        // If your main script.js targets all 'a[href^="#"]', you don't need this block here.
-        // I've kept it for the lightbox functionality which is unique to this article for now.
-        document.querySelectorAll('nav ul li a').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                // Only prevent default for internal links within the same page/section (which there are none in the nav for articles)
-                // For links like "../index.html#home", the browser will handle it.
-                if (this.getAttribute('href').startsWith('#')) {
-                    e.preventDefault();
-                    const sectionId = this.getAttribute('href').substring(1);
-                    document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-
-        // Lightbox effect for images (keep this here if it's only for articles)
+        // Lightbox effect for images
         const images = document.querySelectorAll('.article-image');
         const lightbox = document.getElementById('lightbox');
         const lightboxImage = document.getElementById('lightbox-image');
@@ -270,6 +256,5 @@
             lightbox.classList.remove('active');
         });
     </script>
-
 </body>
 </html>
