@@ -136,16 +136,21 @@
         }
 
         #about .container {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
+            display: flex;
+            flex-direction: column;
             gap: 2rem;
             align-items: center;
+            text-align: center;
         }
 
         #about img {
-            max-width: 100%;
+            max-width: 200px;
             border-radius: 50%;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #about .about-text {
+            color: #000;
         }
 
         #skills .skills-grid {
@@ -259,7 +264,7 @@
             }
 
             #about .container {
-                grid-template-columns: 1fr;
+                flex-direction: column;
                 text-align: center;
             }
 
@@ -317,7 +322,7 @@
     <section id="about">
         <div class="container">
             <img src="profile.jpg" alt="Ezhilarasan Kandiah" width="200">
-            <div>
+            <div class="about-text">
                 <h2>About Me</h2>
                 <p>As a dedicated Technical Specialist with 13 years of industrial expertise, I redefine quality through my mastery of technical cleanliness in the automotive sector. Over the past 7 years, I have led cleanliness laboratories, conducted rigorous cleanroom audits, and developed innovative contamination control strategies, ensuring compliance with ISO 14644 and ISO 16232/VDA 19.1 standards.</p>
                 <p>My expertise in particle characterization, material characterization, metallurgical analysis, and failure analysis enables me to deliver unparalleled material insights. Passionate about training cross-functional teams, I foster collaboration and drive excellence. A proactive innovator, I am committed to maintaining the highest standards of cleanliness.</p>
