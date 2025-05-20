@@ -1,0 +1,446 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script>```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio of Ezhilarasan Kandiah, Technical Specialist in automotive cleanliness and quality assurance.">
+    <title>Ezhilarasan Kandiah | Technical Specialist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: #111;
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+        }
+
+        .navbar ul li {
+            margin-left: 2rem;
+        }
+
+        .navbar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .navbar ul li a:hover {
+            color: #ffd700;
+        }
+
+        .nav-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        section {
+            padding: 5rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        #home {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../images/background.jpg');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+        }
+
+        #home h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        #home p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: #ffd700;
+            color: #111;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #e6c200;
+        }
+
+        #about .container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        #about img {
+            max-width: 100%;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #skills .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-card {
+            background: #222;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+        }
+
+        #projects .projects-grid, #articles .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card, .article-card {
+            background: #222;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .project-card:hover, .article-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-card img, .article-card img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        #contact form {
+            display: grid;
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        #contact input, #contact textarea {
+            padding: 0.8rem;
+            border: none;
+            border-radius: 5px;
+            background: #333;
+            color: #fff;
+        }
+
+        #contact button {
+            background: #ffd700;
+            color: #111;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #contact button:hover {
+            background: #e6c200;
+        }
+
+        .social-icons {
+            margin-top: 1rem;
+        }
+
+        .social-icons a {
+            color: #fff;
+            margin: 0 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .social-icons a:hover {
+            color: #ffd700;
+        }
+
+        footer {
+            background: #111;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar ul {
+                display: none;
+                flex-direction: column;
+                background: #111;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .navbar ul.active {
+                display: flex;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            #about .container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1>Ezhilarasan Kandiah</h1>
+            <span class="nav-toggle"><i class="fas fa-bars"></i></span>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#articles">Articles</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home">
+        <div class="container">
+            <h1>Ezhilarasan Kandiah</h1>
+            <p>Technical Specialist in Automotive Cleanliness</p>
+            <a href="../cv/ezhilarasan_cv.pdf" class="btn" download>Download CV</a>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <img src="../images/profile.jpg" alt="Ezhilarasan Kandiah" width="200">
+            <div>
+                <h2>About Me</h2>
+                <p>As a dedicated Technical Specialist with 13 years of industrial expertise, I redefine quality through my mastery of technical cleanliness in the automotive sector. Over the past 7 years, I have led cleanliness laboratories, conducted rigorous cleanroom audits, and developed innovative contamination control strategies, ensuring compliance with ISO 14644 and ISO 16232/VDA 19.1 standards.</p>
+                <p>My expertise in particle characterization, material characterization, metallurgical analysis, and failure analysis enables me to deliver unparalleled material insights. Passionate about training cross-functional teams, I foster collaboration and drive excellence. A proactive innovator, I am committed to maintaining the highest standards of cleanliness.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills">
+        <div class="container">
+            <h2>Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h3>Particle Characterization</h3>
+                    <p>Expertise in analyzing particle contamination per ISO 16232 standards.</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Material Characterization</h3>
+                    <p>Skilled in advanced material analysis techniques for automotive components.</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Metallurgical Analysis</h3>
+                    <p>Proficient in metallurgical failure analysis for quality assurance.</p>
+                </div>
+                <div class="skill-card">
+                    <h3>Cleanroom Auditing</h3>
+                    <p>Led ISO 14644-compliant cleanroom audits for automotive facilities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="container">
+            <h2>Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <img src="../images/cleanroom-audit.jpg" alt="Cleanroom Audit System">
+                    <h3>Cleanroom Audit System</h3>
+                    <p>Developed a system to automate cleanroom audits per ISO 14644 standards, improving efficiency.</p>
+                    <a href="#" class="btn">View Details</a>
+                </div>
+                <div class="project-card">
+                    <img src="../images/contamination-tool.jpg" alt="Contamination Control Tool">
+                    <h3>Contamination Control Tool</h3>
+                    <p>Designed a tool for particle characterization in automotive parts, reducing defects.</p>
+                    <a href="#" class="btn">View Details</a>
+                </div>
+                <div class="project-card">
+                    <img src="../images/failure-dashboard.jpg" alt="Failure Analysis Dashboard">
+                    <h3>Failure Analysis Dashboard</h3>
+                    <p>Built a dashboard for metallurgical failure analysis, enhancing data visualization for engineers.</p>
+                    <a href="#" class="btn">View Details</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="articles">
+        <div class="container">
+            <h2>Articles</h2>
+            <div class="articles-grid">
+                <div class="article-card">
+                    <img src="../images/particle-counter.jpg" alt="Particle Counter Validation">
+                    <h3>Can Your Particle Counter Be Trusted?</h3>
+                    <p>A guide to validating particle counters for reliable technical cleanliness in automotive manufacturing.</p>
+                    <a href="articles/particle-counter-validation.html" class="btn">Read More</a>
+                </div>
+                <div class="article-card">
+                    <img src="../images/particle-contamination.jpg" alt="Particle Contamination">
+                    <h3>Particle Contamination in Automotive Manufacturing</h3>
+                    <p>A deep dive into effective strategies for reducing particle contamination in automotive components.</p>
+                    <a href="articles/particle-contamination.html" class="btn">Read More</a>
+                </div>
+                <div class="article-card">
+                    <img src="../images/failure-analysis.jpg" alt="Failure Analysis Techniques">
+                    <h3>Metallurgical Failure Analysis Techniques</h3>
+                    <p>Insights into advanced methods for identifying and resolving material failures in automotive parts.</p>
+                    <a href="articles/failure-analysis.html" class="btn">Read More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <h2>Contact Me</h2>
+            <form>
+                <input type="text" placeholder="Name" required>
+                <input type="email" placeholder="Email" required>
+                <textarea placeholder="Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+            <div class="social-icons">
+                <a href="https://linkedin.com/in/ezhilarasan" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/ezhilarasan" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="mailto:ezhilarasan@example.com"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Ezhilarasan Kandiah. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Mobile menu toggle
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.navbar ul');
+
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Hover effect for cards
+        document.querySelectorAll('.skill-card, .project-card, .article-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.background = '#333';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.background = '#222';
+            });
+        });
+    </script>
+</body>
+</html>
+```
