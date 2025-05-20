@@ -3,519 +3,466 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Material Grade Matcher tool for particle characterization, part of Ezhilarasan Kandiah's portfolio.">
-    <title>Material Grade Matcher - Ezhilarasan Kandiah</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
-    <link rel="stylesheet" href="./style.css"> 
-
+    <title>Material Grade Matcher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Article-specific styles to match main site */
-        body {
-            background-color: #1a1a1a !important; /* Ensure black background */
-            font-family: 'Arial', sans-serif;
+        :root {
+            --primary: #FFD700;
+            --secondary: #FF6B00;
+            --dark: #1A1A1A;
+            --medium: #2A2A2A;
+            --light: #F8F8F2;
+            --border: #444;
         }
-
-        .article-content {
-            max-width: 800px;
-            margin: 6rem auto 2rem;
-            padding: 0 2rem;
-            color: #f8f8f2;
-        }
-
-        .article-content h1, .article-content h2, .article-content h3 {
-            color: #ffd700;  /* Yellow headings */
-        }
-
-        .article-content h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .article-content h2 {
-            font-size: 1.8rem;
-            margin: 1.5rem 0 1rem;
-        }
-
-        .article-content h3 {
-            font-size: 1.4rem;
-            margin: 1rem 0 0.5rem;
-        }
-
-        .article-content p {
-            margin-bottom: 1rem;
-            color: #e8e8e0;
-            font-size: 1rem;
-        }
-
-        .article-content a {
-            color: #ffd700;
-            text-decoration: none;
-        }
-
-        .article-content a:hover {
-            text-decoration: underline;
-        }
-
-        /* Form Styles */
-        .material-matcher-form {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            margin: 1rem 0;
-        }
-
-        .form-row {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .form-row label {
-            width: 80px;
-            padding: 0.75rem;
-            text-align: center;
-            color: #ffd700;
-            font-size: 0.9rem;
-            background-color: #2a2a2a;
-            border: 1px solid #333;
-            border-radius: 4px;
-        }
-
-        .form-row input {
-            flex: 1;
-            padding: 0.5rem;
-            border: 1px solid #333;
-            border-radius: 4px;
-            background-color: #2a2a2a;
-            color: #f8f8f2;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-
-        .material-matcher-form button {
-            padding: 0.75rem;
-            background-color: #ffd700;
-            color: #1a1a1a;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s ease;
-            margin-top: 0.5rem;
-        }
-
-        .material-matcher-form button:hover {
-            background-color: #e6c200;
-        }
-
-        .table-wrapper {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-        }
-
-        .material-matcher-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0.5rem 0 2rem 0;
-        }
-
-        .material-matcher-table th, .material-matcher-table td {
-            border: 1px solid #333;
-            padding: 0.75rem;
-            text-align: center;
-            color: #e8e8e0;
-            font-size: 0.9rem;
-        }
-
-        .material-matcher-table th {
-            background-color: #2a2a2a;
-            color: #ffd700;
-        }
-
-        .material-matcher-table tr:nth-child(even) {
-            background-color: #222222;
-        }
-
-        /* Navbar Styles */
-        .navbar {
-            background-color: #1a1a1a;
-            color: #fff;
-            padding: 1rem 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        }
-
-        .navbar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        .navbar h1 {
-            margin: 0;
-            font-size: 1.8rem;
-            color: #fff;
-        }
-
-        .navbar ul {
-            list-style: none;
-            display: flex;
+        
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-
-        .navbar ul li {
-            margin-left: 1.5rem;
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
         }
-
-        .navbar ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-size: 1.1rem;
-            transition: color 0.3s ease;
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
-
-        .navbar ul li a:hover {
-            color: #ffd700;
+        
+        /* Header */
+        header {
+            background-color: var(--dark);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
-
-        .nav-toggle {
-            display: none;
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
             font-size: 1.5rem;
-            color: #fff;
-            cursor: pointer;
+            font-weight: 700;
+            color: var(--primary);
         }
-
-        footer {
-            background: #111;
+        
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+        
+        .tool-title {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
             text-align: center;
-            padding: 1rem;
-            color: #fff;
         }
-
-        /* Responsive Styles */
+        
+        .tool-description {
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #CCC;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Form */
+        .input-form {
+            background-color: var(--medium);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .form-title {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-group label {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--primary);
+        }
+        
+        .input-group input {
+            padding: 0.7rem;
+            background-color: #333;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--light);
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        
+        .submit-btn {
+            background-color: var(--primary);
+            color: var(--dark);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 1rem auto 0;
+            width: 200px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #E6C200;
+            transform: translateY(-2px);
+        }
+        
+        /* Results */
+        .results-section {
+            background-color: var(--medium);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .results-title {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        
+        .results-table th {
+            background-color: #333;
+            color: var(--primary);
+            padding: 0.8rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .results-table td {
+            padding: 0.8rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .results-table tr:nth-child(even) {
+            background-color: #252525;
+        }
+        
+        .results-table tr:hover {
+            background-color: #333;
+        }
+        
+        .match-percent {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #AAA;
+            font-style: italic;
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .article-content {
-                margin-top: 6rem; /* Adjusted for navbar height */
-                padding: 1rem; /* More padding for breathing room */
+            .form-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             }
-
-            .article-content h1 {
-                font-size: 2rem;
-            }
-
-            .article-content h2 {
-                font-size: 1.5rem;
-                margin: 1rem 0 0.75rem;
-            }
-
-            .article-content h3 {
-                font-size: 1.2rem;
-            }
-
-            .article-content p {
-                font-size: 1rem;
-            }
-
-            .nav-toggle {
+            
+            .results-table {
                 display: block;
+                overflow-x: auto;
             }
-
-            .navbar ul {
-                display: none;
-                flex-direction: column;
-                background-color: #1a1a1a;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                text-align: center;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            }
-
-            .navbar ul.active {
-                display: flex;
-            }
-
-            .navbar ul li {
-                margin: 0;
-                padding: 1rem 0;
-                border-bottom: 1px solid #333;
-            }
-
-            .navbar ul li:last-child {
-                border-bottom: none;
-            }
-
-            .navbar ul li a {
-                display: block;
-                font-size: 1rem;
-            }
-
-            .navbar h1 {
-                font-size: 1.5rem;
-            }
-
-            .form-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .form-row label {
-                width: 100%;
-                padding: 0.5rem;
-                font-size: 0.9rem;
-            }
-
-            .form-row input {
-                padding: 0.75rem;
-                font-size: 1rem;
-            }
-
-            .material-matcher-form button {
-                padding: 1rem;
-                font-size: 1.1rem;
-            }
-
-            .material-matcher-table th, .material-matcher-table td {
-                font-size: 0.9rem;
-                padding: 0.5rem;
+            
+            .tool-title {
+                font-size: 1.7rem;
             }
         }
-
+        
         @media (max-width: 480px) {
-            .article-content h1 {
-                font-size: 1.8rem;
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
             }
-
-            .article-content h2 {
-                font-size: 1.3rem;
+            
+            .submit-btn {
+                width: 100%;
             }
-
-            .article-content p {
-                font-size: 0.95rem;
-            }
-
-            .form-row label, .form-row input {
-                font-size: 0.9rem;
-            }
-
-            .material-matcher-table th, .material-matcher-table td {
+            
+            .results-table th, 
+            .results-table td {
+                padding: 0.6rem 0.4rem;
                 font-size: 0.85rem;
             }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
+    <header>
+        <div class="container header-content">
+            <div class="logo">Material Matcher</div>
+            <div class="author">Ezhilarasan Kandiah</div>
+        </div>
+    </header>
+    
+    <main>
         <div class="container">
-            <h1>Ezhilarasan Kandiah</h1>
-            <span class="nav-toggle"><i class="fas fa-bars"></i></span>
-            <ul>
-                <li><a href="../index.html#home">Home</a></li>
-                <li><a href="../index.html#about">About</a></li>
-                <li><a href="../index.html#skills">Skills</a></li>
-                <li><a href="../index.html#projects">Projects</a></li>
-                <li><a href="../index.html#articles">Articles</a></li>
-                <li><a href="../index.html#contact">Contact</a></li>
-            </ul>
+            <h1 class="tool-title">Material Grade Matcher</h1>
+            <p class="tool-description">
+                Enter the chemical composition to find matching material grades from our database.
+                Results are sorted by match percentage.
+            </p>
+            
+            <div class="input-form">
+                <h2 class="form-title">Input Composition</h2>
+                <form id="compositionForm">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="carbon">Carbon (C%)</label>
+                            <input type="number" step="0.01" id="carbon" placeholder="0.00">
+                        </div>
+                        <div class="input-group">
+                            <label for="sulfur">Sulfur (S%)</label>
+                            <input type="number" step="0.01" id="sulfur" placeholder="0.00">
+                        </div>
+                        <div class="input-group">
+                            <label for="phosphorus">Phosphorus (P%)</label>
+                            <input type="number" step="0.01" id="phosphorus" placeholder="0.00">
+                        </div>
+                        <div class="input-group">
+                            <label for="silicon">Silicon (Si%)</label>
+                            <input type="number" step="0.01" id="silicon" placeholder="0.00">
+                        </div>
+                        <div class="input-group">
+                            <label for="manganese">Manganese (Mn%)</label>
+                            <input type="number" step="0.01" id="manganese" placeholder="0.00">
+                        </div>
+                        <div class="input-group">
+                            <label for="chromium">Chromium (Cr%)</label>
+                            <input type="number" step="0.01" id="chromium" placeholder="0.00">
+                        </div>
+                        <div class="input-group">
+                            <label for="molybdenum">Molybdenum (Mo%)</label>
+                            <input type="number" step="0.01" id="molybdenum" placeholder="0.00">
+                        </div>
+                        <div class="input-group">
+                            <label for="nickel">Nickel (Ni%)</label>
+                            <input type="number" step="0.01" id="nickel" placeholder="0.00">
+                        </div>
+                        <div class="input-group">
+                            <label for="copper">Copper (Cu%)</label>
+                            <input type="number" step="0.01" id="copper" placeholder="0.00">
+                        </div>
+                        <div class="input-group">
+                            <label for="vanadium">Vanadium (V%)</label>
+                            <input type="number" step="0.01" id="vanadium" placeholder="0.00">
+                        </div>
+                        <div class="input-group">
+                            <label for="tungsten">Tungsten (W%)</label>
+                            <input type="number" step="0.01" id="tungsten" placeholder="0.00">
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-search"></i> Find Matches
+                    </button>
+                </form>
+            </div>
+            
+            <div class="results-section">
+                <h2 class="results-title">Matching Grades</h2>
+                <div class="table-wrapper">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Grade</th>
+                                <th>Standard</th>
+                                <th>Match</th>
+                                <th>Key Elements</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                            <tr>
+                                <td colspan="4" class="no-results">
+                                    Enter composition values and click "Find Matches"
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-    </nav>
-
-    <div class="article-content">
-        <h1>Material Grade Matcher - Particle Characterization Tool</h1>
-        <p class="published-info">Developed by Ezhilarasan Kandiah</p>
-        <p>This tool allows you to input the chemical composition of a material and find matching material grades based on their elemental percentages. Enter the percentages for each element below and click "Find Matches" to see the results.</p>
-
-        <h2>Input Material Composition</h2>
-        <form id="material-matcher-form" class="material-matcher-form">
-            <div class="form-row">
-                <label for="carbon">C %</label>
-                <input type="number" step="0.01" id="carbon" placeholder="%">
-            </div>
-            <div class="form-row">
-                <label for="sulfur">S %</label>
-                <input type="number" step="0.01" id="sulfur" placeholder="%">
-            </div>
-            <div class="form-row">
-                <label for="phosphorus">P %</label>
-                <input type="number" step="0.01" id="phosphorus" placeholder="%">
-            </div>
-            <div class="form-row">
-                <label for="silicon">Si %</label>
-                <input type="number" step="0.01" id="silicon" placeholder="%">
-            </div>
-            <div class="form-row">
-                <label for="manganese">Mn %</label>
-                <input type="number" step="0.01" id="manganese" placeholder="%">
-            </div>
-            <div class="form-row">
-                <label for="chromium">Cr %</label>
-                <input type="number" step="0.01" id="chromium" placeholder="%">
-            </div>
-            <div class="form-row">
-                <label for="molybdenum">Mo %</label>
-                <input type="number" step="0.01" id="molybdenum" placeholder="%">
-            </div>
-            <div class="form-row">
-                <label for="nickel">Ni %</label>
-                <input type="number" step="0.01" id="nickel" placeholder="%">
-            </div>
-            <div class="form-row">
-                <label for="copper">Cu %</label>
-                <input type="number" step="0.01" id="copper" placeholder="%">
-            </div>
-            <div class="form-row">
-                <label for="vanadium">V %</label>
-                <input type="number" step="0.01" id="vanadium" placeholder="%">
-            </div>
-            <div class="form-row">
-                <label for="tungsten">W %</label>
-                <input type="number" step="0.01" id="tungsten" placeholder="%">
-            </div>
-            <button type="submit">Find Matches</button>
-        </form>
-
-        <h2>Matching Material Grades</h2>
-        <div class="table-wrapper">
-            <table id="material-matcher-table" class="material-matcher-table">
-                <tbody id="material-matcher-results">
-                    <tr>
-                        <th>Grade</th>
-                    </tr>
-                    <tr>
-                        <th>Standard Grade</th>
-                    </tr>
-                    <tr>
-                        <th>Match %</th>
-                    </tr>
-                    <tr>
-                        <th>Composition</th>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <p><a href="./index.html#projects">Back to Projects</a> | <a href="./index.html#contact">Contact Me</a></p>
-    </div>
-
-    <footer>
-        <p>© 2025 Ezhilarasan Kandiah. All rights reserved.</p>
-    </footer>
-
-    <script src="./script.js"></script>
+    </main>
 
     <script>
-        // Mobile menu toggle functionality
-        const navToggle = document.querySelector('.nav-toggle');
-        const navMenu = document.querySelector('.navbar ul');
-
-        navToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
-
-        // Material Grade Matcher logic
-        const form = document.getElementById('material-matcher-form');
-        const resultsTable = document.getElementById('material-matcher-results');
-
-        // Sample material grade database
-        const materialGrades = [
-            {
-                grade: 'AISI 1018',
-                standard: 'Low Carbon Steel',
-                composition: { C: 0.18, S: 0.05, P: 0.04, Si: 0.4, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-            },
-            {
-                grade: 'AISI 4140',
-                standard: 'Chromium-Molybdenum Steel',
-                composition: { C: 0.40, S: 0.04, P: 0.035, Si: 0.25, Mn: 0.85, Cr: 1.0, Mo: 0.2, Ni: 0, Cu: 0, V: 0, W: 0 }
-            },
-            {
-                grade: 'AISI 316',
-                standard: 'Stainless Steel',
-                composition: { C: 0.08, S: 0.03, P: 0.045, Si: 1.0, Mn: 2.0, Cr: 17.0, Mo: 2.5, Ni: 11.0, Cu: 0, V: 0, W: 0 }
-            }
-        ];
-
-        // Calculate match percentage
-        function calculateMatchPercentage(input, reference) {
-            const elements = ['C', 'S', 'P', 'Si', 'Mn', 'Cr', 'Mo', 'Ni', 'Cu', 'V', 'W'];
-            let totalDiff = 0;
-            let validElements = 0;
-
-            elements.forEach(element => {
-                if (input[element] !== '' && input[element] !== null) {
-                    const diff = Math.abs((input[element] || 0) - (reference[element] || 0));
-                    totalDiff += diff;
-                    validElements++;
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('compositionForm');
+            const resultsBody = document.getElementById('resultsBody');
+            const submitBtn = document.querySelector('.submit-btn');
+            
+            // Material database
+            const materialGrades = [
+                {
+                    grade: 'AISI 1018',
+                    standard: 'Low Carbon Steel',
+                    composition: { C: 0.18, S: 0.05, P: 0.04, Si: 0.4, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'AISI 1045',
+                    standard: 'Medium Carbon Steel',
+                    composition: { C: 0.45, S: 0.05, P: 0.04, Si: 0.25, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'AISI 4140',
+                    standard: 'Chromium-Molybdenum',
+                    composition: { C: 0.40, S: 0.04, P: 0.035, Si: 0.25, Mn: 0.85, Cr: 1.0, Mo: 0.2, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'AISI 316',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.03, P: 0.045, Si: 1.0, Mn: 2.0, Cr: 17.0, Mo: 2.5, Ni: 11.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'AISI 304',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.03, P: 0.045, Si: 1.0, Mn: 2.0, Cr: 18.0, Mo: 0, Ni: 8.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'AISI 8620',
+                    standard: 'Nickel-Chromium-Mo',
+                    composition: { C: 0.20, S: 0.04, P: 0.035, Si: 0.25, Mn: 0.80, Cr: 0.5, Mo: 0.2, Ni: 0.55, Cu: 0, V: 0, W: 0 }
                 }
-            });
-
-            if (validElements === 0) return 0;
-            const avgDiff = totalDiff / validElements;
-            return Math.max(0, 100 - (avgDiff * 100)).toFixed(2);
-        }
-
-        // Handle form submission
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            resultsTable.innerHTML = '';
-
-            const inputComposition = {
-                C: parseFloat(document.getElementById('carbon').value) || 0,
-                S: parseFloat(document.getElementById('sulfur').value) || 0,
-                P: parseFloat(document.getElementById('phosphorus').value) || 0,
-                Si: parseFloat(document.getElementById('silicon').value) || 0,
-                Mn: parseFloat(document.getElementById('manganese').value) || 0,
-                Cr: parseFloat(document.getElementById('chromium').value) || 0,
-                Mo: parseFloat(document.getElementById('molybdenum').value) || 0,
-                Ni: parseFloat(document.getElementById('nickel').value) || 0,
-                Cu: parseFloat(document.getElementById('copper').value) || 0,
-                V: parseFloat(document.getElementById('vanadium').value) || 0,
-                W: parseFloat(document.getElementById('tungsten').value) || 0
-            };
-
-            // Calculate matches
-            const matches = materialGrades.map(grade => ({
-                ...grade,
-                matchPercentage: calculateMatchPercentage(inputComposition, grade.composition)
-            }));
-
-            // Sort by match percentage (descending)
-            matches.sort((a, b) => b.matchPercentage - a.matchPercentage);
-
-            // Populate table with columns for each match
-            const rows = [
-                { label: 'Grade', values: matches.map(match => match.grade) },
-                { label: 'Standard Grade', values: matches.map(match => match.standard) },
-                { label: 'Match %', values: matches.map(match => `${match.matchPercentage}%`) },
-                { label: 'Composition', values: matches.map(match => 
-                    Object.entries(match.composition)
-                        .filter(([_, value]) => value > 0)
-                        .map(([key, value]) => `${key}: ${value}%`)
-                        .join(', ')
-                ) }
             ];
-
-            rows.forEach((row, rowIndex) => {
-                const tr = document.createElement('tr');
-                if (rowIndex === 0) {
-                    tr.innerHTML = `<th>${row.label}</th>` + row.values.map(value => `<th>${value}</th>`).join('');
-                } else {
-                    tr.innerHTML = `<th>${row.label}</th>` + row.values.map(value => `<td>${value}</td>`).join('');
+            
+            // Format key elements string
+            function getKeyElements(composition) {
+                const elements = [];
+                for (const [element, value] of Object.entries(composition)) {
+                    if (value > 0) {
+                        elements.push(`${element}:${value.toFixed(2)}%`);
+                    }
                 }
-                resultsTable.appendChild(tr);
+                return elements.slice(0, 4).join(' ');
+            }
+            
+            // Calculate match percentage
+            function calculateMatch(input, material) {
+                let totalDiff = 0;
+                let elementsCounted = 0;
+                
+                for (const [element, value] of Object.entries(input)) {
+                    if (value !== '' && !isNaN(value)) {
+                        const inputVal = parseFloat(value);
+                        const materialVal = material.composition[element] || 0;
+                        totalDiff += Math.abs(inputVal - materialVal);
+                        elementsCounted++;
+                    }
+                }
+                
+                if (elementsCounted === 0) return 0;
+                const avgDiff = totalDiff / elementsCounted;
+                return Math.max(0, 100 - (avgDiff * 100));
+            }
+            
+            // Handle form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Show loading state
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
+                submitBtn.disabled = true;
+                
+                // Get input values
+                const input = {
+                    C: document.getElementById('carbon').value,
+                    S: document.getElementById('sulfur').value,
+                    P: document.getElementById('phosphorus').value,
+                    Si: document.getElementById('silicon').value,
+                    Mn: document.getElementById('manganese').value,
+                    Cr: document.getElementById('chromium').value,
+                    Mo: document.getElementById('molybdenum').value,
+                    Ni: document.getElementById('nickel').value,
+                    Cu: document.getElementById('copper').value,
+                    V: document.getElementById('vanadium').value,
+                    W: document.getElementById('tungsten').value
+                };
+                
+                // Calculate matches
+                const matches = materialGrades.map(material => {
+                    const matchPercent = calculateMatch(input, material);
+                    return {
+                        ...material,
+                        matchPercent: matchPercent
+                    };
+                }).filter(match => match.matchPercent > 0)
+                  .sort((a, b) => b.matchPercent - a.matchPercent);
+                
+                // Display results
+                displayResults(matches);
+                
+                // Reset button
+                submitBtn.innerHTML = '<i class="fas fa-search"></i> Find Matches';
+                submitBtn.disabled = false;
             });
+            
+            // Display results in table
+            function displayResults(matches) {
+                if (matches.length === 0) {
+                    resultsBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="no-results">
+                                No matching grades found. Try adjusting your values.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                let html = '';
+                matches.forEach(match => {
+                    html += `
+                        <tr>
+                            <td>${match.grade}</td>
+                            <td>${match.standard}</td>
+                            <td class="match-percent">${match.matchPercent.toFixed(1)}%</td>
+                            <td>${getKeyElements(match.composition)}</td>
+                        </tr>
+                    `;
+                });
+                
+                resultsBody.innerHTML = html;
+            }
         });
     </script>
 </body>
