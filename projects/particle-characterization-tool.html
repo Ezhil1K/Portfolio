@@ -1430,13 +1430,18 @@
             function getKeyElements(composition) {
                 const elements = [];
                 // Define elements to exclude from display
-                const includedElements = ['C', 'Si', 'Mn', 'Cr', 'Ni', 'Mo', 'V', 'W'];
+                const includedElements = ['C', 'Si', 'Mn', 'Cr', 'Ni', 'Mo', 'V', 'Cu', 'W'];
 
-                for (const [element, value] of Object.entries(composition)) {
-                    // Include all elements except those in the excludedElements array
-                    if (!excludedElements.includes(element)) {
+                for (const element of includedElements) {
+                    const value = composition[element];
+                    // Only add if the element exists in the composition and its value is greater than 0
+                    if (value !== undefined && value > 0) {
                         elements.push(`${element}:${value.toFixed(2)}%`);
                     }
+                }
+                // Display up to 4 key elements
+                return elements.slice(0, 4).join(' ');
+            }
                 }
                 // Display up to 4 key elements
                 return elements.slice(0, 4).join(' ');
@@ -1482,7 +1487,7 @@
                                     const standard = values[headers.indexOf('Standard')] || 'N/A';
                                     const composition = {};
                                     // Map known elements from headers to composition object
-                                    ['C', 'S', 'P', 'Si', 'Mn', 'Cr', 'Mo', 'Ni', 'Cu', 'V', 'CU','W'].forEach(element => {
+                                    ['C', 'S', 'P', 'Si', 'Mn', 'Cr', 'Mo', 'Ni', 'Cu', 'V','W'].forEach(element => {
                                         const index = headers.indexOf(element);
                                         if (index !== -1 && !isNaN(parseFloat(values[index]))) {
                                             composition[element] = parseFloat(values[index]);
