@@ -1426,22 +1426,22 @@
                 return Math.max(0, 100 - (avgDiff * 100));
             }
 
-            // Function to format key elements for display
+           // Function to format key elements for display
             function getKeyElements(composition) {
                 const elements = [];
-                // Define elements to exclude from display
-                const excludedElements = ['S', 'P'];
+                // Define elements to explicitly include in display
+                const includedElements = ['C', 'Si', 'Mn', 'Cr', 'Ni', 'Mo', 'Cu', 'W', 'V'];
 
-                for (const [element, value] of Object.entries(composition)) {
-                    // Include all elements except those in the excludedElements array
-                    if (!excludedElements.includes(element)) {
+                for (const element of includedElements) {
+                    const value = composition[element];
+                    // Only add if the element exists in the composition and its value is greater than 0.1%
+                    if (value !== undefined && value > 0.1) { // Updated condition to value > 0.1
                         elements.push(`${element}:${value.toFixed(2)}%`);
                     }
                 }
-                // Display up to 4 key elements
-                return elements.slice(0, 4).join(' ');
+                // Display up to 7 key elements
+                return elements.slice(0, 7).join(' ');
             }
-
             // Handle form submission
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
