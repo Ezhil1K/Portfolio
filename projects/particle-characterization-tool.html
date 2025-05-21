@@ -1,11 +1,13 @@
 <script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
+    var gk_isXlsx = false;
+    var gk_xlsxFileLookup = {};
+    var gk_fileData = {};
+
+    function filledCell(cell) {
+        return cell !== '' && cell != null;
+    }
+
+    function loadFileData(filename) {
         if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
             try {
                 var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
@@ -19,11 +21,11 @@
 
                 // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
                 var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
                 );
                 // Fallback
                 if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
+                    headerRowIndex = 0;
                 }
 
                 // Convert filtered JSON back to CSV
@@ -36,13 +38,14 @@
             }
         }
         return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+    }
+</script>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MatSync</title>
+    <title>MatSyncr</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -97,13 +100,55 @@
             background-color: #a0aec0;
             cursor: not-allowed;
         }
+
+        /* Mobile menu overlay styles */
+        nav ul {
+            display: none; /* Hidden by default for mobile */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
         nav ul.active {
             display: flex;
-            flex-direction: column;
+        }
+
+        nav ul li {
+            margin: 1rem 0;
+        }
+
+        nav ul li a {
+            color: white;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+
+        .nav-toggle-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        /* Responsive adjustments for buttons on small screens */
+        @media (max-width: 767px) {
+            .submit-btn, .clear-btn {
+                width: 100%;
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
         }
     </style>
 </head>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <body class="bg-gray-100 p-4">
     <header class="bg-white p-4 shadow">
         <nav>
@@ -113,6 +158,7 @@
             <ul class="hidden md:flex space-x-4">
                 <li><a href="#" class="text-blue-600">Home</a></li>
                 <li><a href="#" class="text-blue-600">Projects</a></li>
+                <button class="nav-toggle-close md:hidden">&times;</button>
             </ul>
         </nav>
     </header>
@@ -170,17 +216,19 @@
             <button type="button" class="clear-btn" onclick="document.getElementById('compositionForm').reset()"><i class="fas fa-eraser"></i> Clear Form</button>
         </form>
 
-        <table class="mt-4">
-            <thead>
-                <tr>
-                    <th>Grade</th>
-                    <th>Standard</th>
-                    <th>Match %</th>
-                    <th>Key Elements</th>
-                </tr>
-            </thead>
-            <tbody id="resultsBody"></tbody>
-        </table>
+        <div class="overflow-x-auto">
+            <table class="mt-4">
+                <thead>
+                    <tr>
+                        <th>Grade</th>
+                        <th>Standard</th>
+                        <th>Match %</th>
+                        <th>Key Elements</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody"></tbody>
+            </table>
+        </div>
     </main>
 
     <script>
@@ -190,11 +238,22 @@
             // Mobile menu toggle
             const navToggle = document.querySelector('.nav-toggle');
             const navMenu = document.querySelector('nav ul');
-            if (!navToggle || !navMenu) {
+            const navToggleClose = document.querySelector('.nav-toggle-close');
+
+            if (!navToggle || !navMenu || !navToggleClose) {
                 console.error('Navigation elements not found');
             } else {
                 navToggle.addEventListener('click', () => {
                     navMenu.classList.toggle('active');
+                });
+                navToggleClose.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                });
+                // Close menu if a link is clicked
+                navMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navMenu.classList.remove('active');
+                    });
                 });
             }
 
@@ -240,7 +299,6 @@
                     standard: 'Nickel-Chromium-Mo',
                     composition: { C: 0.20, S: 0.04, P: 0.035, Si: 0.25, Mn: 0.80, Cr: 0.5, Mo: 0.2, Ni: 0.55, Cu: 0, V: 0, W: 0 }
                 },
-                // 300 Series Austenitic Grades
                 {
                     grade: '301',
                     standard: 'Stainless Steel',
@@ -416,7 +474,6 @@
                     standard: 'Stainless Steel',
                     composition: { C: 0.04, S: 0.030, P: 0.045, Si: 1.00, Mn: 2.00, Cr: 16.0, Mo: 0, Ni: 18.0, Cu: 0, V: 0, W: 0 }
                 },
-                // 200 Series Austenitic Grades
                 {
                     grade: '201',
                     standard: 'Austenitic Stainless Steel',
@@ -517,7 +574,6 @@
                     standard: 'Austenitic Stainless Steel',
                     composition: { C: 0.15, S: 0.030, P: 0.045, Si: 1.00, Mn: 18.0, Cr: 18.0, Mo: 1.0, Ni: 0, Cu: 1.0, V: 0, W: 0 }
                 },
-                // Special Austenitic Grades
                 {
                     grade: '20Cb-3',
                     standard: 'Special Austenitic',
@@ -633,7 +689,6 @@
                     standard: 'Special Austenitic',
                     composition: { C: 0.030, S: 0.020, P: 0.040, Si: 6.0, Mn: 2.00, Cr: 14.0, Mo: 1.125, Ni: 15.0, Cu: 1.125, V: 0, W: 0 }
                 },
-                // Ferritic Stainless Steel Grades
                 {
                     grade: 'XM-34 (18-2FM)',
                     standard: 'Ferritic Stainless Steel',
@@ -759,7 +814,6 @@
                     standard: 'Ferritic Stainless Steel',
                     composition: { C: 0.20, S: 0.035, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 20.5, Mo: 0, Ni: 0.60, Cu: 0, V: 0, W: 0 }
                 },
-                // Special Ferritic Grades
                 {
                     grade: 'Cronifer 2803Mo',
                     standard: 'Special Ferritic',
@@ -835,7 +889,6 @@
                     standard: 'Special Ferritic',
                     composition: { C: 0.030, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 19.0, Mo: 0, Ni: 0.50, Cu: 0, V: 0, W: 0 }
                 },
-                // US ASTM SAE AISI Medium Carbon Steel Grades
                 {
                     grade: '1030',
                     standard: 'Medium Carbon Steel',
@@ -881,7 +934,6 @@
                     standard: 'Medium Carbon Steel',
                     composition: { C: 0.55, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
                 },
-                // European EN Medium Carbon Steel Grades
                 {
                     grade: 'C35',
                     standard: 'EN Medium Carbon Steel',
@@ -907,7 +959,6 @@
                     standard: 'EN Medium Carbon Steel',
                     composition: { C: 0.61, S: 0.045, P: 0.045, Si: 0.25, Mn: 0.65, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
                 },
-                // Chinese GB Medium Carbon Steel Grades
                 {
                     grade: '35#',
                     standard: 'GB Medium Carbon Steel',
