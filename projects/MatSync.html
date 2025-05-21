@@ -27,7 +27,7 @@
         }
         .match-percent {
             font-weight: bold;
-            color: #2c5282;
+            color: #d69e2e; /* Changed from blue to yellow/orange shade */
         }
         .form-group {
             margin-bottom: 1rem;
@@ -43,7 +43,7 @@
             border-radius: 0.25rem;
         }
         .submit-btn, .clear-btn {
-            background-color: #2c5282;
+            background-color: #d69e2e; /* Changed from blue to yellow/orange shade */
             color: white;
             padding: 0.5rem 1rem;
             border: none;
@@ -51,7 +51,7 @@
             cursor: pointer;
         }
         .clear-btn {
-            background-color: #e53e3e;
+            background-color: #e53e3e; /* Retained red for clear/danger action */
             margin-left: 0.5rem;
         }
         .submit-btn:disabled {
@@ -127,7 +127,7 @@
         }
 
         .nav-link:hover {
-            color: #63b3ed; /* Blue on hover */
+            color: #d69e2e; /* Changed from blue to yellow/orange shade on hover */
         }
 
         /* Override default Tailwind for specific elements to match dark theme */
@@ -137,14 +137,18 @@
         .form-group input {
             background-color: #4a5568; /* Darker input background */
             color: #e2e8f0; /* Light text in inputs */
-            border-color: #63b3ed; /* Blue border for inputs */
+            border-color: #4a5568; /* Changed from blue to dark grey border for inputs */
+        }
+        .form-group input:focus {
+            border-color: #d69e2e; /* Added focus border color */
+            outline: none;
         }
         .submit-btn, .clear-btn {
             border-radius: 0.5rem; /* More rounded buttons */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .submit-btn:hover {
-            background-color: #4299e1; /* Lighter blue on hover */
+            background-color: #b88a25; /* Darker yellow/orange on hover */
         }
         .clear-btn:hover {
             background-color: #f56565; /* Lighter red on hover */
@@ -154,18 +158,18 @@
             color: #e2e8f0;
         }
         table, th, td {
-            border-color: #63b3ed; /* Blue borders for table */
+            border-color: #4a5568; /* Changed from blue to dark grey borders for table */
         }
         .no-results {
             color: #a0aec0; /* Lighter grey for no results message */
         }
- </style>
+    </style>
 </head>
 <body class="bg-gray-900 text-gray-200 min-h-screen flex flex-col">
     <header class="header-bg p-4 shadow-lg">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <a href="../index.html#home" class="text-2xl font-bold text-blue-400">Ezhilarasan Kandiah</a>
-            <button class="nav-toggle md:hidden text-blue-400 focus:outline-none">
+            <a href="../index.html#home" class="text-2xl font-bold text-yellow-400">Ezhilarasan Kandiah</a>
+            <button class="nav-toggle md:hidden text-yellow-400 focus:outline-none">
                 <i class="fas fa-bars"></i>
             </button>
             <nav class="hidden md:flex space-x-6">
@@ -192,7 +196,7 @@
     </header>
 
     <main class="flex-grow max-w-4xl mx-auto mt-8 main-content-bg p-6 rounded-lg shadow-xl">
-        <h1 class="text-3xl font-bold mb-6 text-blue-400">MatSync</h1>
+        <h1 class="text-3xl font-bold mb-6 text-yellow-400">MatSync</h1>
         <p class="mb-6 text-gray-300">Enter the elemental composition to find matching material grades from our database.</p>
         <form id="compositionForm">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -247,7 +251,7 @@
 
         <div class="mt-8">
             <label for="fileInput" class="block text-gray-300 text-sm font-bold mb-2">Upload Custom Material Data (CSV or XLSX):</label>
-            <input type="file" id="fileInput" accept=".csv, .xlsx" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-blue-600">
+            <input type="file" id="fileInput" accept=".csv, .xlsx" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600 focus:border-yellow-500">
             <p class="text-xs text-gray-400 mt-1">Headers should match: Grade, Standard, C, S, P, Si, Mn, Cr, Mo, Ni, Cu, V, W</p>
         </div>
 
