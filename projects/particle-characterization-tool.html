@@ -161,21 +161,22 @@
         }
     </style>
 </head>
-<body>
-    <nav class="navbar">
-        <div class="container">
-            <h1>Ezhilarasan Kandiah</h1>
-            <span class="nav-toggle"><i class="fas fa-bars"></i></span>
-            <ul>
-                <li><a href="../index.html#home">Home</a></li>
-                <li><a href="../index.html#about">About</a></li>
-                <li><a href="../index.html#skills">Skills</a></li>
-                <li><a href="../index.html#projects">Projects</a></li>
-                <li><a href="../index.html#articles">Articles</a></li>
-                <li><a href="../index.html#contact">Contact</a></li>
-            </ul>
+<body class="bg-gray-900 text-gray-200 min-h-screen flex flex-col">
+    <header class="header-bg p-4 shadow-lg">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-blue-400">Ezhilarasan Kandiah</a>
+            <button class="nav-toggle md:hidden text-blue-400 focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="skills.html" class="nav-link">Skills</a>
+                <a href="projects.html" class="nav-link">Projects</a>
+                <a href="articles.html" class="nav-link">Articles</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </nav>
         </div>
-    </nav>
 
         <nav class="nav-menu">
             <button class="nav-toggle-close">&times;</button>
@@ -1428,22 +1429,18 @@
             // Function to format key elements for display
             function getKeyElements(composition) {
                 const elements = [];
-                // Define elements to exclude from display
-                const includedElements = ['C', 'Si', 'Mn', 'Cr', 'Ni', 'Mo', 'V', 'Cu', 'W'];
+                // Define elements to explicitly include in display
+                const includedElements = ['C', 'Si', 'Mn', 'Cr', 'Ni', 'Mo', 'Cu', 'W', 'V'];
 
                 for (const element of includedElements) {
                     const value = composition[element];
-                    // Only add if the element exists in the composition and its value is greater than 0
-                    if (value !== undefined && value > 0) {
+                    // Only add if the element exists in the composition and its value is greater than 0.1%
+                    if (value !== undefined && value > 0.1) { // Updated condition to value > 0.1
                         elements.push(`${element}:${value.toFixed(2)}%`);
                     }
                 }
-                // Display up to 4 key elements
-                return elements.slice(0, 4).join(' ');
-            }
-                }
-                // Display up to 4 key elements
-                return elements.slice(0, 4).join(' ');
+                // Display up to 7 key elements
+                return elements.slice(0, 7).join(' ');
             }
 
             // Handle form submission
@@ -1486,7 +1483,7 @@
                                     const standard = values[headers.indexOf('Standard')] || 'N/A';
                                     const composition = {};
                                     // Map known elements from headers to composition object
-                                    ['C', 'S', 'P', 'Si', 'Mn', 'Cr', 'Mo', 'Ni', 'Cu', 'V','W'].forEach(element => {
+                                    ['C', 'S', 'P', 'Si', 'Mn', 'Cr', 'Mo', 'Ni', 'Cu', 'V', 'W'].forEach(element => {
                                         const index = headers.indexOf(element);
                                         if (index !== -1 && !isNaN(parseFloat(values[index]))) {
                                             composition[element] = parseFloat(values[index]);
