@@ -3,378 +3,1545 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A guide to validating particle counters for technical cleanliness in automotive manufacturing, ensuring reliable contamination control.">
-    <title>Can Your Particle Counter Be Trusted? - Ezhilarasan Kandiah</title>
-    
+    <title>MatSync - Ezhilarasan Kandiah</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    
-    <link rel="stylesheet" href="../style.css"> 
-
-    <script type="text/javascript">
-        // Initialize global variables safely
-        var gk_isXlsx = typeof gk_isXlsx !== 'undefined' ? gk_isXlsx : false;
-        var gk_xlsxFileLookup = typeof gk_xlsxFileLookup !== 'undefined' ? gk_xlsxFileLookup : {};
-        var gk_fileData = typeof gk_fileData !== 'undefined' ? gk_fileData : {};
-
-        function filledCell(cell) {
-            return cell !== '' && cell != null;
-        }
-
-        function loadFileData(filename) {
-            if (gk_isXlsx && gk_xlsxFileLookup[filename] && gk_fileData[filename]) {
-                try {
-                    // Ensure XLSX is defined
-                    if (typeof XLSX === 'undefined') {
-                        console.error('SheetJS (XLSX) library is not loaded.');
-                        return "";
-                    }
-
-                    // Read the workbook from base64-encoded data
-                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                    var firstSheetName = workbook.SheetNames[0];
-                    var worksheet = workbook.Sheets[firstSheetName];
-
-                    // Convert sheet to JSON array
-                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                    var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                    // Find header row index safely
-                    var headerRowIndex = 0;
-                    for (let i = 0; i < filteredData.length - 1; i++) {
-                        if (filteredData[i].filter(filledCell).length >= filteredData[i + 1].filter(filledCell).length) {
-                            headerRowIndex = i;
-                            break;
-                        }
-                    }
-                    if (headerRowIndex > 25) {
-                        headerRowIndex = 0;
-                    }
-
-                    // Convert filtered data to CSV
-                    var csvSheet = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
-                    var csv = XLSX.utils.sheet_to_csv(csvSheet, { header: 1 });
-                    return csv;
-                } catch (e) {
-                    console.error('Error processing XLSX file:', e);
-                    return "";
-                }
-            }
-            // Return raw data or empty string if not XLSX or file not found
-            return gk_fileData[filename] || "";
-        }
-    </script>
-
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Article-specific styles */
-        body {
-            background-color: #1a1a1a !important; /* Ensure black background */
+        /* Custom styles for table and form */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
         }
-        .article-content {
-            max-width: 800px;
-            margin: 6rem auto 2rem;
-            padding: 0 2rem;
-            color: #f8f8f2;
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
         }
-
-        .article-content h1, .article-content h2, .article-content h3 {
-            color: #ffd700;  /* Make all headings yellow */
+        th {
+            background-color: #f4f4f4;
         }
-
-        .article-content h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .article-content h2 {
-            font-size: 1.8rem;
-            margin: 1.5rem 0 1rem;
-        }
-
-        .article-content h3 {
-            font-size: 1.4rem;
-            margin: 1rem 0 0.5rem;
-        }
-
-        .article-content p {
-            margin-bottom: 1rem;
-            color: #e8e8e0;
-        }
-
-        .article-content ul {
-            margin: 1rem 0;
-            padding-left: 2rem;
-            color: #e8e8e0;
-        }
-
-        .article-content a {
-            color: #ffd700;
-            text-decoration: none;
-        }
-
-        .article-content a:hover {
-            text-decoration: underline;
-        }
-
-.article-image {
-            max-width: 100%;
-            height: auto;
-            margin: 1rem auto; /* This line is already good for horizontal centering if display is block */
-            cursor: pointer;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            /* Add this line to make the image a block-level element */
-            display: block;
-        }
-
-        .image-caption {
-            font-style: italic;
-            color: #aaa;
+        .no-results {
             text-align: center;
+            color: #888;
+        }
+        .match-percent {
+            font-weight: bold;
+            color: #2c5282;
+        }
+        .form-group {
             margin-bottom: 1rem;
         }
+        label {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+        }
+        .submit-btn, .clear-btn {
+            background-color: #2c5282;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+        .clear-btn {
+            background-color: #e53e3e;
+            margin-left: 0.5rem;
+        }
+        .submit-btn:disabled {
+            background-color: #a0aec0;
+            cursor: not-allowed;
+        }
 
-        /* Lightbox styles */
-        .lightbox {
-            display: none;
+        /* Mobile menu overlay styles */
+        .nav-menu {
+            display: none; /* Hidden by default for mobile */
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 2000;
         }
 
-        .lightbox img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 8px;
-        }
-
-        .lightbox.active {
+        .nav-menu.active {
             display: flex;
         }
 
-        /* Responsive adjustments for article content */
-        @media (max-width: 768px) {
-            .article-content {
-                margin-top: 5rem;
-                padding: 0 1rem;
-            }
+        .nav-menu li {
+            margin: 1rem 0;
         }
 
-        /* Navbar Styles */
-        .navbar {
-            background-color: #1a1a1a;  /* Dark background */
-            color: #fff;
-            padding: 1rem 0;
-            position: fixed; /* Fix the navbar to the top */
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Add a shadow for better visibility */
-        }
-
-        .navbar .container {
-            display: flex;
-            justify-content: space-between; /* Space out the logo and nav items */
-            align-items: center;             /* Vertically center items */
-            max-width: 1200px;              /* Maximum width for the container */
-            margin: 0 auto;                  /* Center the container */
-            padding: 0 1rem;                /* Add some padding */
-        }
-
-        .navbar h1 {
-            margin: 0;                      /* Remove default heading margin */
-            font-size: 1.8rem;              /* Adjust font size as needed */
-            color: #fff;
-        }
-
-        .navbar ul {
-            list-style: none;               /* Remove bullet points */
-            display: flex;                  /* Use flexbox for horizontal layout */
-            margin: 0;                      /* Remove default ul margin */
-            padding: 0;                     /* Remove default ul padding */
-        }
-
-        .navbar ul li {
-            margin-left: 1.5rem;            /* Add spacing between nav items */
-        }
-
-        .navbar ul li a {
-            color: #fff;                    /* White text color */
-            text-decoration: none;          /* Remove underlines */
-            font-size: 1.1rem;              /* Adjust font size */
-            transition: color 0.3s ease;    /* Smooth color transition on hover */
-        }
-
-        .navbar ul li a:hover {
-            color: #ffd700;                 /* Change color on hover (e.g., to yellow) */
-        }
-
-        .nav-toggle {
-            display: none;                  /* Hide the menu toggle on larger screens */
+        .nav-menu li a {
+            color: white;
             font-size: 1.5rem;
-            color: #fff;
+            text-decoration: none;
+        }
+
+        .nav-toggle-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: white;
+            font-size: 2rem;
             cursor: pointer;
         }
 
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .nav-toggle {
-                display: block;              /* Show the menu toggle on small screens */
-            }
-
-            .navbar ul {
-                display: none;              /* Hide the nav list by default on small screens */
-                flex-direction: column;    /* Stack the nav items vertically */
-                background-color: #1a1a1a;  /* Dark background for the dropdown menu */
-                position: absolute;         /* Position the menu absolutely */
-                top: 100%;                  /* Position it below the navbar */
-                left: 0;
+        /* Responsive adjustments for buttons on small screens */
+        @media (max-width: 767px) {
+            .submit-btn, .clear-btn {
                 width: 100%;
-                text-align: center;         /* Center the menu items */
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Add a shadow */
-            }
-
-            .navbar ul.active {
-                display: flex;              /* Show the menu when the toggle is clicked */
-            }
-
-            .navbar ul li {
-                margin: 0;                  /* Remove horizontal margin */
-                padding: 1rem 0;            /* Add vertical padding */
-                border-bottom: 1px solid #333; /* Add a border between items */
-            }
-
-            .navbar ul li:last-child {
-                border-bottom: none;       /* Remove the border from the last item */
-            }
-
-            .navbar ul li a {
-                display: block;            /* Make the links take up the full width */
+                margin-left: 0;
+                margin-top: 0.5rem;
             }
         }
-    </style>
+
+        /* General layout for portfolio style */
+        body {
+            font-family: 'Inter', sans-serif; /* Assuming Inter font for portfolio */
+            background-color: #1a202c; /* Dark background from your screenshot */
+            color: #e2e8f0; /* Light text color */
+        }
+
+        .header-bg {
+            background-color: #2d3748; /* Darker header background */
+        }
+
+        .main-content-bg {
+            background-color: #2d3748; /* Darker main content background */
+        }
+
+        .nav-link {
+            color: #a0aec0; /* Lighter grey for links */
+            transition: color 0.2s ease-in-out;
+        }
+
+        .nav-link:hover {
+            color: #63b3ed; /* Blue on hover */
+        }
+
+        /* Override default Tailwind for specific elements to match dark theme */
+        .form-group label {
+            color: #e2e8f0; /* Ensure labels are visible on dark background */
+        }
+        .form-group input {
+            background-color: #4a5568; /* Darker input background */
+            color: #e2e8f0; /* Light text in inputs */
+            border-color: #63b3ed; /* Blue border for inputs */
+        }
+        .submit-btn, .clear-btn {
+            border-radius: 0.5rem; /* More rounded buttons */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .submit-btn:hover {
+            background-color: #4299e1; /* Lighter blue on hover */
+        }
+        .clear-btn:hover {
+            background-color: #f56565; /* Lighter red on hover */
+        }
+        th {
+            background-color: #4a5568; /* Darker table header */
+            color: #e2e8f0;
+        }
+        table, th, td {
+            border-color: #63b3ed; /* Blue borders for table */
+        }
+        .no-results {
+            color: #a0aec0; /* Lighter grey for no results message */
+        }
+ </style>
 </head>
-<body>
-    <nav class="navbar">
-        <div class="container">
-            <h1>Ezhilarasan Kandiah</h1>
-            <span class="nav-toggle"><i class="fas fa-bars"></i></span>
-            <ul>
-                <li><a href="../index.html#home">Home</a></li>
-                <li><a href="../index.html#about">About</a></li>
-                <li><a href="../index.html#skills">Skills</a></li>
-                <li><a href="../index.html#projects">Projects</a></li>
-                <li><a href="../index.html#articles">Articles</a></li>
-                <li><a href="../index.html#contact">Contact</a></li>
-            </ul>
+<body class="bg-gray-900 text-gray-200 min-h-screen flex flex-col">
+    <header class="header-bg p-4 shadow-lg">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <a href="../index.html" class="text-2xl font-bold text-blue-400">Ezhilarasan Kandiah</a>
+            <button class="nav-toggle md:hidden text-blue-400 focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav class="hidden md:flex space-x-6">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="../about.html" class="nav-link">About</a>
+                <a href="../skills.html" class="nav-link">Skills</a>
+                <a href="../projects.html" class="nav-link">Projects</a>
+                <a href="../articles.html" class="nav-link">Articles</a>
+                <a href="../contact.html" class="nav-link">Contact</a>
+            </nav>
         </div>
-    </nav>
 
-    <div class="article-content">
-        <h1>Can Your Particle Counter Be Trusted? A Technical Cleanliness Validation Guide</h1>
-        <p class="published-info">Published by Ezhilarasan Kandiah on May 20, 2025</p>
+        <nav class="nav-menu">
+            <button class="nav-toggle-close">&times;</button>
+            <ul>
+                <li><a href="../index.html" class="nav-link">Home</a></li>
+                <li><a href="../about.html" class="nav-link">About</a></li>
+                <li><a href="../skills.html" class="nav-link">Skills</a></li>
+                <li><a href="../projects.html" class="nav-link">Projects</a></li>
+                <li><a href="../articles.html" class="nav-link">Articles</a></li>
+                <li><a href="../contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
-        <h2>The Hidden Risks in Your Cleanliness Reports</h2>
-        <p>Every time your particle counter misses a critical contaminant, you're one step closer to a potential system failure. In the high-precision world of automotive components, where a single 400μm metallic particle can create catastrophic failure, how confident are you in your particle detection process?</p>
-        <p>This guide reveals the most effective methods to validate your particle counter's reliability and your technical cleanliness team's competence & knowledge that could prevent costly warranty claims and production disruptions.</p>
+    <main class="flex-grow max-w-4xl mx-auto mt-8 main-content-bg p-6 rounded-lg shadow-xl">
+        <h1 class="text-3xl font-bold mb-6 text-blue-400">MatSync</h1>
+        <p class="mb-6 text-gray-300">Enter the elemental composition to find matching material grades from our database.</p>
+        <form id="compositionForm">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="form-group">
+                    <label for="carbon">Carbon (C %)</label>
+                    <input type="number" id="carbon" step="0.01" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="sulfur">Sulfur (S %)</label>
+                    <input type="number" id="sulfur" step="0.01" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="phosphorus">Phosphorus (P %)</label>
+                    <input type="number" id="phosphorus" step="0.01" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="silicon">Silicon (Si %)</label>
+                    <input type="number" id="silicon" step="0.01" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="manganese">Manganese (Mn %)</label>
+                    <input type="number" id="manganese" step="0.01" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="chromium">Chromium (Cr %)</label>
+                    <input type="number" id="chromium" step="0.01" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="molybdenum">Molybdenum (Mo %)</label>
+                    <input type="number" id="molybdenum" step="0.01" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="nickel">Nickel (Ni %)</label>
+                    <input type="number" id="nickel" step="0.01" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="copper">Copper (Cu %)</label>
+                    <input type="number" id="copper" step="0.01" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="vanadium">Vanadium (V %)</label>
+                    <input type="number" id="vanadium" step="0.01" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="tungsten">Tungsten (W %)</label>
+                    <input type="number" id="tungsten" step="0.01" min="0" max="100">
+                </div>
+            </div>
+            <button type="submit" class="submit-btn mt-4 mr-2"><i class="fas fa-search"></i> Find Matches</button>
+            <button type="button" class="clear-btn mt-4" onclick="document.getElementById('compositionForm').reset()"><i class="fas fa-eraser"></i> Clear Form</button>
+        </form>
 
-        <h2>Beyond Basic Counting: The Four Critical Challenges</h2>
-        <p>Technical cleanliness inspection requires specialized expertise at every stage, but particle analysis presents unique challenges that can compromise your results:</p>
-        <ul>
-            <li><strong>Filter Occupancy & Uniformity Issues:</strong> When particles cluster too closely together across the filter membrane, your counter may detect several small particles as a single large one, or killer particles may hide beneath smaller particles, potentially hiding dangerous particles or causing false failures.</li>
-            <li><strong>Thresholding Inconsistencies:</strong> Setting the right brightness and thresholding between particles and the filter background is tricky, especially when moving between high and low-density particle occupancy regions of the same filter.</li>
-            <li><strong>Particle Nature Misclassifications:</strong> The critical difference between a harmless fiber and a dangerous metallic sliver, many systems get this wrong.</li>
-            <li><strong>Particle Reconsideration Gaps:</strong> Without manual verification of certain particles, particularly metallic slivers that systems often misidentify as fibers, your cleanliness reports may underestimate risks.</li>
-        </ul>
+        <div class="mt-8">
+            <label for="fileInput" class="block text-gray-300 text-sm font-bold mb-2">Upload Custom Material Data (CSV or XLSX):</label>
+            <input type="file" id="fileInput" accept=".csv, .xlsx" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-blue-600">
+            <p class="text-xs text-gray-400 mt-1">Headers should match: Grade, Standard, C, S, P, Si, Mn, Cr, Mo, Ni, Cu, V, W</p>
+        </div>
 
-        <h2>Solving Filter Occupancy & Uniformity Problems</h2>
-        <p>When facing filter membrane occupancy or non-uniform particle distribution, reconsider your extraction methodology.</p>
-        <p>For filter occupancy issues, use a multistage filtration process with the highest pore size filter at the top followed by smaller pore filters at the bottom. If multistage filtration isn't available, consider splitting samples across multiple filters.</p>
-        <p>For non-uniformity issues, perform extraction again with improved collection techniques. Consider multiple smaller volume collections rather than a single large volume to achieve more even particle distribution.</p>
-        <p>Implement a pre-scan assessment of filter occupancy before full analysis. If occupancy exceeds the ISO 16232/VDA 19.1 limits (3% for mesh and 1.5% for foam membranes), prepare a new sample with adjusted extraction parameters or use the multistage filtration process.</p>
-        
-        <img src="high-occupancy.jpg" alt="Example of filter membrane with High Occupancy" class="article-image">
-        <p class="image-caption">Figure 1: Example of filter membrane with High Occupancy.</p>
+        <div class="overflow-x-auto mt-8">
+            <table class="w-full text-left">
+                <thead>
+                    <tr>
+                        <th>Grade</th>
+                        <th>Standard</th>
+                        <th>Match %</th>
+                        <th>Key Elements</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody"></tbody>
+            </table>
+        </div>
+    </main>
 
-        <h2>Mastering Thresholding Techniques</h2>
-        <p>To overcome thresholding challenges, experienced inspectors should calibrate brightness settings using mid-density areas of the filter rather than focusing on high or low-density regions. Perform multiple threshold adjustments across different filter areas to verify consistent particle detection. Document optimal settings for different component types to ensure consistent analysis.</p>
-        <p>Remember that threshold optimization should balance detection of both large "killer particles" and smaller particles based on your specific cleanliness requirements.</p>
-        
-        <img src="thresholding.jpg" alt="Thresholding" class="article-image">
-        <p class="image-caption">Figure 2: Particle thresholding.</p>
-
-        <h2>Correcting Particle Nature Identification</h2>
-        <p>To prevent misclassification of critical metallic particles as fibers, implement a two-stage analysis approach: first with polarizers to identify all particles, then without polarizers to distinguish metallic from non-metallic particles. Review fiber classifications manually, particularly for particles with high reflectivity or metallic appearance. Create a reference library of commonly encountered particle types in your specific production environment.</p>
-        
-        <h2>Enhancing Particle Reconsideration Protocols</h2>
-        <p>Establish a systematic review process for critical particle sizes & implement mandatory manual verification of all particles above your system's critical threshold. Train operators to recognize common misclassification patterns specific to your particle counter system. Implement dual-operator verification for cleanliness reports that are near specification limits. Document frequently encountered anomalies to improve automated detection algorithms.</p>
-        
-        <h2>Measurement System Analysis: Validating Your Particle Counter's Trustworthiness</h2>
-        <h3>Why MSA Matters in Technical Cleanliness</h3>
-        <p>Imagine this scenario: Your particle counting results consistently show acceptably clean components, yet your assembly line experiences frequent failures attributed to contamination. Either particles are being generated after inspection, or more concerning your inspection process is missing critical contaminants. Without proper validation, you're making critical decisions based on potentially flawed data.</p>
-
-        <h3>Setting Up MSA for Particle Counting</h3>
-        <p><em>Note:</em> This guide assumes basic familiarity with MSA principles. If you need a comprehensive MSA primer, consider AIAG's Measurement Systems Analysis reference manual.</p>
-
-        <h3>Selecting Test Samples</h3>
-        <p>For meaningful MSA in technical cleanliness applications, prepare filter membranes representing the full spectrum of your normal process variation. Include membranes with low, medium, and borderline-high particle occupancies (staying below the ISO 16232/VDA 19.1 limits). Ensure representative distribution of particle sizes, particularly including critical metallic particles that approach your specification limits. Consider creating reference standards with known particle counts if available.</p>
-        
-        <h3>Conducting the Analysis</h3>
-        <p>Randomize your selected filter membranes to prevent operator bias. Maintain consistent analysis conditions (brightness, thresholding, fiber criteria) to isolate true measurement system variation. Have multiple operators perform repeated measurements of the same filter membranes without knowledge of previous results. Record comprehensive data for each critical measurement parameter (total count, counts by size class, fibers).</p>
-
-        <h3>Analyzing MSA Results</h3>
-        <p>Minitab or similar statistical software makes MSA analysis straightforward. Focus your analysis on overall measurement system variation (% Gage R&R), repeatability (equipment variation), reproducibility (operator variation), and part-to-part variation (actual differences between filter membranes).</p>
-
-        <h3>Interpreting Your Results</h3>
-        <p>According to AIAG guidelines, if your Gage R&R is less than 10%, your particle counting system is reliable and decisions based on its data can be trusted. If your Gage R&R is between 10-30%, your system may be acceptable for some applications, but consider improvements, especially for critical cleanliness requirements. If your Gage R&R exceeds 30%, your measurement system requires significant intervention before results can be trusted for decision-making.</p>
-        <p>If your Gage R&R exceeds 30%, you need comprehensive process examination—from sample preparation through analysis parameters. This typically indicates fundamental issues in your particle counting methodology that must be addressed before cleanliness reports can be considered reliable.</p>
-        
-        <h2>Need Additional Support?</h2>
-        <p>Implementing robust technical cleanliness validation can be challenging. If your organization is struggling with particle counting reliability, high rejection rates despite acceptable cleanliness reports, or MSA results above 30% Gage R&R, please don't hesitate to reach out for specialized technical assistance.</p>
-        <p><a href="../index.html#contact">Contact Me</a> | <a href="../index.html#articles">Back to Articles</a></p>
-    </div>
-
-    <div class="lightbox" id="lightbox">
-        <img src="" alt="Enlarged image" id="lightbox-image">
-    </div>
-
-    <footer>
-        <p>© 2025 Ezhilarasan Kandiah. All rights reserved.</p>
+    <footer class="header-bg p-4 mt-8 text-center text-gray-400">
+        <p>&copy; 2025 Ezhilarasan Kandiah. All rights reserved.</p>
     </footer>
 
-    <script src="../script.js"></script>
 
-    <script>
-        // Lightbox effect for images
-        const images = document.querySelectorAll('.article-image');
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImage = document.getElementById('lightbox-image');
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script type="text/javascript">
+        // Global variables for XLSX handling
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
 
-        images.forEach(image => {
-            image.addEventListener('click', () => {
-                lightboxImage.src = image.src;
-                lightboxImage.alt = image.alt;
-                lightbox.classList.add('active');
+        // Helper function to check if a cell has content
+        function filledCell(cell) {
+            return cell !== '' && cell != null;
+        }
+
+        // Function to load and process file data (CSV or XLSX)
+        function loadFileData(filename) {
+            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+                try {
+                    // Read XLSX workbook from base64 data
+                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                    var firstSheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[firstSheetName];
+
+                    // Convert sheet to JSON, filtering blank rows
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                    var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                    // Heuristic to find the header row
+                    var headerRowIndex = filteredData.findIndex((row, index) =>
+                        row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    );
+                    if (headerRowIndex === -1 || headerRowIndex > 25) {
+                        headerRowIndex = 0; // Default to first row if not found or too far down
+                    }
+
+                    // Convert filtered JSON back to CSV string
+                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                    return csv;
+                } catch (e) {
+                    console.error("Error processing XLSX file:", e);
+                    return "";
+                }
+            }
+            // Return raw text data for CSV or if XLSX processing failed
+            return gk_fileData[filename] || "";
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded'); // Debug log
+
+            // Mobile menu toggle logic
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            const navToggleClose = document.querySelector('.nav-toggle-close');
+
+            if (navToggle && navMenu && navToggleClose) {
+                navToggle.addEventListener('click', () => {
+                    navMenu.classList.add('active'); // Show mobile menu
+                });
+                navToggleClose.addEventListener('click', () => {
+                    navMenu.classList.remove('active'); // Hide mobile menu
+                });
+                // Close menu if a link inside is clicked
+                navMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navMenu.classList.remove('active');
+                    });
+                });
+            } else {
+                console.error('Navigation elements (nav-toggle, nav-menu, or nav-toggle-close) not found.');
+            }
+
+            // Form and results elements
+            const form = document.getElementById('compositionForm');
+            const resultsBody = document.getElementById('resultsBody');
+            const submitBtn = document.querySelector('.submit-btn');
+            const fileInput = document.getElementById('fileInput');
+
+            if (!form || !resultsBody || !submitBtn || !fileInput) {
+                console.error('One or more required form/results HTML elements not found.');
+                return;
+            }
+
+            // Event listener for file input (CSV/XLSX upload)
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    const fileName = file.name;
+                    const fileExtension = fileName.split('.').pop().toLowerCase();
+
+                    reader.onload = function(e) {
+                        if (fileExtension === 'xlsx') {
+                            gk_isXlsx = true;
+                            // Store only the base64 part of the data URL
+                            gk_fileData[fileName] = e.target.result.split(',')[1];
+                            gk_xlsxFileLookup[fileName] = true;
+                            console.log(`XLSX file "${fileName}" loaded.`);
+                        } else if (fileExtension === 'csv') {
+                            gk_isXlsx = false; // Important: ensure this is false for CSV processing
+                            gk_fileData[fileName] = e.target.result;
+                            console.log(`CSV file "${fileName}" loaded.`);
+                        } else {
+                            console.warn("Unsupported file type. Please upload CSV or XLSX.");
+                            gk_isXlsx = false; // Reset for unsupported types
+                            delete gk_fileData[fileName];
+                            delete gk_xlsxFileLookup[fileName];
+                        }
+                    };
+
+                    // Read file based on type
+                    if (fileExtension === 'xlsx') {
+                        reader.readAsDataURL(file); // Read XLSX as Data URL (base64)
+                    } else {
+                        reader.readAsText(file); // Read CSV as plain text
+                    }
+                }
             });
-        });
 
-        lightbox.addEventListener('click', () => {
-            lightbox.classList.remove('active');
-        });
+            // Material database
+            const materialGrades = [
+                // Original materials
+                {
+                    grade: 'AISI 1018',
+                    standard: 'Low Carbon Steel',
+                    composition: { C: 0.18, S: 0.05, P: 0.04, Si: 0.4, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'AISI 1045',
+                    standard: 'Medium Carbon Steel',
+                    composition: { C: 0.45, S: 0.05, P: 0.04, Si: 0.25, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'AISI 4140',
+                    standard: 'Chromium-Molybdenum',
+                    composition: { C: 0.40, S: 0.04, P: 0.035, Si: 0.25, Mn: 0.85, Cr: 1.0, Mo: 0.2, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'AISI 316',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.03, P: 0.045, Si: 1.0, Mn: 2.0, Cr: 17.0, Mo: 2.5, Ni: 11.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'AISI 304',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.03, P: 0.045, Si: 1.0, Mn: 2.0, Cr: 18.0, Mo: 0, Ni: 8.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'AISI 8620',
+                    standard: 'Nickel-Chromium-Mo',
+                    composition: { C: 0.20, S: 0.04, P: 0.035, Si: 0.25, Mn: 0.80, Cr: 0.5, Mo: 0.2, Ni: 0.55, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '301',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.15, S: 0.030, P: 0.045, Si: 1.00, Mn: 2.00, Cr: 17.0, Mo: 0, Ni: 7.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '301L',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.03, S: 0.030, P: 0.045, Si: 1.00, Mn: 2.00, Cr: 17.0, Mo: 0, Ni: 7.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '301LN',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.03, S: 0.030, P: 0.045, Si: 1.00, Mn: 2.00, Cr: 17.0, Mo: 0, Ni: 7.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '302',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.15, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 18.0, Mo: 0, Ni: 9.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '302B',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.15, S: 0.030, P: 0.045, Si: 2.50, Mn: 2.00, Cr: 18.0, Mo: 0, Ni: 9.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '303',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.15, S: 0.15, P: 0.20, Si: 1.00, Mn: 2.00, Cr: 18.0, Mo: 0, Ni: 9.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'XM-5 (303Plus x)',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.15, S: 0.25, P: 0.20, Si: 1.00, Mn: 3.50, Cr: 18.0, Mo: 0, Ni: 8.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '303Se',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.15, S: 0.060, P: 0.20, Si: 1.00, Mn: 2.00, Cr: 18.0, Mo: 0, Ni: 9.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '303Cu',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.15, S: 0.10, P: 0.15, Si: 1.00, Mn: 2.00, Cr: 18.0, Mo: 0, Ni: 8.0, Cu: 3.25, V: 0, W: 0 }
+                },
+                {
+                    grade: '304',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.07, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 18.5, Mo: 0, Ni: 9.25, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '304 (Bar)',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.045, Si: 1.00, Mn: 2.00, Cr: 19.0, Mo: 0, Ni: 9.5, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '304L',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 18.5, Mo: 0, Ni: 10.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '304L (Bar)',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.045, Si: 1.00, Mn: 2.00, Cr: 19.0, Mo: 0, Ni: 10.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '302HQ',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.03, S: 0.030, P: 0.045, Si: 1.00, Mn: 2.00, Cr: 18.0, Mo: 0, Ni: 9.0, Cu: 3.5, V: 0, W: 0 }
+                },
+                {
+                    grade: 'XM-21 (304HN)',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.045, Si: 1.00, Mn: 2.00, Cr: 19.0, Mo: 0, Ni: 9.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '304LN',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 19.0, Mo: 0, Ni: 10.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '304N',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.03, S: 0.030, P: 0.045, Si: 1.00, Mn: 2.00, Cr: 19.0, Mo: 0, Ni: 9.5, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '305',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.12, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 18.0, Mo: 0, Ni: 11.75, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '308',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.045, Si: 1.00, Mn: 2.00, Cr: 20.0, Mo: 0, Ni: 11.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '316',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 17.0, Mo: 2.5, Ni: 12.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '316L',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 17.0, Mo: 2.5, Ni: 12.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '316Ti',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 17.0, Mo: 2.5, Ni: 12.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '316Cb',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 17.0, Mo: 2.5, Ni: 12.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '316LN',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 17.0, Mo: 2.5, Ni: 12.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '317',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 19.0, Mo: 3.5, Ni: 13.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '317L',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 19.0, Mo: 3.5, Ni: 13.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '317LM',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 19.0, Mo: 4.5, Ni: 15.5, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '317LMN',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 18.5, Mo: 4.5, Ni: 15.5, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '317LN',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 19.0, Mo: 3.5, Ni: 13.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '321',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 18.0, Mo: 0, Ni: 10.5, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '347',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 18.0, Mo: 0, Ni: 11.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '347F',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.265, P: 0.040, Si: 1.00, Mn: 2.00, Cr: 18.0, Mo: 0.75, Ni: 10.5, Cu: 0.75, V: 0, W: 0 }
+                },
+                {
+                    grade: '347FSe',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.14, Si: 1.00, Mn: 2.00, Cr: 18.0, Mo: 0.75, Ni: 10.5, Cu: 0.75, V: 0, W: 0 }
+                },
+                {
+                    grade: '348',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.045, Si: 0.75, Mn: 2.00, Cr: 18.0, Mo: 0, Ni: 11.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '384',
+                    standard: 'Stainless Steel',
+                    composition: { C: 0.04, S: 0.030, P: 0.045, Si: 1.00, Mn: 2.00, Cr: 16.0, Mo: 0, Ni: 18.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '201',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.15, S: 0.030, P: 0.060, Si: 1.00, Mn: 6.5, Cr: 17.0, Mo: 0, Ni: 4.5, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '201L',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.03, S: 0.030, P: 0.045, Si: 0.75, Mn: 6.5, Cr: 17.0, Mo: 0, Ni: 4.5, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '201LN',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.03, S: 0.015, P: 0.045, Si: 0.75, Mn: 6.95, Cr: 16.75, Mo: 0, Ni: 4.5, Cu: 1.00, V: 0, W: 0 }
+                },
+                {
+                    grade: 'Gall-Tough',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.15, S: 0.040, P: 0.040, Si: 3.5, Mn: 5.0, Cr: 16.5, Mo: 0, Ni: 5.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '201-6-4',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.15, S: 0.040, P: 0.040, Si: 3.5, Mn: 6.0, Cr: 18.75, Mo: 1.5, Ni: 8.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '202',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.15, S: 0.030, P: 0.060, Si: 1.00, Mn: 8.75, Cr: 18.0, Mo: 0, Ni: 5.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'XM-1 (203EZ)',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.08, S: 0.265, P: 0.04, Si: 1.00, Mn: 5.75, Cr: 17.0, Mo: 0, Ni: 5.75, Cu: 2.0, V: 0, W: 0 }
+                },
+                {
+                    grade: '204',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.040, Si: 1.00, Mn: 8.0, Cr: 16.0, Mo: 0, Ni: 2.25, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '205',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.185, S: 0.030, P: 0.060, Si: 1.00, Mn: 14.75, Cr: 17.25, Mo: 0, Ni: 1.35, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'XM-19 (Nitronic 50)',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.06, S: 0.030, P: 0.040, Si: 0.75, Mn: 5.0, Cr: 22.0, Mo: 2.25, Ni: 12.5, Cu: 0, V: 0.2, W: 0 }
+                },
+                {
+                    grade: 'XM-31 (Tenelon)',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.12, S: 0.030, P: 0.045, Si: 0.65, Mn: 15.0, Cr: 17.75, Mo: 0, Ni: 1.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'XM-14',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.12, S: 0.030, P: 0.060, Si: 0.75, Mn: 15.0, Cr: 18.0, Mo: 0, Ni: 5.5, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'XM-17 (216)',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.045, Si: 0.75, Mn: 8.25, Cr: 19.75, Mo: 2.5, Ni: 6.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'XM-18 (216L)',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.03, S: 0.030, P: 0.045, Si: 0.75, Mn: 8.25, Cr: 19.75, Mo: 2.5, Ni: 6.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'Nitronic 60',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.10, S: 0.030, P: 0.060, Si: 4.0, Mn: 8.0, Cr: 17.0, Mo: 0, Ni: 8.5, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '21-6-9 (Nitronic 40)',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.045, Si: 1.00, Mn: 9.0, Cr: 20.25, Mo: 0, Ni: 6.5, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'XM-11 (Nitronic 40)',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.04, S: 0.030, P: 0.060, Si: 0.75, Mn: 9.0, Cr: 20.25, Mo: 0, Ni: 6.5, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'XM-29 (Nitronic 33)',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.060, Si: 0.75, Mn: 13.0, Cr: 18.0, Mo: 0, Ni: 3.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '18-2Mn (Nitronic 32)',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.15, S: 0.030, P: 0.045, Si: 1.00, Mn: 12.5, Cr: 17.75, Mo: 0, Ni: 1.5, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '18-18 Plus',
+                    standard: 'Austenitic Stainless Steel',
+                    composition: { C: 0.15, S: 0.030, P: 0.045, Si: 1.00, Mn: 18.0, Cr: 18.0, Mo: 1.0, Ni: 0, Cu: 1.0, V: 0, W: 0 }
+                },
+                {
+                    grade: '20Cb-3',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.07, S: 0.035, P: 0.045, Si: 1.00, Mn: 2.00, Cr: 20.0, Mo: 2.5, Ni: 35.0, Cu: 3.5, V: 0, W: 0 }
+                },
+                {
+                    grade: '20Mo-4',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.03, S: 0.035, P: 0.035, Si: 0.50, Mn: 1.00, Cr: 23.75, Mo: 4.25, Ni: 37.5, Cu: 1.0, V: 0, W: 0 }
+                },
+                {
+                    grade: '20Mo6',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.03, S: 0.03, P: 0.03, Si: 0.50, Mn: 1.00, Cr: 24.0, Mo: 5.85, Ni: 35.1, Cu: 3.0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'Sanicro28',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.030, S: 0.030, P: 0.030, Si: 1.0, Mn: 2.50, Cr: 27.0, Mo: 3.5, Ni: 31.0, Cu: 1.0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'AL-6X',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.03, S: 0.030, P: 0.040, Si: 1.00, Mn: 2.00, Cr: 21.0, Mo: 6.5, Ni: 24.5, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'AL-6XN',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.030, S: 0.030, P: 0.040, Si: 1.00, Mn: 2.00, Cr: 21.0, Mo: 6.5, Ni: 24.5, Cu: 0.75, V: 0, W: 0 }
+                },
+                {
+                    grade: 'JS700',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.04, S: 0.030, P: 0.040, Si: 1.00, Mn: 2.00, Cr: 21.0, Mo: 4.65, Ni: 25.0, Cu: 0.50, V: 0, W: 0 }
+                },
+                {
+                    grade: '904L',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.020, S: 0.035, P: 0.045, Si: 1.00, Mn: 2.00, Cr: 21.0, Mo: 4.5, Ni: 25.5, Cu: 1.5, V: 0, W: 0 }
+                },
+                {
+                    grade: '1925hMo',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.020, S: 0.030, P: 0.045, Si: 0.50, Mn: 1.0, Cr: 20.0, Mo: 6.5, Ni: 25.0, Cu: 1.15, V: 0, W: 0 }
+                },
+                {
+                    grade: 'N08926',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.020, S: 0.010, P: 0.030, Si: 0.50, Mn: 2.00, Cr: 20.0, Mo: 6.5, Ni: 25.0, Cu: 1.0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'Cronifer 1815 LCSi',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.018, S: 0.020, P: 0.020, Si: 4.0, Mn: 2.00, Cr: 17.75, Mo: 0.20, Ni: 14.75, Cu: 0.50, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S30601',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.015, S: 0.013, P: 0.030, Si: 5.3, Mn: 0.65, Cr: 17.5, Mo: 0.20, Ni: 17.5, Cu: 0.05, V: 0, W: 0 }
+                },
+                {
+                    grade: '310MoLN',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.020, S: 0.010, P: 0.030, Si: 0.50, Mn: 2.00, Cr: 25.0, Mo: 2.1, Ni: 22.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '254SMO',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.020, S: 0.010, P: 0.030, Si: 0.80, Mn: 1.00, Cr: 20.0, Mo: 6.25, Ni: 18.0, Cu: 0.75, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S31266',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.030, S: 0.020, P: 0.035, Si: 1.00, Mn: 3.0, Cr: 24.0, Mo: 5.7, Ni: 22.5, Cu: 1.75, V: 0, W: 2.0 }
+                },
+                {
+                    grade: 'S31277',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.020, S: 0.010, P: 0.030, Si: 0.50, Mn: 3.00, Cr: 21.75, Mo: 7.25, Ni: 27.0, Cu: 1.0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S32050',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.030, S: 0.020, P: 0.035, Si: 1.00, Mn: 1.50, Cr: 23.0, Mo: 6.4, Ni: 21.5, Cu: 0.40, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S32615',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.07, S: 0.030, P: 0.045, Si: 5.4, Mn: 2.00, Cr: 18.0, Mo: 0.9, Ni: 20.5, Cu: 2.0, V: 0, W: 0 }
+                },
+                {
+                    grade: '654SMO',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.020, S: 0.005, P: 0.030, Si: 0.50, Mn: 3.0, Cr: 24.5, Mo: 7.5, Ni: 22.0, Cu: 0.45, V: 0, W: 0 }
+                },
+                {
+                    grade: 'Nirosta 4565S',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.030, S: 0.010, P: 0.030, Si: 1.00, Mn: 6.0, Cr: 24.0, Mo: 4.5, Ni: 17.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S35135',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.08, S: 0.015, P: 0.045, Si: 0.80, Mn: 1.00, Cr: 22.5, Mo: 4.4, Ni: 34.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'XM-15 (18-18-2)',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.08, S: 0.030, P: 0.030, Si: 2.0, Mn: 2.00, Cr: 18.0, Mo: 0, Ni: 18.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S38815',
+                    standard: 'Special Austenitic',
+                    composition: { C: 0.030, S: 0.020, P: 0.040, Si: 6.0, Mn: 2.00, Cr: 14.0, Mo: 1.125, Ni: 15.0, Cu: 1.125, V: 0, W: 0 }
+                },
+                {
+                    grade: 'XM-34 (18-2FM)',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.08, S: 0.15, P: 0.04, Si: 1.00, Mn: 2.50, Cr: 18.5, Mo: 2.0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S18235',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.025, S: 0.25, P: 0.030, Si: 1.00, Mn: 0.50, Cr: 18.0, Mo: 2.25, Ni: 1.00, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '403',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.15, S: 0.030, P: 0.040, Si: 0.50, Mn: 1.00, Cr: 12.25, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '405',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 13.0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S40800',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.08, S: 0.045, P: 0.045, Si: 1.00, Mn: 1.00, Cr: 12.25, Mo: 0, Ni: 0.50, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S40910',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.030, S: 0.020, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 11.1, Mo: 0, Ni: 0.50, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S40920',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.030, S: 0.020, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 11.1, Mo: 0, Ni: 0.50, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S40930',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.030, S: 0.020, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 11.1, Mo: 0, Ni: 0.50, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S40945',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 11.1, Mo: 0, Ni: 0.50, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S40975',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 11.1, Mo: 0, Ni: 0.75, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S40976',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 11.1, Mo: 0, Ni: 0.875, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '3CR12',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.030, S: 0.015, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 11.5, Mo: 0, Ni: 0.65, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S41003',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.50, Cr: 11.5, Mo: 0, Ni: 1.50, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '410S',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 12.5, Mo: 0, Ni: 0.60, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S41045',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.030, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 12.5, Mo: 0, Ni: 0.50, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S41050',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.04, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 11.5, Mo: 0, Ni: 0.85, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S41603',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.08, S: 0.15, P: 0.06, Si: 1.00, Mn: 1.25, Cr: 13.0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S42035',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.08, S: 0.030, P: 0.045, Si: 1.00, Mn: 1.00, Cr: 14.5, Mo: 0.7, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '430',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.12, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 17.0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '430F',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.12, S: 0.15, P: 0.060, Si: 1.00, Mn: 1.25, Cr: 17.0, Mo: 0, Ni: 0.75, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '430FSe',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.12, S: 0.060, P: 0.060, Si: 1.00, Mn: 1.25, Cr: 17.0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '430Ti',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.10, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 17.75, Mo: 0, Ni: 0.75, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '434',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.12, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 17.0, Mo: 1.0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '436',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.12, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 17.0, Mo: 1.0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '442',
+                    standard: 'Ferritic Stainless Steel',
+                    composition: { C: 0.20, S: 0.035, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 20.5, Mo: 0, Ni: 0.60, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'Cronifer 2803Mo',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.015, S: 0.0035, P: 0.020, Si: 0.55, Mn: 0.50, Cr: 28.5, Mo: 2.15, Ni: 3.5, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '435',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.030, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 18.0, Mo: 0, Ni: 0.50, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '439LL',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.014, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 18.0, Mo: 0, Ni: 0.50, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '441',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.030, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 18.0, Mo: 0, Ni: 0.50, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S43940',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.030, S: 0.015, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 18.0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '444 18Cr-2Mo',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.025, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 18.5, Mo: 2.125, Ni: 1.00, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S44500',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.020, S: 0.012, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 20.0, Mo: 0, Ni: 0.60, Cu: 0.45, V: 0, W: 0 }
+                },
+                {
+                    grade: 'XM-33 (26-1Ti)',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.06, S: 0.020, P: 0.040, Si: 0.75, Mn: 0.75, Cr: 26.0, Mo: 1.125, Ni: 0.50, Cu: 0.20, V: 0, W: 0 }
+                },
+                {
+                    grade: 'XM-27',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.010, S: 0.020, P: 0.020, Si: 0.40, Mn: 0.40, Cr: 26.0, Mo: 1.125, Ni: 0.50, Cu: 0.20, V: 0, W: 0 }
+                },
+                {
+                    grade: 'Nu Monit (25-4-4)',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.025, S: 0.030, P: 0.040, Si: 0.75, Mn: 1.00, Cr: 25.25, Mo: 4.0, Ni: 4.0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'Sea-cure (26-3-3)',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.030, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 26.5, Mo: 3.5, Ni: 2.25, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '29-4',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.010, S: 0.020, P: 0.025, Si: 0.20, Mn: 0.30, Cr: 29.0, Mo: 3.85, Ni: 0.15, Cu: 0.15, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S44735',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.030, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 29.0, Mo: 3.9, Ni: 1.00, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '29-4-2',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.010, S: 0.020, P: 0.025, Si: 0.20, Mn: 0.30, Cr: 29.0, Mo: 3.85, Ni: 2.25, Cu: 0.15, V: 0, W: 0 }
+                },
+                {
+                    grade: 'S46800',
+                    standard: 'Special Ferritic',
+                    composition: { C: 0.030, S: 0.030, P: 0.040, Si: 1.00, Mn: 1.00, Cr: 19.0, Mo: 0, Ni: 0.50, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '1030',
+                    standard: 'Medium Carbon Steel',
+                    composition: { C: 0.31, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '1034',
+                    standard: 'Medium Carbon Steel',
+                    composition: { C: 0.35, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '1035',
+                    standard: 'Medium Carbon Steel',
+                    composition: { C: 0.35, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '1038',
+                    standard: 'Medium Carbon Steel',
+                    composition: { C: 0.39, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '1040',
+                    standard: 'Medium Carbon Steel',
+                    composition: { C: 0.405, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '1042',
+                    standard: 'Medium Carbon Steel',
+                    composition: { C: 0.43, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '1043',
+                    standard: 'Medium Carbon Steel',
+                    composition: { C: 0.43, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.80, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '1050',
+                    standard: 'Medium Carbon Steel',
+                    composition: { C: 0.515, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '1055',
+                    standard: 'Medium Carbon Steel',
+                    composition: { C: 0.55, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'C35',
+                    standard: 'EN Medium Carbon Steel',
+                    composition: { C: 0.355, S: 0.045, P: 0.045, Si: 0.25, Mn: 0.65, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'C40',
+                    standard: 'EN Medium Carbon Steel',
+                    composition: { C: 0.405, S: 0.045, P: 0.045, Si: 0.25, Mn: 0.65, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'C45',
+                    standard: 'EN Medium Carbon Steel',
+                    composition: { C: 0.46, S: 0.045, P: 0.045, Si: 0.25, Mn: 0.65, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'C55',
+                    standard: 'EN Medium Carbon Steel',
+                    composition: { C: 0.55, S: 0.045, P: 0.045, Si: 0.25, Mn: 0.65, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: 'C60',
+                    standard: 'EN Medium Carbon Steel',
+                    composition: { C: 0.61, S: 0.045, P: 0.045, Si: 0.25, Mn: 0.65, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '35#',
+                    standard: 'GB Medium Carbon Steel',
+                    composition: { C: 0.355, S: 0.045, P: 0.045, Si: 0.225, Mn: 0.65, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '40#',
+                    standard: 'GB Medium Carbon Steel',
+                    composition: { C: 0.405, S: 0.045, P: 0.045, Si: 0.225, Mn: 0.65, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '45#',
+                    standard: 'GB Medium Carbon Steel',
+                    composition: { C: 0.46, S: 0.045, P: 0.045, Si: 0.225, Mn: 0.65, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '50#',
+                    standard: 'GB Medium Carbon Steel',
+                    composition: { C: 0.51, S: 0.045, P: 0.045, Si: 0.225, Mn: 0.65, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '55#',
+                    standard: 'GB Medium Carbon Steel',
+                    composition: { C: 0.56, S: 0.045, P: 0.045, Si: 0.225, Mn: 0.65, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+                    grade: '60#',
+                    standard: 'GB Medium Carbon Steel',
+                    composition: { C: 0.61, S: 0.045, P: 0.045, Si: 0.225, Mn: 0.65, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                },
+                {
+    grade: '1059',
+    standard: 'High Carbon Steel',
+    composition: { C: 0.60, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '1060',
+    standard: 'High Carbon Steel',
+    composition: { C: 0.60, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '1065',
+    standard: 'High Carbon Steel',
+    composition: { C: 0.65, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '1070',
+    standard: 'High Carbon Steel',
+    composition: { C: 0.70, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '1075',
+    standard: 'High Carbon Steel',
+    composition: { C: 0.75, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '1080',
+    standard: 'High Carbon Steel',
+    composition: { C: 0.815, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '1085',
+    standard: 'High Carbon Steel',
+    composition: { C: 0.865, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '1090',
+    standard: 'High Carbon Steel',
+    composition: { C: 0.915, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '1095',
+    standard: 'High Carbon Steel',
+    composition: { C: 0.965, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.40, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: 'C62D',
+    standard: 'EN High Carbon Steel',
+    composition: { C: 0.61, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: 'C66D',
+    standard: 'EN High Carbon Steel',
+    composition: { C: 0.65, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: 'C68D',
+    standard: 'EN High Carbon Steel',
+    composition: { C: 0.69, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: 'C70D',
+    standard: 'EN High Carbon Steel',
+    composition: { C: 0.71, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: 'C72D',
+    standard: 'EN High Carbon Steel',
+    composition: { C: 0.74, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: 'C80D',
+    standard: 'EN High Carbon Steel',
+    composition: { C: 0.80, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: 'C86D',
+    standard: 'EN High Carbon Steel',
+    composition: { C: 0.85, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: 'C92D',
+    standard: 'EN High Carbon Steel',
+    composition: { C: 0.90, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '65#',
+    standard: 'GB High Carbon Steel',
+    composition: { C: 0.66, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '65Mn',
+    standard: 'GB High Carbon Steel',
+    composition: { C: 0.66, S: 0.045, P: 0.045, Si: 0.175, Mn: 1.05, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '70#',
+    standard: 'GB High Carbon Steel',
+    composition: { C: 0.71, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '70Mn',
+    standard: 'GB High Carbon Steel',
+    composition: { C: 0.71, S: 0.045, P: 0.045, Si: 0.175, Mn: 1.05, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '75#',
+    standard: 'GB High Carbon Steel',
+    composition: { C: 0.76, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '80#',
+    standard: 'GB High Carbon Steel',
+    composition: { C: 0.81, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '85#',
+    standard: 'GB High Carbon Steel',
+    composition: { C: 0.86, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: 'T7',
+    standard: 'GB High Carbon Steel',
+    composition: { C: 0.70, S: 0.030, P: 0.030, Si: 0.175, Mn: 0.25, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: 'T8',
+    standard: 'GB High Carbon Steel',
+    composition: { C: 0.80, S: 0.030, P: 0.030, Si: 0.175, Mn: 0.25, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: 'T10',
+    standard: 'GB High Carbon Steel',
+    composition: { C: 0.995, S: 0.030, P: 0.030, Si: 0.175, Mn: 0.25, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '4130',
+    standard: 'Alloy Steel',
+    composition: { C: 0.305, S: 0.040, P: 0.040, Si: 0.175, Mn: 0.50, Cr: 0.95, Mo: 0.20, Ni: 0.15, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '4140',
+    standard: 'Alloy Steel',
+    composition: { C: 0.405, S: 0.040, P: 0.040, Si: 0.175, Mn: 0.875, Cr: 0.95, Mo: 0.20, Ni: 0.15, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '4340',
+    standard: 'Alloy Steel',
+    composition: { C: 0.405, S: 0.040, P: 0.040, Si: 0.175, Mn: 0.70, Cr: 0.80, Mo: 0.25, Ni: 1.825, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '8620',
+    standard: 'Alloy Steel',
+    composition: { C: 0.205, S: 0.040, P: 0.040, Si: 0.175, Mn: 0.80, Cr: 0.50, Mo: 0.20, Ni: 0.55, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '52100',
+    standard: 'Alloy Steel',
+    composition: { C: 1.025, S: 0.040, P: 0.040, Si: 0.175, Mn: 0.35, Cr: 1.45, Mo: 0.05, Ni: 0.15, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '42CrMo4',
+    standard: 'EN Alloy Steel',
+    composition: { C: 0.415, S: 0.035, P: 0.035, Si: 0.20, Mn: 0.75, Cr: 1.05, Mo: 0.225, Ni: 0.20, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '34CrNiMo6',
+    standard: 'EN Alloy Steel',
+    composition: { C: 0.335, S: 0.035, P: 0.035, Si: 0.20, Mn: 0.65, Cr: 1.50, Mo: 0.225, Ni: 1.50, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '40NiCrMo4',
+    standard: 'EN Alloy Steel',
+    composition: { C: 0.40, S: 0.035, P: 0.035, Si: 0.20, Mn: 0.65, Cr: 1.05, Mo: 0.25, Ni: 1.825, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '16MnCr5',
+    standard: 'EN Alloy Steel',
+    composition: { C: 0.165, S: 0.035, P: 0.035, Si: 0.20, Mn: 1.15, Cr: 0.95, Mo: 0.05, Ni: 0.15, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '20CrMo',
+    standard: 'GB Alloy Steel',
+    composition: { C: 0.205, S: 0.035, P: 0.035, Si: 0.175, Mn: 0.55, Cr: 1.05, Mo: 0.20, Ni: 0.15, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '40Cr',
+    standard: 'GB Alloy Steel',
+    composition: { C: 0.405, S: 0.035, P: 0.035, Si: 0.175, Mn: 0.65, Cr: 0.95, Mo: 0.05, Ni: 0.15, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '20CrNiMo',
+    standard: 'GB Alloy Steel',
+    composition: { C: 0.20, S: 0.035, P: 0.035, Si: 0.175, Mn: 0.55, Cr: 0.50, Mo: 0.20, Ni: 1.55, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: '35CrMo',
+    standard: 'GB Alloy Steel',
+    composition: { C: 0.36, S: 0.035, P: 0.035, Si: 0.175, Mn: 0.55, Cr: 0.95, Mo: 0.20, Ni: 0.15, Cu: 0, V: 0, W: 0 }
+},
+{
+    grade: 'W1',
+    standard: 'Tool Steel',
+    composition: { C: 1.00, S: 0.025, P: 0.025, Si: 0, Mn: 0.25, Cr: 0.075, Mo: 0, Ni: 0, Cu: 0, V: 0.10, W: 0 }
+},
+{
+    grade: 'W2',
+    standard: 'Tool Steel',
+    composition: { C: 1.175, S: 0.025, P: 0.025, Si: 0, Mn: 0.30, Cr: 0.25, Mo: 0, Ni: 0, Cu: 0, V: 0.10, W: 0 }
+},
+{
+    grade: 'S1',
+    standard: 'Tool Steel',
+    composition: { C: 0.55, S: 0, P: 0, Si: 0.20, Mn: 0.70, Cr: 1.50, Mo: 0.25, Ni: 1.00, Cu: 0, V: 0.15, W: 0 }
+},
+{
+    grade: 'S7',
+    standard: 'Tool Steel',
+    composition: { C: 0.50, S: 0, P: 0, Si: 0, Mn: 0.50, Cr: 3.25, Mo: 0.15, Ni: 0, Cu: 0, V: 0.25, W: 0 }
+},
+{
+    grade: 'O1',
+    standard: 'Tool Steel',
+    composition: { C: 0.925, S: 0, P: 0, Si: 0, Mn: 1.20, Cr: 0.55, Mo: 0, Ni: 0, Cu: 0, V: 0.15, W: 0.25 }
+},
+{
+    grade: 'O2',
+    standard: 'Tool Steel',
+    composition: { C: 1.05, S: 0, P: 0, Si: 0, Mn: 1.30, Cr: 0.45, Mo: 0, Ni: 0, Cu: 0, V: 0.05, W: 0.25 }
+},
+{
+    grade: 'A2',
+    standard: 'Tool Steel',
+    composition: { C: 1.00, S: 0, P: 0, Si: 0, Mn: 0.75, Cr: 5.125, Mo: 1.15, Ni: 0, Cu: 0, V: 0.325, W: 0 }
+},
+{
+    grade: 'A6',
+    standard: 'Tool Steel',
+    composition: { C: 0.70, S: 0, P: 0, Si: 0, Mn: 1.10, Cr: 1.25, Mo: 1.10, Ni: 0, Cu: 0, V: 0.20, W: 0 }
+},
+{
+    grade: 'T1',
+    standard: 'Tool Steel',
+    composition: { C: 0.725, S: 0, P: 0, Si: 0, Mn: 0.20, Cr: 4.125, Mo: 0.15, Ni: 0, Cu: 0, V: 1.15, W: 18.25 }
+},
+{
+    grade: 'M2',
+    standard: 'Tool Steel',
+    composition: { C: 0.83, S: 0, P: 0, Si: 0, Mn: 0.20, Cr: 4.125, Mo: 5.00, Ni: 0, Cu: 0, V: 1.975, W: 6.00 }
+},
+{
+    grade: 'H11',
+    standard: 'Tool Steel',
+    composition: { C: 0.385, S: 0, P: 0, Si: 0.60, Mn: 0.25, Cr: 5.125, Mo: 1.375, Ni: 0, Cu: 0, V: 0.45, W: 0 }
+},
+{
+    grade: 'H13',
+    standard: 'Tool Steel',
+    composition: { C: 0.385, S: 0, P: 0, Si: 0, Mn: 0.25, Cr: 5.125, Mo: 1.425, Ni: 0, Cu: 0, V: 1.00, W: 0 }
+},
+{
+    grade: 'X153CrMoV12',
+    standard: 'EN Tool Steel',
+    composition: { C: 1.525, S: 0, P: 0, Si: 0, Mn: 0.30, Cr: 12.00, Mo: 0.65, Ni: 0, Cu: 0, V: 0.10, W: 0 }
+},
+{
+    grade: 'X40CrMoV5-1',
+    standard: 'EN Tool Steel',
+    composition: { C: 0.40, S: 0, P: 0, Si: 0, Mn: 0.20, Cr: 5.125, Mo: 1.425, Ni: 0, Cu: 0, V: 0.25, W: 0 }
+},
+{
+    grade: 'Cr12',
+    standard: 'GB Tool Steel',
+    composition: { C: 2.15, S: 0, P: 0, Si: 0, Mn: 0.30, Cr: 12.25, Mo: 0.40, Ni: 0, Cu: 0, V: 0.10, W: 0 }
+},
+{
+    grade: '9CrWMn',
+    standard: 'GB Tool Steel',
+    composition: { C: 0.90, S: 0, P: 0, Si: 0, Mn: 1.05, Cr: 2.50, Mo: 0.45, Ni: 0, Cu: 0, V: 0.15, W: 0 }
+},
+{
+    grade: 'W18Cr4V',
+    standard: 'GB Tool Steel',
+    composition: { C: 0.775, S: 0, P: 0, Si: 0, Mn: 0.25, Cr: 4.15, Mo: 0.15, Ni: 0, Cu: 0, V: 1.10, W: 18.25 }
+}
+            ];
 
-        // Mobile menu toggle functionality
-        const navToggle = document.querySelector('.nav-toggle');
-        const navMenu = document.querySelector('.navbar ul');
+             // Function to calculate match percentage with weighted elements
+            function calculateMatch(input, material) {
+                let totalDiff = 0;
+                let elementsCounted = 0;
+                // Weights for different elements (can be adjusted)
+                const weights = { C: 2, Mn: 1.5, Cr: 2, Mo: 2, Ni: 1, S: 0.5, P: 0.5, Si: 0.8, Cu: 0.5, V: 1, W: 1 };
 
-        navToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
+                for (const [element, value] of Object.entries(input)) {
+                    // Only consider elements that have a valid input value
+                    if (value !== '' && !isNaN(value)) {
+                        const inputVal = parseFloat(value);
+                        const materialVal = material.composition[element] || 0; // Default to 0 if element not in material
+                        const weight = weights[element] || 1; // Default weight if not specified
+
+                        // Calculate weighted absolute difference
+                        totalDiff += Math.abs(inputVal - materialVal) * weight;
+                        elementsCounted += weight;
+                    }
+                }
+
+                if (elementsCounted === 0) return 0; // Avoid division by zero
+                const avgDiff = totalDiff / elementsCounted;
+
+                // Convert average difference to a match percentage (higher is better)
+                return Math.max(0, 100 - (avgDiff * 100));
+            }
+
+            // Function to format key elements for display
+            function getKeyElements(composition) {
+                const elements = [];
+                // Define elements to exclude from display
+                const excludedElements = ['S', 'P'];
+
+                for (const [element, value] of Object.entries(composition)) {
+                    // Include all elements except those in the excludedElements array
+                    if (!excludedElements.includes(element)) {
+                        elements.push(`${element}:${value.toFixed(2)}%`);
+                    }
+                }
+                // Display up to 4 key elements
+                return elements.slice(0, 4).join(' ');
+            }
+
+            // Handle form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('Form submitted'); // Debug log
+
+                // Show loading state on button
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
+                submitBtn.disabled = true;
+
+                // Get user input values from form fields
+                const input = {
+                    C: document.getElementById('carbon').value,
+                    S: document.getElementById('sulfur').value,
+                    P: document.getElementById('phosphorus').value,
+                    Si: document.getElementById('silicon').value,
+                    Mn: document.getElementById('manganese').value,
+                    Cr: document.getElementById('chromium').value,
+                    Mo: document.getElementById('molybdenum').value,
+                    Ni: document.getElementById('nickel').value,
+                    Cu: document.getElementById('copper').value,
+                    V: document.getElementById('vanadium').value,
+                    W: document.getElementById('tungsten').value
+                };
+
+                let allGrades = [...materialGrades]; // Start with the hardcoded database
+
+                // Process uploaded file data if available
+                if (Object.keys(gk_fileData).length > 0) {
+                    for (const filename in gk_fileData) {
+                        const processedData = loadFileData(filename); // Get CSV string from loaded file
+                        if (processedData) {
+                            const lines = processedData.trim().split('\n');
+                            if (lines.length > 1) {
+                                const headers = lines[0].split(',').map(h => h.trim());
+                                for (let i = 1; i < lines.length; i++) {
+                                    const values = lines[i].split(',').map(v => v.trim());
+                                    const grade = values[headers.indexOf('Grade')] || 'N/A';
+                                    const standard = values[headers.indexOf('Standard')] || 'N/A';
+                                    const composition = {};
+                                    // Map known elements from headers to composition object
+                                    ['C', 'S', 'P', 'Si', 'Mn', 'Cr', 'Mo', 'Ni', 'Cu', 'V', 'W'].forEach(element => {
+                                        const index = headers.indexOf(element);
+                                        if (index !== -1 && !isNaN(parseFloat(values[index]))) {
+                                            composition[element] = parseFloat(values[index]);
+                                        } else {
+                                            composition[element] = 0; // Default to 0 if not found or invalid
+                                        }
+                                    });
+                                    allGrades.push({ grade, standard, composition }); // Add to the list of grades
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Calculate matches against all available grades (hardcoded + uploaded)
+                const matches = allGrades.map(material => {
+                    const matchPercent = calculateMatch(input, material);
+                    return {
+                        ...material,
+                        matchPercent: matchPercent
+                    };
+                }).filter(match => match.matchPercent > 0) // Only show matches with >0%
+                  .sort((a, b) => b.matchPercent - a.matchPercent); // Sort by match percentage (descending)
+
+                // Display results in the table
+                displayResults(matches);
+
+                // Reset button state
+                submitBtn.innerHTML = '<i class="fas fa-search"></i> Find Matches';
+                submitBtn.disabled = false;
+            });
+
+            // Function to display results in the HTML table
+            function displayResults(matches) {
+                if (matches.length === 0) {
+                    resultsBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="no-results">
+                                No matching grades found. Try adjusting your values or uploading a different file.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                matches.forEach(match => {
+                    html += `
+                        <tr>
+                            <td>${match.grade}</td>
+                            <td>${match.standard}</td>
+                            <td class="match-percent">${match.matchPercent.toFixed(1)}%</td>
+                            <td>${getKeyElements(match.composition)}</td>
+                        </tr>
+                    `;
+                });
+
+                resultsBody.innerHTML = html;
+            }
         });
     </script>
 </body>
