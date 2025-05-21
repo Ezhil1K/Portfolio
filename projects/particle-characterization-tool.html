@@ -713,13 +713,13 @@
                 return elements.join(' ');
             }
 
-          function calculateMatch(input, material) {
+function calculateMatch(input, material) {
     let totalDiff = 0;
     let elementsCounted = 0;
     const weights = { C: 2, Mn: 1.5, Cr: 2, Mo: 2, Ni: 1, S: 0.5, P: 0.5, Si: 0.8, Cu: 0.5, V: 1, W: 1 };
 
     for (const [element, value] of Object.entries(input)) {
-        if (value !== '' && !isNaN(value)) {
+        if (value !== '' && !isNaN(value) && value !== null) {
             const inputVal = parseFloat(value);
             const materialVal = material.composition[element] || 0;
             const weight = weights[element] || 1;
@@ -727,7 +727,11 @@
             elementsCounted += weight;
         }
     }
-    }
+
+    if (elementsCounted === 0) return 0;
+    const avgDiff = totalDiff / elementsCounted;
+    return Math.max(0, 100 - (avgDiff * 100));
+}
 
     if (elementsCounted === 0) return 0;
     const avgDiff = totalDiff / elementsCounted;
@@ -741,50 +745,66 @@
 
             // Handle form submission
             form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
-                loadingIndicator.style.display = 'block';
+    e.preventDefault();
+    
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
+    loadingIndicator.style.display = 'block';
 
-               // Get input values
-const input = {
-    C: document.getElementById('carbon').value || '0',
-    S: document.getElementById('sulfur').value || '0',
-    P: document.getElementById('phosphorus').value || '0',
-    Si: document.getElementById('silicon').value || '0',
-    Mn: document.getElementById('manganese').value || '0',
-    Cr: document.getElementById('chromium').value || '0',
-    Mo: document.getElementById('molybdenum').value || '0',
-    Ni: document.getElementById('nickel').value || '0',
-    Cu: document.getElementById('copper').value || '0',
-    V: document.getElementById('vanadium').value || '0',
-    W: document.getElementById('tungsten').value || '0'
-};
+    // Get input values
+    const input = {
+        C: parseFloat(document.getElementById('carbon').value) || 0,
+        S: parseFloat(document.getElementById('sulfur').value) || 0,
+        P: parseFloat(document.getElementById('phosphorus').value) || 0,
+        Si: parseFloat(document.getElementById('silicon').value) || 0,
+        Mn: parseFloat(document.getElementById('manganese').value) || 0,
+        Cr: parseFloat(document.getElementById('chromium').value) || 0,
+        Mo: parseFloat(document.getElementById('molybdenum').value) || 0,
+        Ni: parseFloat(document.getElementById('nickel').value) || 0,
+        Cu: parseFloat(document.getElementById('copper').value) || 0,
+        V: parseFloat(document.getElementById('vanadium').value) || 0,
+        W: parseFloat(document.getElementById('tungsten').value) || 0
+    };
 
-                setTimeout(() => {
-                    try {
-                        const matches = materialGrades.map(material => {
-                            const matchPercent = calculateMatch(input, material);
-                            return { ...material, matchPercent };
-                        }).filter(match => match.matchPercent > 0)
-                          .sort((a, b) => b.matchPercent - a.matchPercent);
+    // Check if at least one input is non-zero
+    const hasValidInput = Object.values(input).some(val => val > 0);
 
-                        displayResults(matches);
-                    } catch (error) {
-                        console.error("Error:", error);
-                        resultsBody.innerHTML = `
-                            <tr>
-                                <td colspan="4" class="no-results">Error processing request</td>
-                            </tr>
-                        `;
-                    }
+    if (!hasValidInput) {
+        resultsBody.innerHTML = `
+            <tr>
+                <td colspan="4" class="no-results">Please enter at least one non-zero composition value.</td>
+            </tr>
+        `;
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-search"></i> Find Matches';
+        loadingIndicator.style.display = 'none';
+        return;
+    }
 
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-search"></i> Find Matches';
-                    loadingIndicator.style.display = 'none';
-                }, 500);
-            });
+    setTimeout(() => {
+        try {
+            const matches = materialGrades.map(material => {
+                const matchPercent = calculateMatch(input, material);
+                return { ...material, matchPercent };
+            }).filter(match => match.matchPercent >= 50) // Show only matches above 50%
+              .sort((a, b) => b.matchPercent - a.matchPercent)
+              .slice(0, 10); // Limit to top 10 matches
+
+            displayResults(matches);
+        } catch (error) {
+            console.error("Error:", error);
+            resultsBody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="no-results">Error processing request</td>
+                </tr>
+            `;
+        }
+
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-search"></i> Find Matches';
+        loadingIndicator.style.display = 'none';
+    }, 500);
+});
 
             // Clear form
             clearBtn.addEventListener('click', function() {
