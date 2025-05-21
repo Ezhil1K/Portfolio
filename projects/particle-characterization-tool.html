@@ -260,7 +260,7 @@
 <body>
     <nav class="navbar">
         <div class="container">
-           <h1>Ezhilarasan Kandiah</h1>
+            <h1>Ezhilarasan Kandiah</h1>
             <span class="nav-toggle"><i class="fas fa-bars"></i></span>
             <ul>
                 <li><a href="../index.html#home">Home</a></li>
@@ -368,481 +368,221 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle
-            const navToggle = document.querySelector('.nav-toggle');
-            const navMenu = document.querySelector('.navbar ul');
+        (function() {
+            // Ensure script runs after DOM is fully loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                // Mobile menu toggle
+                const navToggle = document.querySelector('.nav-toggle');
+                const navMenu = document.querySelector('.navbar ul');
 
-            if (navToggle && navMenu) {
-                navToggle.addEventListener('click', () => {
-                    navMenu.classList.toggle('active');
-                });
-            }
+                if (navToggle && navMenu) {
+                    navToggle.addEventListener('click', () => {
+                        navMenu.classList.toggle('active');
+                    });
+                } else {
+                    console.warn('Navigation elements not found.');
+                }
 
-            // Form elements
-            const form = document.getElementById('compositionForm');
-            const resultsBody = document.getElementById('resultsBody');
-            const submitBtn = document.getElementById('submitBtn');
-            const clearBtn = document.getElementById('clearBtn');
-            const loadingIndicator = document.getElementById('loadingIndicator');
+                // Form elements
+                const form = document.getElementById('compositionForm');
+                const resultsBody = document.getElementById('resultsBody');
+                const submitBtn = document.getElementById('submitBtn');
+                const clearBtn = document.getElementById('clearBtn');
+                const loadingIndicator = document.getElementById('loadingIndicator');
 
-            // Material database (sample entries)
-            const materialGrades = [
-                {
-                    grade: 'AISI 1018',
-                    standard: 'Low Carbon Steel',
-                    composition: { C: 0.18, S: 0.05, P: 0.04, Si: 0.4, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-                },
-                {
-                    grade: 'AISI 1045',
-                    standard: 'Medium Carbon Steel',
-                    composition: { C: 0.45, S: 0.05, P: 0.04, Si: 0.25, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-                },
-                {
-                    grade: 'AISI 4140',
-                    standard: 'Chromium-Molybdenum',
-                    composition: { C: 0.40, S: 0.04, P: 0.035, Si: 0.25, Mn: 0.85, Cr: 1.0, Mo: 0.2, Ni: 0, Cu: 0, V: 0, W: 0 }
-                },
-                {
-                    grade: 'AISI 316',
-                    standard: 'Stainless Steel',
-                    composition: { C: 0.08, S: 0.03, P: 0.045, Si: 1.0, Mn: 2.0, Cr: 17.0, Mo: 2.5, Ni: 11.0, Cu: 0, V: 0, W: 0 }
-                },
-                {
-                    grade: 'AISI 304',
-                    standard: 'Stainless Steel',
-                    composition: { C: 0.08, S: 0.03, P: 0.045, Si: 1.0, Mn: 2.0, Cr: 18.0, Mo: 0, Ni: 8.0, Cu: 0, V: 0, W: 0 }
-                },
-                {
-                    grade: '1059',
-                    standard: 'High Carbon Steel',
-                    composition: { C: 0.60, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-                },
-                {
-                   grade: '1060',
-                   standard: 'High Carbon Steel',
-                   composition: { C: 0.60, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-                },
-{
-    grade: '1065',
-    standard: 'High Carbon Steel',
-    composition: { C: 0.65, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '1070',
-    standard: 'High Carbon Steel',
-    composition: { C: 0.70, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '1075',
-    standard: 'High Carbon Steel',
-    composition: { C: 0.75, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '1080',
-    standard: 'High Carbon Steel',
-    composition: { C: 0.815, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '1085',
-    standard: 'High Carbon Steel',
-    composition: { C: 0.865, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '1090',
-    standard: 'High Carbon Steel',
-    composition: { C: 0.915, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '1095',
-    standard: 'High Carbon Steel',
-    composition: { C: 0.965, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.40, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: 'C62D',
-    standard: 'EN High Carbon Steel',
-    composition: { C: 0.61, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: 'C66D',
-    standard: 'EN High Carbon Steel',
-    composition: { C: 0.65, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: 'C68D',
-    standard: 'EN High Carbon Steel',
-    composition: { C: 0.69, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: 'C70D',
-    standard: 'EN High Carbon Steel',
-    composition: { C: 0.71, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: 'C72D',
-    standard: 'EN High Carbon Steel',
-    composition: { C: 0.74, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: 'C80D',
-    standard: 'EN High Carbon Steel',
-    composition: { C: 0.80, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: 'C86D',
-    standard: 'EN High Carbon Steel',
-    composition: { C: 0.85, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: 'C92D',
-    standard: 'EN High Carbon Steel',
-    composition: { C: 0.90, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '65#',
-    standard: 'GB High Carbon Steel',
-    composition: { C: 0.66, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '65Mn',
-    standard: 'GB High Carbon Steel',
-    composition: { C: 0.66, S: 0.045, P: 0.045, Si: 0.175, Mn: 1.05, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '70#',
-    standard: 'GB High Carbon Steel',
-    composition: { C: 0.71, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '70Mn',
-    standard: 'GB High Carbon Steel',
-    composition: { C: 0.71, S: 0.045, P: 0.045, Si: 0.175, Mn: 1.05, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '75#',
-    standard: 'GB High Carbon Steel',
-    composition: { C: 0.76, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '80#',
-    standard: 'GB High Carbon Steel',
-    composition: { C: 0.81, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '85#',
-    standard: 'GB High Carbon Steel',
-    composition: { C: 0.86, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: 'T7',
-    standard: 'GB High Carbon Steel',
-    composition: { C: 0.70, S: 0.030, P: 0.030, Si: 0.175, Mn: 0.25, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: 'T8',
-    standard: 'GB High Carbon Steel',
-    composition: { C: 0.80, S: 0.030, P: 0.030, Si: 0.175, Mn: 0.25, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: 'T10',
-    standard: 'GB High Carbon Steel',
-    composition: { C: 0.995, S: 0.030, P: 0.030, Si: 0.175, Mn: 0.25, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
-}
-{
-    grade: '4130',
-    standard: 'Alloy Steel',
-    composition: { C: 0.305, S: 0.040, P: 0.040, Si: 0.175, Mn: 0.50, Cr: 0.95, Mo: 0.20, Ni: 0.15, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '4140',
-    standard: 'Alloy Steel',
-    composition: { C: 0.405, S: 0.040, P: 0.040, Si: 0.175, Mn: 0.875, Cr: 0.95, Mo: 0.20, Ni: 0.15, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '4340',
-    standard: 'Alloy Steel',
-    composition: { C: 0.405, S: 0.040, P: 0.040, Si: 0.175, Mn: 0.70, Cr: 0.80, Mo: 0.25, Ni: 1.825, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '8620',
-    standard: 'Alloy Steel',
-    composition: { C: 0.205, S: 0.040, P: 0.040, Si: 0.175, Mn: 0.80, Cr: 0.50, Mo: 0.20, Ni: 0.55, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '52100',
-    standard: 'Alloy Steel',
-    composition: { C: 1.025, S: 0.040, P: 0.040, Si: 0.175, Mn: 0.35, Cr: 1.45, Mo: 0.05, Ni: 0.15, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '42CrMo4',
-    standard: 'EN Alloy Steel',
-    composition: { C: 0.415, S: 0.035, P: 0.035, Si: 0.20, Mn: 0.75, Cr: 1.05, Mo: 0.225, Ni: 0.20, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '34CrNiMo6',
-    standard: 'EN Alloy Steel',
-    composition: { C: 0.335, S: 0.035, P: 0.035, Si: 0.20, Mn: 0.65, Cr: 1.50, Mo: 0.225, Ni: 1.50, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '40NiCrMo4',
-    standard: 'EN Alloy Steel',
-    composition: { C: 0.40, S: 0.035, P: 0.035, Si: 0.20, Mn: 0.65, Cr: 1.05, Mo: 0.25, Ni: 1.825, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '16MnCr5',
-    standard: 'EN Alloy Steel',
-    composition: { C: 0.165, S: 0.035, P: 0.035, Si: 0.20, Mn: 1.15, Cr: 0.95, Mo: 0.05, Ni: 0.15, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '20CrMo',
-    standard: 'GB Alloy Steel',
-    composition: { C: 0.205, S: 0.035, P: 0.035, Si: 0.175, Mn: 0.55, Cr: 1.05, Mo: 0.20, Ni: 0.15, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '40Cr',
-    standard: 'GB Alloy Steel',
-    composition: { C: 0.405, S: 0.035, P: 0.035, Si: 0.175, Mn: 0.65, Cr: 0.95, Mo: 0.05, Ni: 0.15, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '20CrNiMo',
-    standard: 'GB Alloy Steel',
-    composition: { C: 0.20, S: 0.035, P: 0.035, Si: 0.175, Mn: 0.55, Cr: 0.50, Mo: 0.20, Ni: 1.55, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: '35CrMo',
-    standard: 'GB Alloy Steel',
-    composition: { C: 0.36, S: 0.035, P: 0.035, Si: 0.175, Mn: 0.55, Cr: 0.95, Mo: 0.20, Ni: 0.15, Cu: 0, V: 0, W: 0 }
-},
-{
-    grade: 'W1',
-    standard: 'Tool Steel',
-    composition: { C: 1.00, S: 0.025, P: 0.025, Si: 0, Mn: 0.25, Cr: 0.075, Mo: 0, Ni: 0, Cu: 0, V: 0.10, W: 0 }
-},
-{
-    grade: 'W2',
-    standard: 'Tool Steel',
-    composition: { C: 1.175, S: 0.025, P: 0.025, Si: 0, Mn: 0.30, Cr: 0.25, Mo: 0, Ni: 0, Cu: 0, V: 0.10, W: 0 }
-},
-{
-    grade: 'S1',
-    standard: 'Tool Steel',
-    composition: { C: 0.55, S: 0, P: 0, Si: 0.20, Mn: 0.70, Cr: 1.50, Mo: 0.25, Ni: 1.00, Cu: 0, V: 0.15, W: 0 }
-},
-{
-    grade: 'S7',
-    standard: 'Tool Steel',
-    composition: { C: 0.50, S: 0, P: 0, Si: 0, Mn: 0.50, Cr: 3.25, Mo: 0.15, Ni: 0, Cu: 0, V: 0.25, W: 0 }
-},
-{
-    grade: 'O1',
-    standard: 'Tool Steel',
-    composition: { C: 0.925, S: 0, P: 0, Si: 0, Mn: 1.20, Cr: 0.55, Mo: 0, Ni: 0, Cu: 0, V: 0.15, W: 0.25 }
-},
-{
-    grade: 'O2',
-    standard: 'Tool Steel',
-    composition: { C: 1.05, S: 0, P: 0, Si: 0, Mn: 1.30, Cr: 0.45, Mo: 0, Ni: 0, Cu: 0, V: 0.05, W: 0.25 }
-},
-{
-    grade: 'A2',
-    standard: 'Tool Steel',
-    composition: { C: 1.00, S: 0, P: 0, Si: 0, Mn: 0.75, Cr: 5.125, Mo: 1.15, Ni: 0, Cu: 0, V: 0.325, W: 0 }
-},
-{
-    grade: 'A6',
-    standard: 'Tool Steel',
-    composition: { C: 0.70, S: 0, P: 0, Si: 0, Mn: 1.10, Cr: 1.25, Mo: 1.10, Ni: 0, Cu: 0, V: 0.20, W: 0 }
-},
-{
-    grade: 'T1',
-    standard: 'Tool Steel',
-    composition: { C: 0.725, S: 0, P: 0, Si: 0, Mn: 0.20, Cr: 4.125, Mo: 0.15, Ni: 0, Cu: 0, V: 1.15, W: 18.25 }
-},
-{
-    grade: 'M2',
-    standard: 'Tool Steel',
-    composition: { C: 0.83, S: 0, P: 0, Si: 0, Mn: 0.20, Cr: 4.125, Mo: 5.00, Ni: 0, Cu: 0, V: 1.975, W: 6.00 }
-},
-{
-    grade: 'H11',
-    standard: 'Tool Steel',
-    composition: { C: 0.385, S: 0, P: 0, Si: 0.60, Mn: 0.25, Cr: 5.125, Mo: 1.375, Ni: 0, Cu: 0, V: 0.45, W: 0 }
-},
-{
-    grade: 'H13',
-    standard: 'Tool Steel',
-    composition: { C: 0.385, S: 0, P: 0, Si: 0, Mn: 0.25, Cr: 5.125, Mo: 1.425, Ni: 0, Cu: 0, V: 1.00, W: 0 }
-},
-{
-    grade: 'X153CrMoV12',
-    standard: 'EN Tool Steel',
-    composition: { C: 1.525, S: 0, P: 0, Si: 0, Mn: 0.30, Cr: 12.00, Mo: 0.65, Ni: 0, Cu: 0, V: 0.10, W: 0 }
-},
-{
-    grade: 'X40CrMoV5-1',
-    standard: 'EN Tool Steel',
-    composition: { C: 0.40, S: 0, P: 0, Si: 0, Mn: 0.20, Cr: 5.125, Mo: 1.425, Ni: 0, Cu: 0, V: 0.25, W: 0 }
-},
-{
-    grade: 'Cr12',
-    standard: 'GB Tool Steel',
-    composition: { C: 2.15, S: 0, P: 0, Si: 0, Mn: 0.30, Cr: 12.25, Mo: 0.40, Ni: 0, Cu: 0, V: 0.10, W: 0 }
-},
-{
-    grade: '9CrWMn',
-    standard: 'GB Tool Steel',
-    composition: { C: 0.90, S: 0, P: 0, Si: 0, Mn: 1.05, Cr: 2.50, Mo: 0.45, Ni: 0, Cu: 0, V: 0.15, W: 0 }
-},
-{
-    grade: 'W18Cr4V',
-    standard: 'GB Tool Steel',
-    composition: { C: 0.775, S: 0, P: 0, Si: 0, Mn: 0.25, Cr: 4.15, Mo: 0.15, Ni: 0, Cu: 0, V: 1.10, W: 18.25 }
-}
-            ];
-
-            // Format complete composition string
-            function getFullComposition(composition) {
-                const elements = [];
-                const elementOrder = ['C', 'S', 'P', 'Si', 'Mn', 'Cr', 'Mo', 'Ni', 'Cu', 'V', 'W'];
-                
-                elementOrder.forEach(element => {
-                    const value = composition[element] || 0;
-                    elements.push(`${element}:${value.toFixed(2)}%`);
-                });
-                
-                return elements.join(' ');
-            }
-
-function calculateMatch(input, material) {
-    let totalDiff = 0;
-    let elementsCounted = 0;
-    const weights = { C: 2, Mn: 1.5, Cr: 2, Mo: 2, Ni: 1, S: 0.5, P: 0.5, Si: 0.8, Cu: 0.5, V: 1, W: 1 };
-
-    for (const [element, value] of Object.entries(input)) {
-        if (value !== '' && !isNaN(value) && value !== null) {
-            const inputVal = parseFloat(value);
-            const materialVal = material.composition[element] || 0;
-            const weight = weights[element] || 1;
-            totalDiff += Math.abs(inputVal - materialVal) * weight;
-            elementsCounted += weight;
-        }
-    }
-
-    if (elementsCounted === 0) return 0;
-    const avgDiff = totalDiff / elementsCounted;
-    return Math.max(0, 100 - (avgDiff * 100));
-}
-
-    if (elementsCounted === 0) return 0;
-    const avgDiff = totalDiff / elementsCounted;
-    return Math.max(0, 100 - (avgDiff * 100));
-}
-
-    if (elementsCounted === 0) return 0;
-    const avgDiff = totalDiff / elementsCounted;
-    return Math.max(0, 100 - (avgDiff * 100));
-}
-
-            // Handle form submission
-            form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
-    loadingIndicator.style.display = 'block';
-
-    // Get input values
-    const input = {
-        C: parseFloat(document.getElementById('carbon').value) || 0,
-        S: parseFloat(document.getElementById('sulfur').value) || 0,
-        P: parseFloat(document.getElementById('phosphorus').value) || 0,
-        Si: parseFloat(document.getElementById('silicon').value) || 0,
-        Mn: parseFloat(document.getElementById('manganese').value) || 0,
-        Cr: parseFloat(document.getElementById('chromium').value) || 0,
-        Mo: parseFloat(document.getElementById('molybdenum').value) || 0,
-        Ni: parseFloat(document.getElementById('nickel').value) || 0,
-        Cu: parseFloat(document.getElementById('copper').value) || 0,
-        V: parseFloat(document.getElementById('vanadium').value) || 0,
-        W: parseFloat(document.getElementById('tungsten').value) || 0
-    };
-
-    // Check if at least one input is non-zero
-    const hasValidInput = Object.values(input).some(val => val > 0);
-
-    if (!hasValidInput) {
-        resultsBody.innerHTML = `
-            <tr>
-                <td colspan="4" class="no-results">Please enter at least one non-zero composition value.</td>
-            </tr>
-        `;
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-search"></i> Find Matches';
-        loadingIndicator.style.display = 'none';
-        return;
-    }
-
-    setTimeout(() => {
-        try {
-            const matches = materialGrades.map(material => {
-                const matchPercent = calculateMatch(input, material);
-                return { ...material, matchPercent };
-            }).filter(match => match.matchPercent >= 50) // Show only matches above 50%
-              .sort((a, b) => b.matchPercent - a.matchPercent)
-              .slice(0, 10); // Limit to top 10 matches
-
-            displayResults(matches);
-        } catch (error) {
-            console.error("Error:", error);
-            resultsBody.innerHTML = `
-                <tr>
-                    <td colspan="4" class="no-results">Error processing request</td>
-                </tr>
-            `;
-        }
-
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-search"></i> Find Matches';
-        loadingIndicator.style.display = 'none';
-    }, 500);
-});
-
-            // Clear form
-            clearBtn.addEventListener('click', function() {
-                form.reset();
-                resultsBody.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="no-results">Enter composition values and click "Find Matches" to see results</td>
-                    </tr>
-                `;
-            });
-
-            // Display results
-            function displayResults(matches) {
-                if (!matches || matches.length === 0) {
-                    resultsBody.innerHTML = `
-                        <tr>
-                            <td colspan="4" class="no-results">
-                                No matching grades found. Try adjusting your values.
-                            </td>
-                        </tr>
-                    `;
+                // Check if all required elements exist
+                if (!form || !resultsBody || !submitBtn || !clearBtn || !loadingIndicator) {
+                    console.error('Required DOM elements missing:', {
+                        form: !!form,
+                        resultsBody: !!resultsBody,
+                        submitBtn: !!submitBtn,
+                        clearBtn: !!clearBtn,
+                        loadingIndicator: !!loadingIndicator
+                    });
                     return;
                 }
 
-                let html = '';
-                matches.forEach(match => {
-                    html += `
-                        <tr>
-                            <td>${match.grade}</td>
-                            <td>${match.standard}</td>
-                            <td class="match-percent">${match.matchPercent.toFixed(1)}%</td>
-                            <td class="composition-display">${getFullComposition(match.composition)}</td>
-                        </tr>
-                    `;
-                });
-                resultsBody.innerHTML = html;
-            }
-        });
-    </script>
-</body>
-</html>
+                // Material database
+                const materialGrades = [
+                    {
+                        grade: 'AISI 1018',
+                        standard: 'Low Carbon Steel',
+                        composition: { C: 0.18, S: 0.05, P: 0.04, Si: 0.4, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'AISI 1045',
+                        standard: 'Medium Carbon Steel',
+                        composition: { C: 0.45, S: 0.05, P: 0.04, Si: 0.25, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'AISI 4140',
+                        standard: 'Chromium-Molybdenum',
+                        composition: { C: 0.40, S: 0.04, P: 0.035, Si: 0.25, Mn: 0.85, Cr: 1.0, Mo: 0.2, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'AISI 316',
+                        standard: 'Stainless Steel',
+                        composition: { C: 0.08, S: 0.03, P: 0.045, Si: 1.0, Mn: 2.0, Cr: 17.0, Mo: 2.5, Ni: 11.0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'AISI 304',
+                        standard: 'Stainless Steel',
+                        composition: { C: 0.08, S: 0.03, P: 0.045, Si: 1.0, Mn: 2.0, Cr: 18.0, Mo: 0, Ni: 8.0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '1059',
+                        standard: 'High Carbon Steel',
+                        composition: { C: 0.60, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '1060',
+                        standard: 'High Carbon Steel',
+                        composition: { C: 0.60, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '1065',
+                        standard: 'High Carbon Steel',
+                        composition: { C: 0.65, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '1070',
+                        standard: 'High Carbon Steel',
+                        composition: { C: 0.70, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '1075',
+                        standard: 'High Carbon Steel',
+                        composition: { C: 0.75, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '1080',
+                        standard: 'High Carbon Steel',
+                        composition: { C: 0.815, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '1085',
+                        standard: 'High Carbon Steel',
+                        composition: { C: 0.865, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '1090',
+                        standard: 'High Carbon Steel',
+                        composition: { C: 0.915, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '1095',
+                        standard: 'High Carbon Steel',
+                        composition: { C: 0.965, S: 0.050, P: 0.040, Si: 0.05, Mn: 0.40, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'C62D',
+                        standard: 'EN High Carbon Steel',
+                        composition: { C: 0.61, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'C66D',
+                        standard: 'EN High Carbon Steel',
+                        composition: { C: 0.65, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'C68D',
+                        standard: 'EN High Carbon Steel',
+                        composition: { C: 0.69, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'C70D',
+                        standard: 'EN High Carbon Steel',
+                        composition: { C: 0.71, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'C72D',
+                        standard: 'EN High Carbon Steel',
+                        composition: { C: 0.74, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'C80D',
+                        standard: 'EN High Carbon Steel',
+                        composition: { C: 0.80, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'C86D',
+                        standard: 'EN High Carbon Steel',
+                        composition: { C: 0.85, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'C92D',
+                        standard: 'EN High Carbon Steel',
+                        composition: { C: 0.90, S: 0.045, P: 0.045, Si: 0.20, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '65#',
+                        standard: 'GB High Carbon Steel',
+                        composition: { C: 0.66, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '65Mn',
+                        standard: 'GB High Carbon Steel',
+                        composition: { C: 0.66, S: 0.045, P: 0.045, Si: 0.175, Mn: 1.05, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '70#',
+                        standard: 'GB High Carbon Steel',
+                        composition: { C: 0.71, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '70Mn',
+                        standard: 'GB High Carbon Steel',
+                        composition: { C: 0.71, S: 0.045, P: 0.045, Si: 0.175, Mn: 1.05, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '75#',
+                        standard: 'GB High Carbon Steel',
+                        composition: { C: 0.76, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '80#',
+                        standard: 'GB High Carbon Steel',
+                        composition: { C: 0.81, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '85#',
+                        standard: 'GB High Carbon Steel',
+                        composition: { C: 0.86, S: 0.045, P: 0.045, Si: 0.175, Mn: 0.75, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'T7',
+                        standard: 'GB High Carbon Steel',
+                        composition: { C: 0.70, S: 0.030, P: 0.030, Si: 0.175, Mn: 0.25, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'T8',
+                        standard: 'GB High Carbon Steel',
+                        composition: { C: 0.80, S: 0.030, P: 0.030, Si: 0.175, Mn: 0.25, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: 'T10',
+                        standard: 'GB High Carbon Steel',
+                        composition: { C: 0.995, S: 0.030, P: 0.030, Si: 0.175, Mn: 0.25, Cr: 0, Mo: 0, Ni: 0, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '4130',
+                        standard: 'Alloy Steel',
+                        composition: { C: 0.305, S: 0.040, P: 0.040, Si: 0.175, Mn: 0.50, Cr: 0.95, Mo: 0.20, Ni: 0.15, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '4140',
+                        standard: 'Alloy Steel',
+                        composition: { C: 0.405, S: 0.040, P: 0.040, Si: 0.175, Mn: 0.875, Cr: 0.95, Mo: 0.20, Ni: 0.15, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '4340',
+                        standard: 'Alloy Steel',
+                        composition: { C: 0.405, S: 0.040, P: 0.040, Si: 0.175, Mn: 0.70, Cr: 0.80, Mo: 0.25, Ni: 1.825, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade: '8620',
+                        standard: 'Alloy Steel',
+                        composition: { C: 0.205, S: 0.040, P: 0.040, Si: 0.175, Mn: 0.80, Cr: 0.50, Mo: 0.20, Ni: 0.55, Cu: 0, V: 0, W: 0 }
+                    },
+                    {
+                        grade
