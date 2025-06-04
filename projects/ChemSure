@@ -6,7 +6,6 @@
     <title>Introducing ChemSure: Your Ultimate Tool for GADSL Compliance | Ezhilarasan Kandiah</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* General Body Styles */
         body {
             font-family: 'Arial', sans-serif;
             background: #1a1a1a;
@@ -16,8 +15,6 @@
             margin: 0 auto;
             padding: 0;
         }
-
-        /* Navigation Bar Styles */
         .navbar {
             background: #222;
             padding: 1rem 2rem;
@@ -29,69 +26,55 @@
             top: 0;
             z-index: 1000;
         }
-
         .navbar .logo {
             color: #ffd700;
             font-size: 1.8rem;
             font-weight: bold;
             text-decoration: none;
         }
-
         .navbar-links {
             display: flex;
             gap: 1.5rem;
         }
-
         .navbar-links a {
             color: #f8f8f2;
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s ease;
         }
-
         .navbar-links a:hover {
             color: #ffd700;
         }
-
-        /* Article Header Styles */
         .article-header {
             text-align: center;
             margin-bottom: 3rem;
             padding: 2rem;
         }
-
         .article-header h1 {
             color: #ffd700;
             font-size: 2.5rem;
             margin-bottom: 1rem;
         }
-
         .article-meta {
             color: #aaa;
             font-style: italic;
             margin-bottom: 2rem;
         }
-
-        /* Article Content Styles */
         .article-content {
             background: #222;
             padding: 2rem;
             border-radius: 8px;
             margin: 0 2rem 2rem 2rem;
         }
-
-        /* Homogenous Heading Styles (All yellow) */
         .article-content h2,
         .article-content h3,
         .article-content h4 {
             color: #ffd700;
             margin: 2rem 0 1rem;
         }
-
         .article-content h3 {
             margin-top: 1.5rem;
         }
-
         .article-content img {
             max-width: 100%;
             border-radius: 8px;
@@ -99,24 +82,19 @@
             border: 1px solid #444;
             height: auto;
         }
-
         .article-content figure {
             text-align: center;
             margin: 2rem 0;
             font-style: italic;
             color: #aaa;
         }
-
-        /* YouTube Video Styles */
         .article-content iframe {
             max-width: 100%;
             border-radius: 8px;
             margin: 1rem 0;
             border: 1px solid #444;
-            height: 315px; /* Standard YouTube embed height */
+            height: 315px;
         }
-
-        /* Button Styles */
         .btn {
             display: inline-block;
             padding: 0.8rem 1.5rem;
@@ -128,36 +106,29 @@
             margin-top: 2rem;
             transition: background 0.3s ease;
         }
-
         .btn:hover {
             background: #e6b800;
         }
-
-        /* Responsive Adjustments */
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
                 gap: 1rem;
                 padding: 1rem;
             }
-
             .navbar-links {
                 flex-direction: column;
                 gap: 0.8rem;
                 text-align: center;
             }
-
             .article-header h1 {
                 font-size: 2rem;
             }
-
             .article-content {
                 margin: 0 1rem 1rem 1rem;
                 padding: 1.5rem;
             }
-
             .article-content iframe {
-                height: 200px; /* Adjust height for smaller screens */
+                height: 200px;
             }
         }
     </style>
@@ -205,10 +176,7 @@
 
         <h2>Watch ChemSure in Action</h2>
         <p>Below is a demonstration video showcasing how ChemSure works. Watch as we search for a substance, upload an MSDS file, and review compliance results in just a few steps.</p>
-        <!-- Highlighted section for YouTube video link -->
         <iframe src="https://www.youtube.com/embed/9wD0SjlFIKw" frameborder="0" allowfullscreen></iframe>
-        <!-- End of highlighted section -->
-        
 
         <h2>Why Choose ChemSure?</h2>
         <p>ChemSure isn’t just about compliance—it’s about efficiency. By automating the verification process, ChemSure saves you time, reduces human error, and ensures your data aligns with the latest GADSL standards. Whether you're auditing spare parts, managing a supply chain, or preparing for regulatory reviews, ChemSure empowers you with the tools you need to stay ahead.</p>
