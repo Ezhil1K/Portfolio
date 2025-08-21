@@ -1,257 +1,558 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ezhilarasan Kandiah - Portfolio</title>
-    <!-- Modern font for a clean look -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
+    <meta name="description" content="Portfolio of Ezhilarasan Kandiah, Chemical System Technical Specialist">
+    <title>Ezhilarasan Kandiah | Chemical System Technical Specialist</title>
+    <!-- Font Awesome for social icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
-    <!-- Google Analytics Integration -->
-    <!-- This script is added based on your request and will send data after user consent -->
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        // This function will be called by the cookie consent banner
-        function initializeGoogleAnalytics() {
-            gtag('config', 'G-365191627', { 'anonymize_ip': true });
-        }
-    </script>
-    
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Base Styles */
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #1a1a1a;
-            color: #f8f8f2;
-            line-height: 1.8;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0;
+        /* This is a single-page portfolio, so smooth scrolling is a nice touch */
+        html {
             scroll-behavior: smooth;
         }
 
-        /* Navbar & Hamburger Menu */
-        .navbar {
-            background: #222;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #444;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-radius: 0 0 10px 10px;
-        }
-
-        .navbar .logo {
-            color: #ffd700;
-            font-size: 1.8rem;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        .navbar-links {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .navbar-links a {
-            color: #f8f8f2;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        .navbar-links a:hover {
-            color: #ffd700;
-        }
-
-        /* Hamburger menu button for mobile */
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: #ffd700;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Responsive Navbar */
-        @media (max-width: 768px) {
-            .navbar {
-                flex-wrap: wrap;
-                padding: 1rem;
-            }
-
-            .navbar-links {
-                display: none;
-                flex-direction: column;
-                width: 100%;
-                text-align: center;
-                gap: 0.8rem;
-                margin-top: 1rem;
-            }
-
-            .navbar-links.active {
-                display: flex;
-            }
-
-            .menu-toggle {
-                display: block;
-            }
-        }
-        
-        /* Cookie Consent Banner Styles */
-        .cookie-banner {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #333;
-            color: #fff;
-            padding: 1rem 2rem;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-            z-index: 2000;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
-        }
-        
-        .cookie-banner button {
-            background: #ffd700;
-            color: #1a1a1a;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s ease;
-        }
-        
-        .cookie-banner button:hover {
-            background: #e6b800;
-        }
-
-        /* Other sections and content styles (re-used from your existing files) */
-        section {
-            padding: 4rem 2rem;
-            border-bottom: 1px solid #444;
-        }
-
-        h1, h2, h3 {
-            color: #ffd700;
-            text-align: center;
-        }
-
-        /* About, Skills, Projects, Articles, Contact sections as before */
-        /* ... add content for each section here ... */
-
+        /*
+        * ORIGINAL CSS STYLES - FOR REFERENCE ONLY
+        * All styles below have been converted to Tailwind CSS classes in the HTML.
+        */
+        /*
+        * {
+        * margin: 0;
+        * padding: 0;
+        * box-sizing: border-box;
+        * }
+        *
+        * body {
+        * font-family: 'Arial', sans-serif;
+        * background: #1a1a1a;
+        * color: #fff;
+        * line-height: 1.6;
+        * }
+        *
+        * .navbar {
+        * background: #111;
+        * padding: 1rem;
+        * position: fixed;
+        * width: 100%;
+        * z-index: 1000;
+        * }
+        *
+        * .navbar .container {
+        * display: flex;
+        * justify-content: space-between;
+        * align-items: center;
+        * max-width: 1200px;
+        * margin: 0 auto;
+        * }
+        *
+        * .navbar h1 {
+        * font-size: 1.5rem;
+        * }
+        *
+        * .navbar ul {
+        * list-style: none;
+        * display: flex;
+        * }
+        *
+        * .navbar ul li {
+        * margin-left: 2rem;
+        * }
+        *
+        * .navbar ul li a {
+        * color: #fff;
+        * text-decoration: none;
+        * font-weight: bold;
+        * }
+        *
+        * .navbar ul li a:hover {
+        * color: #ffd700;
+        * }
+        *
+        * .nav-toggle {
+        * display: none;
+        * font-size: 1.5rem;
+        * cursor: pointer;
+        * }
+        *
+        * section {
+        * padding: 5rem 1rem;
+        * min-height: 100vh;
+        * display: flex;
+        * align-items: center;
+        * justify-content: center;
+        * }
+        *
+        * .container {
+        * max-width: 1200px;
+        * margin: 0 auto;
+        * padding: 0 1rem;
+        * }
+        *
+        * #home {
+        * background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('cleanroom-inspection1.jpg');
+        * background-size: cover;
+        * background-position: center;
+        * text-align: center;
+        * transition: background-image 1s ease-in-out;
+        * }
+        *
+        * #home .intro-text {
+        * margin-bottom: 2rem;
+        * }
+        *
+        * #home .intro-text .greeting {
+        * font-size: 1.5rem;
+        * font-weight: 300;
+        * text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        * }
+        *
+        * #home .intro-text .name {
+        * font-size: 3.5rem;
+        * font-weight: 700;
+        * text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        * }
+        *
+        * #home .subtitle {
+        * font-size: 1.2rem;
+        * font-weight: 300;
+        * margin-top: 0.5rem;
+        * text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        * }
+        *
+        * .btn {
+        * display: inline-block;
+        * padding: 0.8rem 1.5rem;
+        * background: #ffd700;
+        * color: #111;
+        * text-decoration: none;
+        * border-radius: 5px;
+        * font-weight: bold;
+        * }
+        *
+        * .btn:hover {
+        * background: #e6c200;
+        * }
+        *
+        * #about {
+        * background: linear-gradient(to right,
+        * rgba(0, 0, 0, 0.7) 50%,
+        * rgba(0, 0, 0, 0.7) 50%),
+        * url('technical-cleanliness1.jpg') right center/cover,
+        * url('technical-cleanliness2.jpg') left center/cover;
+        * background-size: 50% 100%, 50% 100%;
+        * background-position: left, right;
+        * background-repeat: no-repeat, no-repeat;
+        * }
+        *
+        * #about .container {
+        * display: flex;
+        * flex-direction: column;
+        * gap: 2rem;
+        * align-items: center;
+        * text-align: center;
+        * }
+        *
+        * #about img {
+        * max-width: 200px;
+        * border-radius: 50%;
+        * box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        * }
+        *
+        * #about .about-text {
+        * color: #f8f8f2;
+        * font-size: 1.4rem;
+        * line-height: 1.8;
+        * max-width: 800px;
+        * text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        * }
+        *
+        * #about .about-text h2 {
+        * font-size: 2.5rem;
+        * margin-bottom: 1.5rem;
+        * color: #ffd700;
+        * text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        * }
+        *
+        * #about .about-text p {
+        * margin-bottom: 1.5rem;
+        * color: #e8e8e0;
+        * }
+        *
+        * #about .about-text p:last-child {
+        * margin-bottom: 0;
+        * }
+        *
+        * #skills .skills-grid {
+        * display: grid;
+        * grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        * gap: 2rem;
+        * }
+        *
+        * .skill-card {
+        * background: #222;
+        * padding: 1.5rem;
+        * border-radius: 8px;
+        * text-align: center;
+        * transition: transform 0.3s;
+        * }
+        *
+        * .skill-card:hover {
+        * transform: translateY(-5px);
+        * }
+        *
+        * #projects .projects-grid, #articles .articles-grid {
+        * display: grid;
+        * grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        * gap: 2rem;
+        * }
+        *
+        * .project-card, .article-card {
+        * background: #222;
+        * padding: 1.5rem;
+        * border-radius: 8px;
+        * text-align: center;
+        * transition: transform 0.3s;
+        * }
+        *
+        * .project-card:hover, .article-card:hover {
+        * transform: translateY(-5px);
+        * }
+        *
+        * .project-card img, .article-card img {
+        * width: 100%;
+        * height: 200px;
+        * object-fit: cover;
+        * border-radius: 8px;
+        * margin-bottom: 1rem;
+        * }
+        *
+        * #contact form {
+        * display: grid;
+        * gap: 1rem;
+        * max-width: 600px;
+        * margin: 0 auto;
+        * }
+        *
+        * #contact input, #contact textarea {
+        * padding: 0.8rem;
+        * border: none;
+        * border-radius: 5px;
+        * background: #333;
+        * color: #fff;
+        * }
+        *
+        * #contact button {
+        * background: #ffd700;
+        * color: #111;
+        * border: none;
+        * padding: 0.8rem;
+        * border-radius: 5px;
+        * cursor: pointer;
+        * }
+        *
+        * #contact button:hover {
+        * background: #e6c200;
+        * }
+        *
+        * .social-icons {
+        * margin-top: 1rem;
+        * }
+        *
+        * .social-icons a {
+        * color: #fff;
+        * margin: 0 0.5rem;
+        * font-size: 1.5rem;
+        * }
+        *
+        * .social-icons a:hover {
+        * color: #ffd700;
+        * }
+        *
+        * footer {
+        * background: #111;
+        * text-align: center;
+        * padding: 1rem;
+        * }
+        *
+        * @media (max-width: 768px) {
+        * .navbar ul {
+        * display: none;
+        * flex-direction: column;
+        * background: #111;
+        * position: absolute;
+        * top: 60px;
+        * left: 0;
+        * width: 100%;
+        * padding: 1rem;
+        * }
+        *
+        * .navbar ul.active {
+        * display: flex;
+        * }
+        *
+        * .nav-toggle {
+        * display: block;
+        * }
+        *
+        * #about .container {
+        * flex-direction: column;
+        * text-align: center;
+        * }
+        *
+        * #about {
+        * background: linear-gradient(to bottom,
+        * rgba(0, 0, 0, 0.7) 50%,
+        * rgba(0, 0, 0, 0.7) 50%),
+        * url('technical-cleanliness2.jpg') top center/cover,
+        * url('technical-cleanliness1.jpg') bottom center/cover;
+        * background-size: 100% 50%, 100% 50%;
+        * background-position: top, bottom;
+        * background-repeat: no-repeat, no-repeat;
+        * }
+        *
+        * #about .about-text {
+        * font-size: 1.2rem;
+        * color: #f5f5f0;
+        * }
+        *
+        * #about .about-text h2 {
+        * font-size: 2rem;
+        * }
+        *
+        * #home .intro-text .greeting {
+        * font-size: 1.2rem;
+        * }
+        *
+        * #home .intro-text .name {
+        * font-size: 2.5rem;
+        * }
+        *
+        * #home .subtitle {
+        * font-size: 1rem;
+        * }
+        * }
+        */
     </style>
 </head>
-<body>
 
-    <!-- Cookie Consent Banner -->
-    <div id="cookie-banner" class="cookie-banner">
-        <p>This website uses cookies to enhance your experience and analyze traffic. By clicking "Accept", you consent to our use of cookies.</p>
-        <button id="accept-cookies">Accept</button>
-    </div>
+<body class="bg-[#1a1a1a] text-white font-sans leading-relaxed">
 
     <!-- Navigation Bar -->
-    <nav class="navbar">
-        <a href="#home" class="logo">Ezhilarasan Kandiah</a>
-        <button class="menu-toggle" aria-label="Toggle navigation menu">
-            <i class="fas fa-bars"></i>
-        </button>
-        <div class="navbar-links">
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#skills">Skills</a>
-            <a href="#projects">Projects</a>
-            <a href="#articles">Articles</a>
-            <a href="#contact">Contact</a>
+    <nav class="navbar bg-[#111] p-4 fixed w-full z-1000">
+        <div class="container mx-auto max-w-6xl flex justify-between items-center px-4">
+            <h1 class="text-xl">Ezhilarasan Kandiah</h1>
+            <span class="nav-toggle text-2xl cursor-pointer md:hidden"><i class="fas fa-bars"></i></span>
+            <ul class="flex-col md:flex md:flex-row list-none hidden md:block md:w-auto">
+                <li class="md:ml-8 mt-4 md:mt-0"><a href="#home" class="text-white hover:text-yellow-400 font-bold">Home</a></li>
+                <li class="md:ml-8 mt-4 md:mt-0"><a href="#about" class="text-white hover:text-yellow-400 font-bold">About</a></li>
+                <li class="md:ml-8 mt-4 md:mt-0"><a href="#skills" class="text-white hover:text-yellow-400 font-bold">Skills</a></li>
+                <li class="md:ml-8 mt-4 md:mt-0"><a href="#projects" class="text-white hover:text-yellow-400 font-bold">Projects</a></li>
+                <li class="md:ml-8 mt-4 md:mt-0"><a href="#articles" class="text-white hover:text-yellow-400 font-bold">Articles</a></li>
+                <li class="md:ml-8 mt-4 md:mt-0"><a href="#contact" class="text-white hover:text-yellow-400 font-bold">Contact</a></li>
+            </ul>
         </div>
     </nav>
 
-    <!-- Page Sections -->
-    <section id="home">
-        <h1>Welcome to My Portfolio</h1>
-        <p>A showcase of my skills, projects, and articles in the world of engineering and technology.</p>
+    <!-- Home Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center text-center p-4 bg-cover bg-center transition-all duration-1000" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://placehold.co/1920x1080/1a1a1a/fff?text=Home+Background+1');">
+        <div class="container mx-auto max-w-6xl">
+            <div class="intro-text mb-8">
+                <span class="greeting text-xl font-light text-white drop-shadow-md">Hi,</span>
+                <br>
+                <span class="name text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white drop-shadow-lg">I am Ezhilarasan.</span>
+            </div>
+            <p class="subtitle text-lg font-light mt-2 drop-shadow-md">Chemical System Technical Specialist</p>
+        </div>
     </section>
 
-    <section id="about">
-        <h2>About Me</h2>
-        <p>Experienced professional with a background in...</p>
-        <!-- ... your About content ... -->
+    <!-- About Section -->
+    <section id="about" class="min-h-screen flex items-center justify-center p-4 bg-cover bg-center text-center" style="background: linear-gradient(to right, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0.7) 50%), url('https://placehold.co/960x1080/1a1a1a/fff?text=About+Image+2') right center/cover, url('https://placehold.co/960x1080/1a1a1a/fff?text=About+Image+1') left center/cover;">
+        <div class="container mx-auto max-w-6xl flex flex-col md:flex-row gap-8 items-center md:text-left">
+            <img src="https://placehold.co/200x200/1a1a1a/fff?text=Profile+Photo" alt="Ezhilarasan Kandiah" class="max-w-[200px] rounded-full shadow-lg">
+            <div class="about-text text-white/95 text-xl leading-relaxed max-w-[800px] drop-shadow">
+                <h2 class="text-4xl sm:text-5xl font-bold mb-6 text-yellow-400 drop-shadow-md">About Me</h2>
+                <p class="mb-6 text-white/90">Chemical System Technical Specialist with 13+ years of experience across automotive, steel casting, and welding industries, specializing in technical cleanliness, material characterization, and failure investigation. Proven expertise in establishing cleanliness labs, leading VDA 19.1 and VDA 19.2 audits, and applying structured problem-solving techniques to reduce contamination and corrosion-related defects and enhance component reliability. Adept at statistical analysis, cross-functional training, and aligning technical solutions with global quality and cleanliness standards.</p>
+            </div>
+        </div>
     </section>
 
-    <section id="skills">
-        <h2>My Skills</h2>
-        <p>From technical cleanliness to web development, I bring a diverse skill set...</p>
-        <!-- ... your Skills content ... -->
+    <!-- Skills Section -->
+    <section id="skills" class="min-h-screen flex items-center justify-center p-4">
+        <div class="container mx-auto max-w-6xl text-center">
+            <h2 class="text-4xl font-bold mb-8 text-yellow-400">Skills</h2>
+            <div class="skills-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="skill-card bg-[#222] p-6 rounded-lg text-center transition-transform duration-300 hover:scale-105 hover:bg-[#333]">
+                    <h3 class="text-2xl font-semibold mb-2">Particle Characterization</h3>
+                    <p>Expertise in analyzing particle contamination per ISO 16232 standards.</p>
+                </div>
+                <div class="skill-card bg-[#222] p-6 rounded-lg text-center transition-transform duration-300 hover:scale-105 hover:bg-[#333]">
+                    <h3 class="text-2xl font-semibold mb-2">Material Characterization</h3>
+                    <p>Skilled in advanced material analysis techniques for automotive components.</p>
+                </div>
+                <div class="skill-card bg-[#222] p-6 rounded-lg text-center transition-transform duration-300 hover:scale-105 hover:bg-[#333]">
+                    <h3 class="text-2xl font-semibold mb-2">Metallurgical Analysis</h3>
+                    <p>Proficient in metallurgical failure analysis for quality assurance.</p>
+                </div>
+                <div class="skill-card bg-[#222] p-6 rounded-lg text-center transition-transform duration-300 hover:scale-105 hover:bg-[#333]">
+                    <h3 class="text-2xl font-semibold mb-2">Cleanroom Auditing</h3>
+                    <p>Led ISO 14644-compliant cleanroom audits for automotive facilities.</p>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section id="projects">
-        <h2>Projects</h2>
-        <p>Explore my featured projects, including ChemSure and more.</p>
-        <!-- Link to other HTML pages -->
-        <a href="projects/chemsure.html" class="btn">View ChemSure Details</a>
-        <!-- ... more projects ... -->
+    <!-- Projects Section -->
+    <section id="projects" class="min-h-screen flex items-center justify-center p-4">
+        <div class="container mx-auto max-w-6xl text-center">
+            <h2 class="text-4xl font-bold mb-8 text-yellow-400">Projects</h2>
+            <div class="projects-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="project-card bg-[#222] p-6 rounded-lg text-center transition-transform duration-300 hover:scale-105 hover:bg-[#333]">
+                    <img src="https://placehold.co/300x200/1a1a1a/fff?text=MatSync+Tool" alt="Particle Characterization Tool" class="w-full h-[200px] object-cover rounded-lg mb-4">
+                    <h3 class="text-2xl font-semibold mb-2">MatSync</h3>
+                    <p>Discover your perfect steel match with MatSync, the revolutionary tool that instantly identifies possible steel grades based on your particle elemental composition.</p>
+                    <a href="#" onclick="showMatSyncImmersive()" class="btn inline-block px-6 py-3 mt-4 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-colors duration-300">Read More</a>
+                </div>
+                <div class="project-card bg-[#222] p-6 rounded-lg text-center transition-transform duration-300 hover:scale-105 hover:bg-[#333]">
+                    <img src="https://placehold.co/300x200/1a1a1a/fff?text=ChemSure+GADSL+Search" alt="ChemSure GADSL Substance Search" class="w-full h-[200px] object-cover rounded-lg mb-4">
+                    <h3 class="text-2xl font-semibold mb-2">ChemSure GADSL Substance Search</h3>
+                    <p>Streamline your chemical compliance and data management with ChemSure, the powerful web application that instantly identifies substances against the GADSL list and extracts critical information from MSDS PDFs</p>
+                    <a href="https://ezhilarasan.pythonanywhere.com/" target="_blank" class="btn inline-block px-6 py-3 mt-4 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-colors duration-300">Live Demo</a>
+                    <a href="#" onclick="showChemSureImmersive()" class="btn inline-block px-6 py-3 mt-4 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-colors duration-300">View Details</a>
+                </div>
+                <div class="project-card bg-[#222] p-6 rounded-lg text-center transition-transform duration-300 hover:scale-105 hover:bg-[#333]">
+                    <img src="https://placehold.co/300x200/1a1a1a/fff?text=Failure+Analysis+Dashboard" alt="Failure Analysis Dashboard" class="w-full h-[200px] object-cover rounded-lg mb-4">
+                    <h3>Failure Analysis Dashboard</h3>
+                    <p>Built a dashboard for metallurgical failure analysis, enhancing data visualization for engineers.</p>
+                    <a href="#" onclick="showFailureDashboardImmersive()" class="btn inline-block px-6 py-3 mt-4 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-colors duration-300">View Details</a>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section id="articles">
-        <h2>Articles</h2>
-        <p>My latest insights and guides on technical topics.</p>
-        <!-- Link to other HTML pages -->
-        <a href="articles/particle-counter-validation.html" class="btn">View Article</a>
-        <!-- ... more articles ... -->
+    <!-- Articles Section -->
+    <section id="articles" class="min-h-screen flex items-center justify-center p-4">
+        <div class="container mx-auto max-w-6xl text-center">
+            <h2 class="text-4xl font-bold mb-8 text-yellow-400">Articles</h2>
+            <div class="articles-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="article-card bg-[#222] p-6 rounded-lg text-center transition-transform duration-300 hover:scale-105 hover:bg-[#333]">
+                    <img src="https://placehold.co/300x200/1a1a1a/fff?text=Particle+Counter+Validation" alt="Particle Counter Validation" class="w-full h-[200px] object-cover rounded-lg mb-4">
+                    <h3 class="text-2xl font-semibold mb-2">Can Your Particle Counter Be Trusted?</h3>
+                    <p>A technical cleanliness validation guide for reliable particle counting.</p>
+                    <a href="#" onclick="showParticleCounterArticle()" class="btn inline-block px-6 py-3 mt-4 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-colors duration-300">Read More</a>
+                </div>
+                <div class="article-card bg-[#222] p-6 rounded-lg text-center transition-transform duration-300 hover:scale-105 hover:bg-[#333]">
+                    <img src="https://placehold.co/300x200/1a1a1a/fff?text=Particle+Contamination" alt="Particle Contamination" class="w-full h-[200px] object-cover rounded-lg mb-4">
+                    <h3 class="text-2xl font-semibold mb-2">Particle Contamination in Automotive Manufacturing</h3>
+                    <p>A deep dive into effective strategies for reducing particle contamination in automotive components.</p>
+                    <a href="#" onclick="showParticleContaminationArticle()" class="btn inline-block px-6 py-3 mt-4 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-colors duration-300">Read More</a>
+                </div>
+                <div class="article-card bg-[#222] p-6 rounded-lg text-center transition-transform duration-300 hover:scale-105 hover:bg-[#333]">
+                    <img src="https://placehold.co/300x200/1a1a1a/fff?text=Failure+Analysis+Techniques" alt="Failure Analysis Techniques" class="w-full h-[200px] object-cover rounded-lg mb-4">
+                    <h3 class="text-2xl font-semibold mb-2">Metallurgical Failure Analysis Techniques</h3>
+                    <p>Insights into advanced methods for identifying and resolving material failures in automotive parts.</p>
+                    <a href="#" onclick="showFailureAnalysisArticle()" class="btn inline-block px-6 py-3 mt-4 bg-yellow-400 text-black font-bold rounded-lg hover:bg-yellow-500 transition-colors duration-300">Read More</a>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section id="contact">
-        <h2>Contact Me</h2>
-        <p>I'd love to connect. Reach out for collaborations or inquiries.</p>
-        <!-- ... your Contact form or details ... -->
+    <!-- Contact Section -->
+    <section id="contact" class="min-h-screen flex items-center justify-center p-4">
+        <div class="container mx-auto max-w-6xl text-center">
+            <h2 class="text-4xl font-bold mb-8 text-yellow-400">Contact Me</h2>
+            <form class="grid gap-4 max-w-2xl mx-auto">
+                <input type="text" placeholder="Name" required class="p-4 rounded-lg bg-[#333] text-white/90 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                <input type="email" placeholder="Email" required class="p-4 rounded-lg bg-[#333] text-white/90 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                <textarea placeholder="Message" required class="p-4 rounded-lg bg-[#333] text-white/90 focus:outline-none focus:ring-2 focus:ring-yellow-400 min-h-[150px]"></textarea>
+                <button type="submit" class="bg-yellow-400 text-black font-bold py-3 rounded-lg hover:bg-yellow-500 transition-colors duration-300">Send Message</button>
+            </form>
+            <div class="social-icons mt-4">
+                <a href="https://linkedin.com/in/ezhilarasan-kandiah" target="_blank" class="text-white/80 mx-2 text-3xl hover:text-yellow-400 transition-colors duration-300"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/ezhilarasan" target="_blank" class="text-white/80 mx-2 text-3xl hover:text-yellow-400 transition-colors duration-300"><i class="fab fa-github"></i></a>
+                <a href="mailto:ezhilarasan@example.com" class="text-white/80 mx-2 text-3xl hover:text-yellow-400 transition-colors duration-300"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
     </section>
 
-    <!-- JavaScript for Mobile Menu and Cookie Consent -->
+    <!-- Footer -->
+    <footer class="bg-[#111] text-center p-4">
+        <p>&copy; 2025 Ezhilarasan Kandiah. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript -->
     <script>
-        // Hamburger Menu Toggle
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navLinks = document.querySelector('.navbar-links');
-
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
         });
 
-        // Cookie Consent Logic
-        const cookieBanner = document.getElementById('cookie-banner');
-        const acceptButton = document.getElementById('accept-cookies');
+        // Mobile menu toggle
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.navbar ul');
 
-        // Check if user has already accepted cookies
-        if (localStorage.getItem('cookies-accepted') === 'true') {
-            cookieBanner.style.display = 'none';
-            // If accepted, initialize Google Analytics
-            initializeGoogleAnalytics();
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('hidden');
+        });
+
+        // Background image carousel for Home section
+        const homeSection = document.getElementById('home');
+        const images = [
+            'https://placehold.co/1920x1080/1a1a1a/fff?text=Home+Background+1',
+            'https://placehold.co/1920x1080/1a1a1a/fff?text=Home+Background+2',
+            'https://placehold.co/1920x1080/1a1a1a/fff?text=Home+Background+3'
+        ];
+        let currentImageIndex = 0;
+
+        function changeBackgroundImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            const imageUrl = images[currentImageIndex];
+            homeSection.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('${imageUrl}')`;
         }
 
-        // Event listener for the "Accept" button
-        acceptButton.addEventListener('click', () => {
-            // Hide the banner
-            cookieBanner.style.display = 'none';
-            // Store user's choice in local storage
-            localStorage.setItem('cookies-accepted', 'true');
-            // Now, initialize Google Analytics
-            initializeGoogleAnalytics();
-        });
+        setInterval(changeBackgroundImage, 5000); // Change image every 5 seconds
+
+        // Functions to simulate showing immersive content for projects/articles
+        // These will be replaced by actual logic if you want to create full pages for them.
+        function showMatSyncImmersive() {
+            console.log('You clicked the link for MatSync!');
+            // Replace this with a function to show the MatSync immersive
+        }
+
+        function showChemSureImmersive() {
+            console.log('You clicked the link for ChemSure!');
+            // Replace this with a function to show the ChemSure immersive
+        }
+
+        function showFailureDashboardImmersive() {
+            console.log('You clicked the link for Failure Analysis Dashboard!');
+            // Replace this with a function to show the Failure Analysis Dashboard immersive
+        }
+
+        function showParticleCounterArticle() {
+            console.log('You clicked the link for "Can Your Particle Counter Be Trusted?"');
+            // Replace this with a function to show the article immersive
+        }
+
+        function showParticleContaminationArticle() {
+            console.log('You clicked the link for "Particle Contamination in Automotive Manufacturing"');
+            // Replace this with a function to show the article immersive
+        }
+
+        function showFailureAnalysisArticle() {
+            console.log('You clicked the link for "Metallurgical Failure Analysis Techniques"');
+            // Replace this with a function to show the article immersive
+        }
     </script>
 </body>
+
 </html>
