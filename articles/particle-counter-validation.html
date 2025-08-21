@@ -3,38 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Particle Counter Validation Guide | Ezhilarasan Kandiah</title>
+    <meta name="description" content="Particle Counter Validation Guide by Ezhilarasan Kandiah">
+    <title>Can Your Particle Counter Be Trusted? | Ezhilarasan Kandiah</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* General Body Styles */
-        body {
-            font-family: 'Arial', sans-serif;
-            background: #1a1a1a;
-            color: #f8f8f2;
-            line-height: 1.8;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0; /* Removed padding here, added to content sections */
+        :root {
+            --primary-color: #ffd700;
+            --secondary-color: #00cc99;
+            --dark-bg: #1a1a1a;
+            --card-bg: #222;
+            --text-light: #f8f8f2;
+            --text-secondary: #e8e8e0;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --transition: all 0.3s ease-in-out;
         }
 
-        /* Navigation Bar Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
         .navbar {
-            background: #222;
+            background: var(--glass-bg);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #444;
-            position: sticky; /* Makes the navbar stick to the top */
+            position: sticky;
             top: 0;
-            z-index: 1000; /* Ensures it stays on top of other content */
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .navbar .logo {
-            color: #ffd700;
-            font-size: 1.8rem;
-            font-weight: bold;
+            color: var(--primary-color);
+            font-size: clamp(1.5rem, 3vw, 1.8rem);
+            font-weight: 700;
             text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .navbar-links {
@@ -43,61 +63,179 @@
         }
 
         .navbar-links a {
-            color: #f8f8f2;
+            color: var(--text-light);
             text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
+            font-weight: 600;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
         }
 
-        .navbar-links a:hover {
-            color: #ffd700;
+        .navbar-links a:hover, .navbar-links a:focus {
+            color: var(--secondary-color);
+            background: rgba(0, 204, 153, 0.1);
+            border-radius: 5px;
         }
 
-        /* Article Header Styles */
-        .article-header {
+        .nav-toggle {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-toggle:hover {
+            transform: rotate(90deg);
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            .navbar-links {
+                display: none;
+                flex-direction: column;
+                position: fixed;
+                top: 60px;
+                left: 0;
+                width: 250px;
+                height: calc(100% - 60px);
+                background: var(--glass-bg);
+                backdrop-filter: blur(10px);
+                padding: 2rem;
+                transform: translateX(-100%);
+                transition: transform 0.4s ease, opacity 0.3s ease;
+                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+                opacity: 0;
+            }
+
+            .navbar-links.active {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            .navbar-links a {
+                display: block;
+                padding: 0.8rem 1.5rem;
+                border-radius: 8px;
+            }
+
+            .navbar-links a:hover, .navbar-links a:focus {
+                background: rgba(255, 215, 0, 0.2);
+                color: var(--primary-color);
+            }
+        }
+
+        .hero {
+            min-height: 60vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../technical-cleanliness1.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem; /* Added padding to the header */
-        }
-
-        .article-header h1 {
-            color: #ffd700;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .article-meta {
-            color: #aaa;
-            font-style: italic;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem 1rem;
             margin-bottom: 2rem;
         }
 
-        /* Article Content Styles */
-        .article-content {
-            background: #222;
-            padding: 2rem;
-            border-radius: 8px;
-            margin: 0 2rem 2rem 2rem; /* Added margin for spacing from edges */
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease-out;
         }
 
-        /* Homogenous Heading Styles (All yellow) */
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out 0.5s forwards;
+        }
+
+        .hero .article-meta {
+            color: #aaa;
+            font-style: italic;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out 1s forwards;
+        }
+
+        .hero .btn {
+            margin-top: 1rem;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out 1.5s forwards;
+        }
+
+        .hero-video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 204, 153, 0.1), rgba(255, 215, 0, 0.1));
+            animation: gradientShift 8s ease infinite;
+            z-index: 0;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .article-content {
+            background: var(--card-bg);
+            padding: clamp(1.5rem, 4vw, 2rem);
+            border-radius: 10px;
+            margin: 0 clamp(1rem, 3vw, 2rem) 2rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
         .article-content h2,
         .article-content h3,
-        .article-content h4 { /* Added h4 for consistency if used */
-            color: #ffd700; /* All headings within article-content are now yellow */
+        .article-content h4 {
+            color: var(--primary-color);
             margin: 2rem 0 1rem;
         }
 
         .article-content h3 {
-            margin-top: 1.5rem; /* Slightly less top margin for h3 */
+            margin-top: 1.5rem;
+        }
+
+        .article-content p {
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
         }
 
         .article-content img {
             max-width: 100%;
+            height: auto;
             border-radius: 8px;
             margin: 1rem 0;
             border: 1px solid #444;
-            height: auto; /* Ensure image scales proportionally */
+            transition: transform 0.3s ease;
+        }
+
+        .article-content img:hover {
+            transform: scale(1.02);
         }
 
         .article-content figure {
@@ -105,53 +243,95 @@
             margin: 2rem 0;
             font-style: italic;
             color: #aaa;
+            font-size: 0.9rem;
         }
 
-        /* Button Styles */
         .btn {
             display: inline-block;
             padding: 0.8rem 1.5rem;
-            background: #ffd700;
+            background: var(--primary-color);
             color: #111;
             text-decoration: none;
             border-radius: 5px;
-            font-weight: bold;
+            font-weight: 600;
             margin-top: 2rem;
-            transition: background 0.3s ease;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
         }
 
-        .btn:hover {
-            background: #e6b800; /* Slightly darker yellow on hover */
+        .btn:hover, .btn:focus {
+            background: #e6b800;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
         }
 
-        /* Responsive Adjustments */
+        .cookie-consent {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            max-width: 500px;
+            background: var(--glass-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .cookie-consent p {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .cookie-consent .btn {
+            margin: 0 0.5rem;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+        }
+
+        .cookie-consent .btn-decline {
+            background: #555;
+            color: var(--text-light);
+        }
+
+        .cookie-consent .btn-decline:hover {
+            background: #444;
+        }
+
         @media (max-width: 768px) {
             .navbar {
-                flex-direction: column;
-                gap: 1rem;
                 padding: 1rem;
             }
 
             .navbar-links {
-                flex-direction: column;
-                gap: 0.8rem;
-                text-align: center;
+                width: 240px;
             }
 
-            .article-header h1 {
-                font-size: 2rem;
+            .hero {
+                min-height: 50vh;
             }
 
-            .article-content {
-                margin: 0 1rem 1rem 1rem; /* Adjust margin for smaller screens */
-                padding: 1.5rem;
-            }
+            .hero h1 { font-size: clamp(1.8rem, 4vw, 2rem); }
+            .hero .article-meta { font-size: clamp(0.8rem, 2vw, 0.9rem); }
+            .article-content { margin: 0 1rem 1rem; padding: 1.5rem; }
+            .cookie-consent { bottom: 10px; left: 10px; right: 10px; }
+        }
+
+        @media (max-width: 480px) {
+            .article-content { padding: 1rem; }
+            .article-content p { font-size: clamp(0.9rem, 2vw, 1rem); }
+            .cookie-consent { padding: 1rem; }
+            .cookie-consent p { font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
         <a href="../index.html" class="logo">Ezhilarasan Kandiah</a>
+        <span class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"><i class="fas fa-bars"></i></span>
         <div class="navbar-links">
             <a href="../index.html#home">Home</a>
             <a href="../index.html#about">About</a>
@@ -162,13 +342,16 @@
         </div>
     </nav>
 
-    <div class="article-header">
-        <h1>Can Your Particle Counter Be Trusted?</h1>
-        <div class="article-meta">
-            Published by Ezhilarasan Kandiah on May 20, 2025
+    <section class="hero" aria-labelledby="article-heading">
+        <div class="hero-video-placeholder"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 id="article-heading">Can Your Particle Counter Be Trusted?</h1>
+                <div class="article-meta">Published by Ezhilarasan Kandiah on May 20, 2025</div>
+                <a href="../index.html#articles" class="btn">Back to Articles</a>
+            </div>
         </div>
-        <a href="../index.html#articles" class="btn">Back to Articles</a>
-    </div>
+    </section>
 
     <div class="article-content">
         <h2>The Hidden Risks in Your Cleanliness Reports</h2>
@@ -241,5 +424,82 @@
 
         <a href="../index.html#contact" class="btn">Contact Me for Assistance</a>
     </div>
+
+    <div class="cookie-consent" id="cookieConsent">
+        <p>We use cookies to enhance your experience and analyze site usage via Google Analytics. By clicking "Accept," you agree to our use of cookies. <a href="/privacy-policy" target="_blank">Learn more</a>.</p>
+        <button class="btn" onclick="acceptCookies()">Accept</button>
+        <button class="btn btn-decline" onclick="declineCookies()">Decline</button>
+    </div>
+
+    <script>
+        // Cookie Consent Logic
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/;SameSite=Strict`;
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        function acceptCookies() {
+            setCookie('cookieConsent', 'accepted', 365);
+            document.getElementById('cookieConsent').style.display = 'none';
+            loadGoogleAnalytics();
+        }
+
+        function declineCookies() {
+            setCookie('cookieConsent', 'declined', 365);
+            document.getElementById('cookieConsent').style.display = 'none';
+        }
+
+        function loadGoogleAnalytics() {
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-365191627';
+            document.head.appendChild(script);
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-365191627');
+        }
+
+        // Check consent on page load
+        window.onload = function() {
+            if (!getCookie('cookieConsent')) {
+                document.getElementById('cookieConsent').style.display = 'block';
+            } else if (getCookie('cookieConsent') === 'accepted') {
+                loadGoogleAnalytics();
+            }
+        };
+
+        // Mobile menu toggle
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.navbar-links');
+
+        navToggle.addEventListener('click', () => {
+            const isExpanded = navMenu.classList.toggle('active');
+            navToggle.setAttribute('aria-expanded', isExpanded);
+            document.body.style.overflow = isExpanded ? 'hidden' : '';
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navMenu.contains(e.target) && !navToggle.contains(e.target) && navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                navToggle.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Prevent menu from closing when clicking inside
+        navMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    </script>
 </body>
 </html>
