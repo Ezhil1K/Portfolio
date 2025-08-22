@@ -96,10 +96,6 @@
             color: var(--primary-color);
         }
 
-        .navbar ul {
-            display: flex;
-        }
-
         @media (max-width: 768px) {
             .nav-toggle {
                 display: block;
@@ -120,9 +116,11 @@
                 transition: transform 0.4s ease, opacity 0.3s ease;
                 box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
                 opacity: 0;
+                z-index: 1001;
             }
 
             .navbar ul.active {
+                display: flex;
                 transform: translateX(0);
                 opacity: 1;
             }
@@ -141,6 +139,14 @@
                 background: rgba(255, 215, 0, 0.2);
                 color: var(--primary-color);
             }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 0 0.5rem; }
+            .btn { padding: 0.6rem 1rem; }
+            .skill-card, .project-card, .article-card { padding: 1rem; }
+            .cookie-consent { padding: 1rem; }
+            .cookie-consent p { font-size: 0.8rem; }
         }
 
         .hero {
@@ -210,7 +216,6 @@
             box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
         }
 
-        /* Placeholder for video animation */
         .hero-video-placeholder {
             position: absolute;
             top: 0;
@@ -426,32 +431,6 @@
         }
 
         @media (max-width: 768px) {
-            .navbar ul {
-                display: none;
-                flex-direction: column;
-                position: fixed;
-                top: 60px;
-                left: 0;
-                width: 250px;
-                height: calc(100% - 60px);
-                background: var(--glass-bg);
-                backdrop-filter: blur(10px);
-                padding: 2rem;
-                transform: translateX(-100%);
-                transition: transform 0.4s ease, opacity 0.3s ease;
-                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
-                opacity: 0;
-            }
-
-            .navbar ul.active {
-                transform: translateX(0);
-                opacity: 1;
-            }
-
-            .nav-toggle {
-                display: block;
-            }
-
             .hero .greeting { font-size: clamp(1rem, 3vw, 1.2rem); }
             .hero .name { font-size: clamp(1.8rem, 5vw, 2.5rem); }
             .hero .subtitle { font-size: clamp(0.9rem, 2.5vw, 1rem); }
@@ -459,22 +438,116 @@
             #about .about-text p { font-size: clamp(0.9rem, 2.5vw, 1.2rem); }
             .cookie-consent { bottom: 10px; left: 10px; right: 10px; }
         }
-
-        @media (max-width: 480px) {
-            .container { padding: 0 0.5rem; }
-            .btn { padding: 0.6rem 1rem; }
-            .skill-card, .project-card, .article-card { padding: 1rem; }
-            .cookie-consent { padding: 1rem; }
-            .cookie-consent p { font-size: 0.8rem; }
-        }
     </style>
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-365191627"></script>
-    <script>
+    <script defer>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-365191627');
+
+        // Cookie Consent Logic
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/;SameSite=Strict`;
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        function acceptCookies() {
+            const cookieConsent = document.getElementById('cookieConsent');
+            if (cookieConsent) {
+                setCookie('cookieConsent', 'accepted', 365);
+                cookieConsent.style.display = 'none';
+                loadGoogleAnalytics();
+            }
+        }
+
+        function declineCookies() {
+            const cookieConsent = document.getElementById('cookieConsent');
+            if (cookieConsent) {
+                setCookie('cookieConsent', 'declined', 365);
+                cookieConsent.style.display = 'none';
+            }
+        }
+
+        function loadGoogleAnalytics() {
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-365191627';
+            document.head.appendChild(script);
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-365191627');
+        }
+
+        window.onload = function() {
+            const cookieConsent = document.getElementById('cookieConsent');
+            if (cookieConsent && !getCookie('cookieConsent')) {
+                cookieConsent.style.display = 'block';
+            } else if (cookieConsent && getCookie('cookieConsent') === 'accepted') {
+                loadGoogleAnalytics();
+            }
+        };
+
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', () => {
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.querySelector('.navbar ul');
+
+            if (navToggle && navMenu) {
+                navToggle.addEventListener('click', () => {
+                    const isExpanded = !navMenu.classList.contains('active');
+                    navMenu.classList.toggle('active');
+                    navToggle.setAttribute('aria-expanded', isExpanded);
+                    document.body.style.overflow = isExpanded ? 'hidden' : '';
+                    if (isExpanded && window.innerWidth <= 768) {
+                        navMenu.style.display = 'flex';
+                    } else if (!isExpanded && window.innerWidth <= 768) {
+                        navMenu.style.display = 'none';
+                    }
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (navMenu && !navMenu.contains(e.target) && !navToggle.contains(e.target) && navMenu.classList.contains('active')) {
+                        navMenu.classList.remove('active');
+                        navToggle.setAttribute('aria-expanded', 'false');
+                        document.body.style.overflow = '';
+                        if (window.innerWidth <= 768) {
+                            navMenu.style.display = 'none';
+                        }
+                    }
+                });
+
+                navMenu.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+            }
+        });
+
+        // Background image carousel
+        const homeSection = document.getElementById('home');
+        const images = [
+            'cleanroom-inspection1.jpg',
+            'cleanroom-inspection2.jpg',
+            'cleanroom-inspection3.jpg'
+        ];
+        let currentImageIndex = 0;
+
+        function changeBackgroundImage() {
+            if (homeSection) {
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                homeSection.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${images[currentImageIndex]}')`;
+            }
+        }
+
+        setInterval(changeBackgroundImage, 5000);
     </script>
 </head>
 <body>
@@ -618,92 +691,5 @@
         <button class="btn" onclick="acceptCookies()">Accept</button>
         <button class="btn btn-decline" onclick="declineCookies()">Decline</button>
     </div>
-
-    <script>
-        // Cookie Consent Logic
-        function setCookie(name, value, days) {
-            const date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/;SameSite=Strict`;
-        }
-
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-        }
-
-        function acceptCookies() {
-            setCookie('cookieConsent', 'accepted', 365);
-            document.getElementById('cookieConsent').style.display = 'none';
-            loadGoogleAnalytics();
-        }
-
-        function declineCookies() {
-            setCookie('cookieConsent', 'declined', 365);
-            document.getElementById('cookieConsent').style.display = 'none';
-        }
-
-        function loadGoogleAnalytics() {
-            const script = document.createElement('script');
-            script.async = true;
-            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-365191627';
-            document.head.appendChild(script);
-
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-365191627');
-        }
-
-        // Check consent on page load
-        window.onload = function() {
-            if (!getCookie('cookieConsent')) {
-                document.getElementById('cookieConsent').style.display = 'block';
-            } else if (getCookie('cookieConsent') === 'accepted') {
-                loadGoogleAnalytics();
-            }
-        };
-
-        // Mobile menu toggle
-        const navToggle = document.querySelector('.nav-toggle');
-        const navMenu = document.querySelector('.navbar ul');
-
-        navToggle.addEventListener('click', () => {
-            const isExpanded = navMenu.classList.toggle('active');
-            navToggle.setAttribute('aria-expanded', isExpanded);
-            document.body.style.overflow = isExpanded ? 'hidden' : '';
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!navMenu.contains(e.target) && !navToggle.contains(e.target) && navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-                navToggle.setAttribute('aria-expanded', 'false');
-                document.body.style.overflow = '';
-            }
-        });
-
-        // Background image carousel
-        const homeSection = document.getElementById('home');
-        const images = [
-            'cleanroom-inspection1.jpg',
-            'cleanroom-inspection2.jpg',
-            'cleanroom-inspection3.jpg'
-        ];
-        let currentImageIndex = 0;
-
-        function changeBackgroundImage() {
-            currentImageIndex = (currentImageIndex + 1) % images.length;
-            homeSection.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${images[currentImageIndex]}')`;
-        }
-
-        setInterval(changeBackgroundImage, 5000);
-
-        // Prevent menu from closing when clicking inside
-        navMenu.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
-    </script>
 </body>
 </html>
