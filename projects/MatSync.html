@@ -7,197 +7,354 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom styles for table and form */
+        :root {
+            --primary-color: #ffd700;
+            --secondary-color: #00cc99;
+            --dark-bg: #1a1a1a;
+            --card-bg: #222;
+            --text-light: #f8f8f2;
+            --text-secondary: #e8e8e0;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --transition: all 0.3s ease-in-out;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background: var(--glass-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar .logo {
+            color: var(--primary-color);
+            font-size: clamp(1.5rem, 3vw, 1.8rem);
+            font-weight: 700;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .navbar-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+        }
+
+        .navbar-links a:hover, .navbar-links a:focus {
+            color: var(--secondary-color);
+            background: rgba(0, 204, 153, 0.1);
+            border-radius: 5px;
+        }
+
+        .nav-toggle {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-toggle:hover {
+            transform: rotate(90deg);
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .nav-toggle {
+                display: block;
+            }
+
+            .navbar-links {
+                display: none;
+                flex-direction: column;
+                position: fixed;
+                top: 60px;
+                left: 0;
+                width: 250px;
+                height: calc(100% - 60px);
+                background: var(--glass-bg);
+                backdrop-filter: blur(10px);
+                padding: 2rem;
+                transform: translateX(-100%);
+                transition: transform 0.4s ease, opacity 0.3s ease;
+                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+                opacity: 0;
+            }
+
+            .navbar-links.active {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            .navbar-links a {
+                display: block;
+                padding: 0.8rem 1.5rem;
+                border-radius: 8px;
+            }
+
+            .navbar-links a:hover, .navbar-links a:focus {
+                background: rgba(255, 215, 0, 0.2);
+                color: var(--primary-color);
+            }
+        }
+
+        .hero {
+            min-height: 50vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../technical-material.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out 0.5s forwards;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out 1s forwards;
+        }
+
+        .hero .btn {
+            margin-top: 1rem;
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out 1.5s forwards;
+        }
+
+        .hero-video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 204, 153, 0.1), rgba(255, 215, 0, 0.1));
+            animation: gradientShift 8s ease infinite;
+            z-index: 0;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-content {
+            background: var(--card-bg);
+            padding: clamp(1.5rem, 4vw, 2rem);
+            border-radius: 10px;
+            margin: 0 clamp(1rem, 3vw, 2rem) 2rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-content h1 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .main-content p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 1rem;
         }
+
         th, td {
-            border: 1px solid #ddd;
+            border: 1px solid #444;
             padding: 0.5rem;
             text-align: left;
         }
+
         th {
-            background-color: #f4f4f4;
+            background-color: #333;
+            color: var(--text-light);
         }
-        .no-results {
-            text-align: center;
-            color: #888;
-        }
+
         .match-percent {
             font-weight: bold;
-            color: #d69e2e; /* Changed from blue to yellow/orange shade */
+            color: var(--primary-color);
         }
+
         .form-group {
             margin-bottom: 1rem;
         }
+
         label {
             display: block;
             margin-bottom: 0.25rem;
+            color: var(--text-secondary);
         }
+
         input {
             width: 100%;
             padding: 0.5rem;
-            border: 1px solid #ddd;
+            background: #333;
+            color: var(--text-light);
+            border: 1px solid #444;
             border-radius: 0.25rem;
         }
+
+        input:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+        }
+
         .submit-btn, .clear-btn {
-            background-color: #d69e2e; /* Changed from blue to yellow/orange shade */
-            color: white;
+            background-color: var(--primary-color);
+            color: #111;
             padding: 0.5rem 1rem;
             border: none;
-            border-radius: 0.25rem;
+            border-radius: 0.5rem;
             cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
         }
+
         .clear-btn {
-            background-color: #e53e3e; /* Retained red for clear/danger action */
+            background-color: #e53e3e;
             margin-left: 0.5rem;
         }
+
         .submit-btn:disabled {
-            background-color: #a0aec0;
+            background-color: #666;
             cursor: not-allowed;
         }
 
-        /* Mobile menu overlay styles */
-        .nav-menu {
-            display: none; /* Hidden by default for mobile */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        .submit-btn:hover {
+            background-color: #e6b800;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(255, 215, 0, 0.3);
         }
 
-        .nav-menu.active {
-            display: flex;
+        .clear-btn:hover {
+            background-color: #f56565;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(229, 62, 62, 0.3);
         }
 
-        .nav-menu li {
-            margin: 1rem 0;
+        #fileInput {
+            background: #333;
+            color: var(--text-light);
+            border: 1px solid #444;
+            border-radius: 0.25rem;
         }
 
-        .nav-menu li a {
-            color: white;
-            font-size: 1.5rem;
-            text-decoration: none;
+        #fileInput:focus {
+            border-color: var(--secondary-color);
+            outline: none;
         }
 
-        .nav-toggle-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            color: white;
-            font-size: 2rem;
-            cursor: pointer;
+        .no-results {
+            text-align: center;
+            color: #a0aec0;
         }
 
-        /* Responsive adjustments for buttons on small screens */
         @media (max-width: 767px) {
             .submit-btn, .clear-btn {
                 width: 100%;
                 margin-left: 0;
                 margin-top: 0.5rem;
             }
+
+            .grid-cols-3 {
+                grid-template-columns: 1fr;
+            }
         }
 
-        /* General layout for portfolio style */
-        body {
-            font-family: 'Inter', sans-serif; /* Assuming Inter font for portfolio */
-            background-color: #1a202c; /* Dark background from your screenshot */
-            color: #e2e8f0; /* Light text color */
-        }
-
-        .header-bg {
-            background-color: #2d3748; /* Darker header background */
-        }
-
-        .main-content-bg {
-            background-color: #2d3748; /* Darker main content background */
-        }
-
-        .nav-link {
-            color: #a0aec0; /* Lighter grey for links */
-            transition: color 0.2s ease-in-out;
-        }
-
-        .nav-link:hover {
-            color: #d69e2e; /* Changed from blue to yellow/orange shade on hover */
-        }
-
-        /* Override default Tailwind for specific elements to match dark theme */
-        .form-group label {
-            color: #e2e8f0; /* Ensure labels are visible on dark background */
-        }
-        .form-group input {
-            background-color: #4a5568; /* Darker input background */
-            color: #e2e8f0; /* Light text in inputs */
-            border-color: #4a5568; /* Changed from blue to dark grey border for inputs */
-        }
-        .form-group input:focus {
-            border-color: #d69e2e; /* Added focus border color */
-            outline: none;
-        }
-        .submit-btn, .clear-btn {
-            border-radius: 0.5rem; /* More rounded buttons */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .submit-btn:hover {
-            background-color: #b88a25; /* Darker yellow/orange on hover */
-        }
-        .clear-btn:hover {
-            background-color: #f56565; /* Lighter red on hover */
-        }
-        th {
-            background-color: #4a5568; /* Darker table header */
-            color: #e2e8f0;
-        }
-        table, th, td {
-            border-color: #4a5568; /* Changed from blue to dark grey borders for table */
-        }
-        .no-results {
-            color: #a0aec0; /* Lighter grey for no results message */
+        @media (max-width: 480px) {
+            .main-content { padding: 1rem; }
+            .navbar { padding: 1rem; }
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 min-h-screen flex flex-col">
-    <header class="header-bg p-4 shadow-lg">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <a href="../index.html#home" class="text-2xl font-bold text-yellow-400">Ezhilarasan Kandiah</a>
-            <button class="nav-toggle md:hidden text-yellow-400 focus:outline-none">
-                <i class="fas fa-bars"></i>
-            </button>
-            <nav class="hidden md:flex space-x-6">
-                <a href="../index.html#home" class="nav-link">Home</a>
-                <a href="../index.html#about" class="nav-link">About</a>
-                <a href="../index.html#skills" class="nav-link">Skills</a>
-                <a href="../index.html#projects" class="nav-link">Projects</a>
-                <a href="../index.html#articles" class="nav-link">Articles</a>
-                <a href="../index.html#contact" class="nav-link">Contact</a>
-            </nav>
+<body>
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <a href="../index.html" class="logo">Ezhilarasan Kandiah</a>
+        <span class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false"><i class="fas fa-bars"></i></span>
+        <div class="navbar-links">
+            <a href="../index.html#home">Home</a>
+            <a href="../index.html#about">About</a>
+            <a href="../index.html#skills">Skills</a>
+            <a href="../index.html#projects">Projects</a>
+            <a href="../index.html#articles">Articles</a>
+            <a href="../index.html#contact">Contact</a>
         </div>
+    </nav>
 
-        <nav class="nav-menu">
-            <button class="nav-toggle-close">&times;</button>
-            <ul>
-                <li><a href="../index.html#home" class="nav-link">Home</a></li>
-                <li><a href="../index.html#about" class="nav-link">About</a></li>
-                <li><a href="../index.html#skills" class="nav-link">Skills</a></li>
-                <li><a href="../index.html#projects" class="nav-link">Projects</a></li>
-                <li><a href="../index.html#articles" class="nav-link">Articles</a></li>
-                <li><a href="../index.html#contact" class="nav-link">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+    <section class="hero" aria-labelledby="project-heading">
+        <div class="hero-video-placeholder"></div>
+        <div class="hero-content">
+            <h1 id="project-heading">MatSync</h1>
+            <p>Enter elemental composition to find matching material grades from our database.</p>
+            <a href="#main-content" class="btn">Get Started</a>
+        </div>
+    </section>
 
-    <main class="flex-grow max-w-4xl mx-auto mt-8 main-content-bg p-6 rounded-lg shadow-xl">
-        <h1 class="text-3xl font-bold mb-6 text-yellow-400">MatSync</h1>
-        <p class="mb-6 text-gray-300">Enter the elemental composition to find matching material grades from our database.</p>
+    <main class="main-content" id="main-content">
         <form id="compositionForm">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="form-group">
@@ -274,7 +431,6 @@
         <p>&copy; 2025 Ezhilarasan Kandiah. All rights reserved.</p>
     </footer>
 
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script type="text/javascript">
         // Global variables for XLSX handling
@@ -326,24 +482,30 @@
 
             // Mobile menu toggle logic
             const navToggle = document.querySelector('.nav-toggle');
-            const navMenu = document.querySelector('.nav-menu');
-            const navToggleClose = document.querySelector('.nav-toggle-close');
+            const navMenu = document.querySelector('.navbar-links');
 
-            if (navToggle && navMenu && navToggleClose) {
+            if (navToggle && navMenu) {
                 navToggle.addEventListener('click', () => {
-                    navMenu.classList.add('active'); // Show mobile menu
+                    const isExpanded = navMenu.classList.toggle('active');
+                    navToggle.setAttribute('aria-expanded', isExpanded);
+                    document.body.style.overflow = isExpanded ? 'hidden' : '';
                 });
-                navToggleClose.addEventListener('click', () => {
-                    navMenu.classList.remove('active'); // Hide mobile menu
-                });
-                // Close menu if a link inside is clicked
-                navMenu.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
+
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!navMenu.contains(e.target) && !navToggle.contains(e.target) && navMenu.classList.contains('active')) {
                         navMenu.classList.remove('active');
-                    });
+                        navToggle.setAttribute('aria-expanded', 'false');
+                        document.body.style.overflow = '';
+                    }
+                });
+
+                // Prevent menu from closing when clicking inside
+                navMenu.addEventListener('click', (e) => {
+                    e.stopPropagation();
                 });
             } else {
-                console.error('Navigation elements (nav-toggle, nav-menu, or nav-toggle-close) not found.');
+                console.error('Navigation elements (nav-toggle or nav-menu) not found.');
             }
 
             // Form and results elements
@@ -368,27 +530,25 @@
                     reader.onload = function(e) {
                         if (fileExtension === 'xlsx') {
                             gk_isXlsx = true;
-                            // Store only the base64 part of the data URL
                             gk_fileData[fileName] = e.target.result.split(',')[1];
                             gk_xlsxFileLookup[fileName] = true;
                             console.log(`XLSX file "${fileName}" loaded.`);
                         } else if (fileExtension === 'csv') {
-                            gk_isXlsx = false; // Important: ensure this is false for CSV processing
+                            gk_isXlsx = false;
                             gk_fileData[fileName] = e.target.result;
                             console.log(`CSV file "${fileName}" loaded.`);
                         } else {
                             console.warn("Unsupported file type. Please upload CSV or XLSX.");
-                            gk_isXlsx = false; // Reset for unsupported types
+                            gk_isXlsx = false;
                             delete gk_fileData[fileName];
                             delete gk_xlsxFileLookup[fileName];
                         }
                     };
 
-                    // Read file based on type
                     if (fileExtension === 'xlsx') {
-                        reader.readAsDataURL(file); // Read XLSX as Data URL (base64)
+                        reader.readAsDataURL(file);
                     } else {
-                        reader.readAsText(file); // Read CSV as plain text
+                        reader.readAsText(file);
                     }
                 }
             });
